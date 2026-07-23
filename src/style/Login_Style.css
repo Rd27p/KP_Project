@@ -1,0 +1,296 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Login Container */
+.login-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background: #E7E7E7;
+    position: relative;
+    overflow: hidden;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Login Card - Neumorphism Effect */
+.login-card {
+    position: relative;
+    width: 100%;
+    max-width: 450px;
+    padding: 50px;
+    background: #E7E7E7;
+    border-radius: 24px;
+    box-shadow: 12px 12px 24px #C5C5C5,
+                -12px -12px 24px #FFFFFF;
+    animation: slideUp 0.6s ease-out;
+    z-index: 1;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Login Heading */
+.login-card h2 {
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: #1F2A44;
+    text-align: center;
+    letter-spacing: -0.5px;
+}
+
+.login-card h2::after {
+    content: '';
+    display: block;
+    width: 60px;
+    height: 4px;
+    background: linear-gradient(90deg, #D3324A 0%, #A50224 100%);
+    margin: 15px auto 0;
+    border-radius: 2px;
+}
+
+/* Subtitle */
+.login-subtitle {
+    text-align: center;
+    color: #7A7A7A;
+    font-size: 14px;
+    margin-bottom: 30px;
+    font-weight: 500;
+}
+
+/* Form */
+.login-form {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Form Group */
+.form-group {
+    margin-bottom: 24px;
+    animation: slideUp 0.6s ease-out;
+    animation-fill-mode: both;
+}
+
+.form-group:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+.form-group:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.form-group label {
+    display: block;
+    color: #1F2A44;
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Input - Inset Neumorphism */
+.form-group input {
+    width: 100%;
+    padding: 14px 16px;
+    border: none;
+    border-radius: 12px;
+    font-size: 15px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    background: #E7E7E7;
+    color: #1F2A44;
+    font-weight: 500;
+    box-shadow: inset 6px 6px 12px #C5C5C5,
+                inset -6px -6px 12px #FFFFFF;
+}
+
+.form-group input::placeholder {
+    color: #7A7A7A;
+    font-weight: 400;
+}
+
+.form-group input:hover {
+    box-shadow: inset 4px 4px 10px #C5C5C5,
+                inset -4px -4px 10px #FFFFFF;
+}
+
+.form-group input:focus {
+    outline: none;
+    box-shadow: inset 6px 6px 12px #C5C5C5,
+                inset -6px -6px 12px #FFFFFF,
+                0 0 0 3px rgba(211, 50, 74, 0.3);
+    color: #A50224;
+}
+
+/* Error Message */
+.error-message {
+    margin-bottom: 20px;
+    padding: 14px 16px;
+    background: #E7E7E7;
+    color: #A50224;
+    border-left: 4px solid #D3324A;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    animation: shake 0.5s ease-in-out;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 4px 4px 10px #C5C5C5,
+                -4px -4px 10px #FFFFFF;
+}
+
+.error-message::before {
+    content: '⚠';
+    font-size: 18px;
+    flex-shrink: 0;
+    color: #E8720C;
+}
+
+@keyframes shake {
+    0%, 100% {
+        transform: translateX(0);
+    }
+    25% {
+        transform: translateX(-8px);
+    }
+    75% {
+        transform: translateX(8px);
+    }
+}
+
+/* Submit Button - Neumorphic with Red Gradient */
+.login-btn {
+    width: 100%;
+    padding: 14px 20px;
+    background: linear-gradient(135deg, #D3324A 0%, #A50224 100%);
+    color: #FFFFFF;
+    font-size: 16px;
+    font-weight: 700;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    margin-top: 15px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 6px 6px 14px #C5C5C5,
+                -6px -6px 14px #FFFFFF;
+    animation: slideUp 0.6s ease-out 0.3s both;
+}
+
+.login-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.6s;
+}
+
+.login-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 8px 8px 18px #C5C5C5,
+                -8px -8px 18px #FFFFFF;
+}
+
+.login-btn:hover::before {
+    left: 100%;
+}
+
+.login-btn:active {
+    transform: translateY(0);
+    box-shadow: inset 4px 4px 10px #A50224,
+                inset -4px -4px 10px #D3324A;
+}
+
+.login-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+    background: #7A7A7A;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .login-card {
+        max-width: 100%;
+        margin: 20px;
+        padding: 40px 25px;
+        border-radius: 20px;
+    }
+
+    .login-card h2 {
+        font-size: 26px;
+        margin-bottom: 8px;
+    }
+
+    .login-card h2::after {
+        width: 50px;
+        height: 3px;
+        margin-top: 12px;
+    }
+
+    .login-subtitle {
+        font-size: 13px;
+        margin-bottom: 25px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        font-size: 12px;
+        margin-bottom: 8px;
+    }
+
+    .form-group input {
+        padding: 12px 14px;
+        font-size: 14px;
+        border-radius: 10px;
+    }
+
+    .login-btn {
+        padding: 12px 16px;
+        font-size: 14px;
+        margin-top: 12px;
+        border-radius: 10px;
+    }
+}
+
+@media (max-width: 360px) {
+    .login-card {
+        padding: 30px 20px;
+    }
+
+    .login-card h2 {
+        font-size: 22px;
+    }
+
+    .form-group input {
+        padding: 10px 12px;
+        font-size: 13px;
+    }
+
+    .login-btn {
+        padding: 10px 14px;
+        font-size: 13px;
+    }
+}
