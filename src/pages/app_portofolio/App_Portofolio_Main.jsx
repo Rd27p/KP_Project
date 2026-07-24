@@ -1,15 +1,17 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Search, Plus, Boxes, Clock, User } from 'lucide-react';
 import Layout from '../../components/layout';
 import '../../style/app_portofolio_style/main.css';
 
 const applications = [
-    { name: 'GarasiBMW Portal', category: 'Operasional', owner: 'Raka Adi', status: 'Active', updated: '20 Jul 2026' },
+    { name: 'GarasiBMW Portal', category: 'Operational', owner: 'Raka Adi', status: 'Active', updated: '20 Jul 2026' },
     { name: 'HRIS Telkomsel', category: 'Human Resource', owner: 'Siti Rahma', status: 'Active', updated: '18 Jul 2026' },
-    { name: 'App Catalog SSO', category: 'Infrastructure', owner: 'Dimas Prayoga', status: 'Active', updated: '22 Jul 2026' },
+    { name: 'App Catalog SSO', category: 'Network', owner: 'Dimas Prayoga', status: 'Active', updated: '22 Jul 2026' },
     { name: 'Finance Dashboard', category: 'Finance', owner: 'Wulan Sari', status: 'Maintenance', updated: '15 Jul 2026' },
-    { name: 'Inventory System', category: 'Operasional', owner: 'Fajar Nugroho', status: 'Inactive', updated: '10 Jun 2026' },
-    { name: 'Monitoring Grafana', category: 'Infrastructure', owner: 'Raka Adi', status: 'Active', updated: '23 Jul 2026' },
+    { name: 'Inventory System', category: 'Operational', owner: 'Fajar Nugroho', status: 'Inactive', updated: '10 Jun 2026' },
+    { name: 'Monitoring Grafana', category: 'Network', owner: 'Raka Adi', status: 'Active', updated: '23 Jul 2026' },
+    { name: 'Payroll Gateway', category: 'Finance', owner: 'Siti Rahma', status: 'Active', updated: '19 Jul 2026' },
+    { name: 'Security Scanner', category: 'Security', owner: 'Dimas Prayoga', status: 'Active', updated: '21 Jul 2026' },
 ];
 
 const statusColor = {
@@ -20,11 +22,20 @@ const statusColor = {
 
 function AppPortofolioMain() {
     const [searchTerm, setSearchTerm] = useState('');
+    const [activeCategory, setActiveCategory] = useState('All');
 
-    const filteredApps = applications.filter((app) =>
-        app.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        app.category.toLowerCase().includes(searchTerm.toLowerCase())
+    const categories = useMemo(
+        () => ['All', ...new Set(applications.map((app) => app.category))],
+        []
     );
+
+    const filteredApps = applications.filter((app) => {
+        const matchesSearch =
+            app.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            app.category.toLowerCase().includes(searchTerm.toLowerCase());
+        const matchesCategory = activeCategory === 'All' || app.category === activeCategory;
+        return matchesSearch && matchesCategory;
+    });
 
     return (
         <Layout title="App Portofolio">
@@ -45,11 +56,23 @@ function AppPortofolioMain() {
                     </button>
                 </div>
 
+                <div className="portofolio-filters">
+                    {categories.map((category) => (
+                        <button
+                            key={category}
+                            className={`filter-chip ${activeCategory === category ? 'active' : ''}`}
+                            onClick={() => setActiveCategory(category)}
+                        >
+                            {category}
+                        </button>
+                    ))}
+                </div>
+
                 <p className="portofolio-count">{filteredApps.length} aplikasi ditemukan</p>
 
                 {filteredApps.length === 0 ? (
                     <div className="portofolio-empty">
-                        Tidak ada aplikasi yang cocok dengan pencarian.
+                        Tidak ada aplikasi yang cocok dengan pencarian atau filter.
                     </div>
                 ) : (
                     <div className="app-card-grid">

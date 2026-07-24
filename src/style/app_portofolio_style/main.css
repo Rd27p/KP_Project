@@ -84,6 +84,40 @@
     color: #7A7A7A;
 }
 
+/* Category Filter Chips */
+.portofolio-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.filter-chip {
+    padding: 9px 18px;
+    background: #E7E7E7;
+    border: none;
+    border-radius: 20px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: #7A7A7A;
+    cursor: pointer;
+    box-shadow: 4px 4px 10px #C5C5C5,
+                -4px -4px 10px #FFFFFF;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.filter-chip:hover {
+    color: #D3324A;
+}
+
+.filter-chip.active {
+    color: #FFFFFF;
+    background: linear-gradient(135deg, #D3324A 0%, #A50224 100%);
+    box-shadow: inset 2px 2px 6px #A50224,
+                inset -2px -2px 6px #D3324A;
+}
+
 /* Card Grid */
 .app-card-grid {
     display: grid;
