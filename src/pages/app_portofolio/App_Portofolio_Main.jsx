@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Search, Plus, Boxes, Clock, User } from 'lucide-react';
-import Layout from '../../components/Layout';
+import Layout from '../../components/layout';
 import '../../style/app_portofolio_style/main.css';
 
 const applications = [

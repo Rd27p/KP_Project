@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Folder, Users, Mail, Zap } from 'lucide-react';
-import Layout from '../components/Layout';
-import Table from '../components/Table';
+import Layout from '../components/layout';
+import Table from '../components/table';
 import '../style/Dashboard_Style.css';
 
 const stats = [
