@@ -17,7 +17,6 @@ function Login() {
             return;
         }
 
-        // TODO: Add API call for authentication here
         console.log('Login attempt:', { username, password });
         localStorage.setItem('user', JSON.stringify({ username })); 
         navigate('/dashboard');

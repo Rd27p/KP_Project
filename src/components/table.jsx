@@ -1,26 +1,5 @@
 import '../style/Table_Style.css';
 
-/**
- * Table reusable
- *
- * Props:
- * - title: string (opsional) - judul di atas tabel
- * - columns: array of { key: string, label: string, render?: (row) => ReactNode }
- * - data: array of object - baris data, setiap object harus punya properti sesuai `key` di columns
- * - emptyMessage: string (opsional) - pesan saat data kosong
- *
- * Contoh pemakaian:
- * <Table
- *   title="Aktivitas Terbaru"
- *   columns={[
- *     { key: 'user', label: 'Pengguna' },
- *     { key: 'action', label: 'Aksi' },
- *     { key: 'target', label: 'Target' },
- *     { key: 'time', label: 'Waktu', className: 'table-muted' },
- *   ]}
- *   data={recentActivity}
- * />
- */
 function Table({ title, columns = [], data = [], emptyMessage = 'Belum ada data.' }) {
     return (
         <div className="table-card">

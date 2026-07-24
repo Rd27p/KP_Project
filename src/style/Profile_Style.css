@@ -2,7 +2,6 @@
     position: relative;
 }
 
-/* Trigger button (di header) */
 .profile-trigger {
     display: flex;
     align-items: center;
@@ -54,7 +53,6 @@
     transform: rotate(180deg);
 }
 
-/* Dropdown */
 .profile-dropdown {
     position: absolute;
     top: calc(100% + 14px);
@@ -173,7 +171,6 @@
     color: #A50224;
 }
 
-/* Responsive */
 @media (max-width: 600px) {
     .profile-name {
         display: none;

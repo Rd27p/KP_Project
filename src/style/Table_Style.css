@@ -59,14 +59,12 @@
     padding: 28px 12px !important;
 }
 
-/* Utility class untuk kolom yang butuh warna redup (misal kolom waktu) */
 .table-muted {
     color: #7A7A7A;
     font-weight: 400;
     white-space: nowrap;
 }
 
-/* Responsive */
 @media (max-width: 600px) {
     .table-card {
         padding: 20px 18px;

@@ -3,12 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { User, Settings, LogOut, ChevronDown } from 'lucide-react';
 import '../style/Profile_Style.css';
 
-/**
- * ProfileMenu - dropdown profil pengguna di header
- *
- * Props:
- * - user: { username: string, email?: string, role?: string } | null
- */
 function Profile({ user }) {
     const [open, setOpen] = useState(false);
     const navigate = useNavigate();

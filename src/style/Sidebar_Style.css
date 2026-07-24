@@ -17,7 +17,6 @@
     width: 84px;
 }
 
-/* Header inside sidebar */
 .sidebar-header {
     display: flex;
     align-items: center;
@@ -64,7 +63,6 @@
                 inset -3px -3px 6px #FFFFFF;
 }
 
-/* Section label */
 .sidebar-section-label {
     font-family: 'Inter', sans-serif;
     font-size: 11px;
@@ -77,7 +75,6 @@
     overflow: hidden;
 }
 
-/* Nav */
 .sidebar-nav {
     display: flex;
     flex-direction: column;
@@ -117,7 +114,6 @@
                 inset 1px 1px 2px rgba(255, 255, 255, 0.15);
 }
 
-/* Parent item (button, has dropdown) */
 .sidebar-parent {
     width: 100%;
     border: none;
@@ -135,7 +131,6 @@
     transform: rotate(180deg);
 }
 
-/* Submenu */
 .sidebar-group {
     display: flex;
     flex-direction: column;
@@ -203,14 +198,12 @@
     letter-spacing: 0.1px;
 }
 
-/* Footer / bottom area (optional use) */
 .sidebar-footer {
     margin-top: auto;
     padding-top: 20px;
     border-top: 1px solid #D5D5D5;
 }
 
-/* Responsive */
 @media (max-width: 768px) {
     .sidebar {
         width: 84px;
