@@ -1,23 +1,33 @@
 import { useState } from 'react';
-import { Folder, Users, Mail, Zap } from 'lucide-react';
+import { Folder, CheckCircle2, Layers, AlertTriangle } from 'lucide-react';
 import Layout from '../components/layout';
 import Table from '../components/table';
+import { applications } from './app_portofolio/Application_Data';
 import '../style/Dashboard_Style.css';
 
+const totalApps = applications.length;
+const activeApps = applications.filter((app) => app.status === 'Active').length;
+const totalCategories = new Set(applications.map((app) => app.category)).size;
+const needsAttention = applications.filter(
+    (app) => app.status === 'Maintenance' || app.status === 'Inactive'
+).length;
+
 const stats = [
-    { label: 'Total Aplikasi', value: '24', change: '+3 bulan ini', icon: Folder },
-    { label: 'Pengguna Aktif', value: '1,204', change: '+82 minggu ini', icon: Users },
-    { label: 'Permintaan Akses', value: '7', change: '3 menunggu review', icon: Mail },
-    { label: 'Uptime Sistem', value: '99.9%', change: '30 hari terakhir', icon: Zap },
+    { label: 'Total Aplikasi', value: totalApps, change: `${totalCategories} kategori`, icon: Folder },
+    { label: 'Aplikasi Aktif', value: activeApps, change: `${totalApps - activeApps} lainnya`, icon: CheckCircle2 },
+    { label: 'Total Kategori', value: totalCategories, change: 'Berdasarkan portofolio', icon: Layers },
+    { label: 'Perlu Perhatian', value: needsAttention, change: 'Maintenance / Inactive', icon: AlertTriangle },
 ];
 
-const recentActivity = [
-    { user: 'Dimas Prayoga', action: 'Mengakses aplikasi', target: 'GarasiBMW Portal', time: '5 menit lalu' },
-    { user: 'Siti Rahma', action: 'Meminta akses', target: 'HRIS Telkomsel', time: '22 menit lalu' },
-    { user: 'Fajar Nugroho', action: 'Login berhasil', target: 'App Catalog SSO', time: '1 jam lalu' },
-    { user: 'Wulan Sari', action: 'Ditolak akses', target: 'Finance Dashboard', time: '3 jam lalu' },
-    { user: 'Raka Adi', action: 'Menambahkan aplikasi baru', target: 'Inventory System', time: 'Kemarin' },
-];
+const recentActivity = [...applications]
+    .sort((a, b) => new Date(b.updated) - new Date(a.updated))
+    .slice(0, 5)
+    .map((app) => ({
+        user: app.owner,
+        action: 'Memperbarui aplikasi',
+        target: app.name,
+        time: app.updated,
+    }));
 
 const activityColumns = [
     { key: 'user', label: 'Pengguna' },
@@ -63,7 +73,7 @@ function Dashboard() {
                 </div>
 
                 <Table
-                    title="Aktivitas Terbaru"
+                    title="Aplikasi Terbaru Diperbarui"
                     columns={activityColumns}
                     data={recentActivity}
                 />
