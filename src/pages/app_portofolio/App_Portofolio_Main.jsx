@@ -1,8 +1,10 @@
 import { useState, useMemo } from 'react';
 import { Search, Plus, Boxes, Clock, User } from 'lucide-react';
 import Layout from '../../components/layout';
-import '../../style/app_portofolio_style/main.css';
+import '../../style/app_portofolio_style/Main_Style.css';
 
+// Data aplikasi utama. Diekspor supaya halaman lain (misal Dashboard)
+// bisa pakai data yang sama tanpa perlu file data terpisah.
 const applications = [
     { name: 'GarasiBMW Portal', category: 'Operational', owner: 'Raka Adi', status: 'Active', updated: '20 Jul 2026' },
     { name: 'HRIS Telkomsel', category: 'Human Resource', owner: 'Siti Rahma', status: 'Active', updated: '18 Jul 2026' },

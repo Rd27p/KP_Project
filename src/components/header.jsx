@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Bell, ShieldAlert, ServerCrash, AlertTriangle } from 'lucide-react';
+import { Bell, ShieldAlert, AlertTriangle } from 'lucide-react';
+import Profile from '../pages/Profile';
 import '../style/Header_Style.css';
 
 const notifications = [
@@ -37,20 +37,13 @@ const notifications = [
 const notificationIcon = {
     critical: ShieldAlert,
     warning: AlertTriangle,
-    down: ServerCrash,
 };
 
 function Header({ title = 'Dashboard', user }) {
-    const navigate = useNavigate();
     const [notifOpen, setNotifOpen] = useState(false);
     const notifRef = useRef(null);
 
     const criticalCount = notifications.filter((n) => n.type === 'critical').length;
-
-    const handleLogout = () => {
-        localStorage.removeItem('user');
-        navigate('/login');
-    };
 
     useEffect(() => {
         function handleClickOutside(e) {
@@ -115,12 +108,7 @@ function Header({ title = 'Dashboard', user }) {
                     )}
                 </div>
 
-                <span className="header-username">
-                    {user ? user.username : 'Guest'}
-                </span>
-                <button className="header-logout-btn" onClick={handleLogout}>
-                    Logout
-                </button>
+                <Profile user={user} />
             </div>
         </header>
     );
