@@ -1,0 +1,134 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;500;600;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.dashboard-content {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.dashboard-welcome {
+    background: #E7E7E7;
+    padding: 32px 36px;
+    border-radius: 22px;
+    box-shadow: 10px 10px 20px #C5C5C5,
+                -10px -10px 20px #FFFFFF;
+    animation: slideUp 0.5s ease-out;
+}
+
+.dashboard-welcome h1 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 26px;
+    font-weight: 700;
+    color: #1F2A44;
+    letter-spacing: -0.4px;
+}
+
+.dashboard-subtitle {
+    margin-top: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #7A7A7A;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+
+.stat-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: #E7E7E7;
+    padding: 22px;
+    border-radius: 18px;
+    box-shadow: 8px 8px 16px #C5C5C5,
+                -8px -8px 16px #FFFFFF;
+    animation: slideUp 0.5s ease-out both;
+    transition: transform 0.25s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-3px);
+}
+
+.stat-icon {
+    width: 48px;
+    height: 48px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #D3324A 0%, #A50224 100%);
+}
+
+.stat-info {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.stat-value {
+    font-family: 'Poppins', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: #1F2A44;
+    line-height: 1.2;
+}
+
+.stat-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #1F2A44;
+    margin-top: 2px;
+}
+
+.stat-change {
+    font-size: 12px;
+    font-weight: 500;
+    color: #E8720C;
+    margin-top: 2px;
+}
+
+@media (max-width: 900px) {
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    .dashboard-welcome {
+        padding: 24px 22px;
+        border-radius: 18px;
+    }
+
+    .dashboard-welcome h1 {
+        font-size: 20px;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+}

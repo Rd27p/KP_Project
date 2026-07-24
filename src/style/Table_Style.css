@@ -1,0 +1,76 @@
+.table-card {
+    background: #E7E7E7;
+    padding: 28px 32px;
+    border-radius: 22px;
+    box-shadow: 10px 10px 20px #C5C5C5,
+                -10px -10px 20px #FFFFFF;
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+}
+
+.table-title {
+    font-family: 'Poppins', sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: #1F2A44;
+    margin-bottom: 20px;
+}
+
+.table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.app-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.app-table thead th {
+    text-align: left;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #7A7A7A;
+    padding: 0 12px 12px;
+    border-bottom: 1px solid #D5D5D5;
+    white-space: nowrap;
+}
+
+.app-table tbody td {
+    padding: 14px 12px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #1F2A44;
+    border-bottom: 1px solid #DADADA;
+}
+
+.app-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.app-table tbody tr:hover td {
+    background: rgba(255, 255, 255, 0.5);
+}
+
+.table-empty {
+    text-align: center;
+    color: #7A7A7A;
+    padding: 28px 12px !important;
+}
+
+.table-muted {
+    color: #7A7A7A;
+    font-weight: 400;
+    white-space: nowrap;
+}
+
+@media (max-width: 600px) {
+    .table-card {
+        padding: 20px 18px;
+    }
+
+    .app-table {
+        min-width: 480px;
+    }
+}

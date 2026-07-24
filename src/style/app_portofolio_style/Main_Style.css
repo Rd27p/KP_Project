@@ -1,0 +1,248 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;500;600;700&display=swap');
+
+.portofolio-content {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.portofolio-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.portofolio-search {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+    min-width: 240px;
+    padding: 12px 18px;
+    background: #E7E7E7;
+    border-radius: 14px;
+    box-shadow: inset 4px 4px 10px #C5C5C5,
+                inset -4px -4px 10px #FFFFFF;
+    color: #7A7A7A;
+}
+
+.portofolio-search input {
+    flex: 1;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: #1F2A44;
+}
+
+.portofolio-search input::placeholder {
+    color: #7A7A7A;
+}
+
+.portofolio-add-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 22px;
+    background: linear-gradient(135deg, #D3324A 0%, #A50224 100%);
+    color: #FFFFFF;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    border: none;
+    border-radius: 14px;
+    cursor: pointer;
+    box-shadow: 6px 6px 14px #C5C5C5,
+                -6px -6px 14px #FFFFFF;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    white-space: nowrap;
+}
+
+.portofolio-add-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 8px 8px 18px #C5C5C5,
+                -8px -8px 18px #FFFFFF;
+}
+
+.portofolio-add-btn:active {
+    transform: translateY(0);
+    box-shadow: inset 3px 3px 8px #A50224,
+                inset -3px -3px 8px #D3324A;
+}
+
+.portofolio-count {
+    font-size: 13px;
+    font-weight: 500;
+    color: #7A7A7A;
+}
+
+.portofolio-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.filter-chip {
+    padding: 9px 18px;
+    background: #E7E7E7;
+    border: none;
+    border-radius: 20px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: #7A7A7A;
+    cursor: pointer;
+    box-shadow: 4px 4px 10px #C5C5C5,
+                -4px -4px 10px #FFFFFF;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.filter-chip:hover {
+    color: #D3324A;
+}
+
+.filter-chip.active {
+    color: #FFFFFF;
+    background: linear-gradient(135deg, #D3324A 0%, #A50224 100%);
+    box-shadow: inset 2px 2px 6px #A50224,
+                inset -2px -2px 6px #D3324A;
+}
+
+.app-card-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.app-card {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    background: #E7E7E7;
+    padding: 22px;
+    border-radius: 20px;
+    box-shadow: 8px 8px 18px #C5C5C5,
+                -8px -8px 18px #FFFFFF;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    cursor: pointer;
+}
+
+.app-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 10px 10px 22px #C5C5C5,
+                -10px -10px 22px #FFFFFF;
+}
+
+.app-card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.app-card-icon {
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 13px;
+    background: linear-gradient(135deg, #D3324A 0%, #A50224 100%);
+    flex-shrink: 0;
+}
+
+.app-card-name {
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: #1F2A44;
+    letter-spacing: -0.2px;
+}
+
+.app-card-category {
+    font-size: 12px;
+    font-weight: 500;
+    color: #7A7A7A;
+    margin-top: -8px;
+}
+
+.app-card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 12px;
+    border-top: 1px solid #D5D5D5;
+}
+
+.app-card-meta {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    color: #7A7A7A;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+}
+
+.badge-active {
+    background: rgba(34, 139, 87, 0.12);
+    color: #1E8E52;
+}
+
+.badge-maintenance {
+    background: rgba(232, 114, 12, 0.14);
+    color: #E8720C;
+}
+
+.badge-inactive {
+    background: rgba(122, 122, 122, 0.16);
+    color: #7A7A7A;
+}
+
+.portofolio-empty {
+    text-align: center;
+    padding: 40px 20px;
+    background: #E7E7E7;
+    border-radius: 18px;
+    box-shadow: inset 4px 4px 10px #C5C5C5,
+                inset -4px -4px 10px #FFFFFF;
+    color: #7A7A7A;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+@media (max-width: 900px) {
+    .app-card-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    .portofolio-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .portofolio-add-btn {
+        justify-content: center;
+    }
+
+    .app-card-grid {
+        grid-template-columns: 1fr;
+    }
+}

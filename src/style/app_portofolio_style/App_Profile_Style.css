@@ -1,0 +1,244 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;500;600;700&display=swap');
+
+.app-profile-content {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.profile-back-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    align-self: flex-start;
+    padding: 10px 18px;
+    background: #E7E7E7;
+    border: none;
+    border-radius: 12px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: #1F2A44;
+    cursor: pointer;
+    box-shadow: 4px 4px 10px #C5C5C5,
+                -4px -4px 10px #FFFFFF;
+    transition: all 0.2s ease;
+}
+
+.profile-back-btn:hover {
+    color: #D3324A;
+    box-shadow: 2px 2px 6px #C5C5C5,
+                -2px -2px 6px #FFFFFF;
+}
+
+/* Header Card */
+.profile-header-card {
+    background: #E7E7E7;
+    padding: 32px 36px;
+    border-radius: 22px;
+    box-shadow: 8px 8px 16px #C5C5C5,
+                -8px -8px 16px #FFFFFF;
+    animation: profileSlideUp 0.5s ease-out;
+}
+
+@keyframes profileSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.profile-header-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.profile-header-icon {
+    width: 56px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #D3324A 0%, #A50224 100%);
+}
+
+.profile-app-name {
+    font-family: 'Poppins', sans-serif;
+    font-size: 26px;
+    font-weight: 700;
+    color: #1F2A44;
+    letter-spacing: -0.4px;
+    margin-bottom: 10px;
+}
+
+.profile-app-description {
+    font-size: 14px;
+    font-weight: 500;
+    color: #7A7A7A;
+    line-height: 1.6;
+}
+
+/* Info Grid */
+.profile-info-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+}
+
+.profile-info-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: #E7E7E7;
+    padding: 18px 20px;
+    border-radius: 16px;
+    box-shadow: 8px 8px 16px #C5C5C5,
+                -8px -8px 16px #FFFFFF;
+}
+
+.profile-info-icon {
+    width: 38px;
+    height: 38px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 11px;
+    background: rgba(31, 42, 68, 0.08);
+    color: #1F2A44;
+}
+
+.profile-info-body {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.profile-info-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: #7A7A7A;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+}
+
+.profile-info-value {
+    font-size: 14px;
+    font-weight: 700;
+    color: #1F2A44;
+    margin-top: 3px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Detail Lengkap (toggle section) */
+.profile-detail-section {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.profile-detail-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 14px;
+    background: #E7E7E7;
+    border: none;
+    border-radius: 14px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: #A50224;
+    cursor: pointer;
+    box-shadow: 4px 4px 10px #C5C5C5,
+                -4px -4px 10px #FFFFFF;
+    transition: all 0.2s ease;
+}
+
+.profile-detail-toggle:hover {
+    box-shadow: 2px 2px 6px #C5C5C5,
+                -2px -2px 6px #FFFFFF;
+}
+
+.profile-detail-chevron {
+    transition: transform 0.25s ease;
+}
+
+.profile-detail-chevron-open {
+    transform: rotate(180deg);
+}
+
+.profile-detail-grid {
+    animation: profileSlideUp 0.35s ease-out;
+}
+
+/* Status Badge (sama seperti App Portofolio) */
+.status-badge {
+    display: inline-block;
+    padding: 5px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+}
+
+.badge-active {
+    background: rgba(34, 139, 87, 0.12);
+    color: #1E8E52;
+}
+
+.badge-maintenance {
+    background: rgba(232, 114, 12, 0.14);
+    color: #E8720C;
+}
+
+.badge-inactive {
+    background: rgba(122, 122, 122, 0.16);
+    color: #7A7A7A;
+}
+
+.profile-notfound {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    padding: 60px 20px;
+    text-align: center;
+    color: #7A7A7A;
+    font-size: 14px;
+}
+
+/* Responsive */
+@media (max-width: 700px) {
+    .profile-info-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 500px) {
+    .profile-header-card {
+        padding: 24px 22px;
+    }
+
+    .profile-app-name {
+        font-size: 20px;
+    }
+
+    .profile-info-grid {
+        grid-template-columns: 1fr;
+    }
+}
