@@ -115,62 +115,6 @@
     margin-top: 2px;
 }
 
-/* Activity Card */
-.activity-card {
-    background: #E7E7E7;
-    padding: 28px 32px;
-    border-radius: 22px;
-    box-shadow: 10px 10px 20px #C5C5C5,
-                -10px -10px 20px #FFFFFF;
-    animation: slideUp 0.5s ease-out 0.1s both;
-}
-
-.activity-card h2 {
-    font-family: 'Poppins', sans-serif;
-    font-size: 18px;
-    font-weight: 600;
-    color: #1F2A44;
-    margin-bottom: 20px;
-}
-
-.activity-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.activity-table thead th {
-    text-align: left;
-    font-size: 12px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    color: #7A7A7A;
-    padding: 0 12px 12px;
-    border-bottom: 1px solid #D5D5D5;
-}
-
-.activity-table tbody td {
-    padding: 14px 12px;
-    font-size: 14px;
-    font-weight: 500;
-    color: #1F2A44;
-    border-bottom: 1px solid #DADADA;
-}
-
-.activity-table tbody tr:last-child td {
-    border-bottom: none;
-}
-
-.activity-table tbody tr:hover td {
-    background: rgba(255, 255, 255, 0.5);
-}
-
-.activity-time {
-    color: #7A7A7A;
-    font-weight: 400;
-    white-space: nowrap;
-}
-
 /* Responsive */
 @media (max-width: 900px) {
     .stats-grid {
@@ -190,14 +134,5 @@
 
     .stats-grid {
         grid-template-columns: 1fr;
-    }
-
-    .activity-card {
-        padding: 20px 18px;
-        overflow-x: auto;
-    }
-
-    .activity-table {
-        min-width: 480px;
     }
 }

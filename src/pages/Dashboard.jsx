@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Folder, Users, Mail, Zap } from 'lucide-react';
 import Layout from '../components/Layout';
+import Table from '../components/Table';
 import '../style/Dashboard_Style.css';
 
 const stats = [
@@ -18,6 +19,13 @@ const recentActivity = [
     { user: 'Raka Adi', action: 'Menambahkan aplikasi baru', target: 'Inventory System', time: 'Kemarin' },
 ];
 
+const activityColumns = [
+    { key: 'user', label: 'Pengguna' },
+    { key: 'action', label: 'Aksi' },
+    { key: 'target', label: 'Target' },
+    { key: 'time', label: 'Waktu', className: 'table-muted' },
+];
+
 function Dashboard() {
     const [user] = useState(() => {
         const storedUser = localStorage.getItem('user');
@@ -25,7 +33,7 @@ function Dashboard() {
     });
 
     return (
-        <Layout title="Dashboard">
+        <Layout title="Executive Summary">
             <div className="dashboard-content">
                 <div className="dashboard-welcome">
                     <h1>Welcome back{user ? `, ${user.username}` : ''}</h1>
@@ -54,29 +62,11 @@ function Dashboard() {
                     })}
                 </div>
 
-                <div className="activity-card">
-                    <h2>Aktivitas Terbaru</h2>
-                    <table className="activity-table">
-                        <thead>
-                            <tr>
-                                <th>Pengguna</th>
-                                <th>Aksi</th>
-                                <th>Target</th>
-                                <th>Waktu</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {recentActivity.map((item, index) => (
-                                <tr key={index}>
-                                    <td>{item.user}</td>
-                                    <td>{item.action}</td>
-                                    <td>{item.target}</td>
-                                    <td className="activity-time">{item.time}</td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
+                <Table
+                    title="Aktivitas Terbaru"
+                    columns={activityColumns}
+                    data={recentActivity}
+                />
             </div>
         </Layout>
     );

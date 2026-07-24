@@ -1,13 +1,31 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Grid3x3, Users, Settings } from 'lucide-react';
+import {
+    LayoutDashboard,
+    Grid3x3,
+    Network,
+    Users,
+    FileText,
+    Database,
+    ShieldCheck,
+    KeyRound,
+    Inbox,
+    MessageSquare,
+} from 'lucide-react';
+
 import '../style/Sidebar_Style.css';
 
 const menuItems = [
-    { label: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
-    { label: 'Aplikasi', path: '/applications', icon: Grid3x3 },
-    { label: 'Pengguna', path: '/users', icon: Users },
-    { label: 'Pengaturan', path: '/settings', icon: Settings },
+    { label: 'Executive Summary', path: '/dashboard', icon: LayoutDashboard },
+    { label: 'App Portofolio', path: '/applications', icon: Grid3x3 },
+    { label: 'Infrastructure Visibility', path: '/infrastructure', icon: Network },
+    { label: 'TSA Team', path: '/tsa-team', icon: Users },
+    { label: 'TSA Information', path: '/tsa-information', icon: FileText },
+    { label: 'OSS Data Integration', path: '/oss-data', icon: Database },
+    { label: 'Security Assessment', path: '/security-assessment', icon: ShieldCheck },
+    { label: 'User Access', path: '/user-access', icon: KeyRound },
+    { label: 'Request', path: '/request', icon: Inbox },
+    { label: 'Feedback', path: '/feedback', icon: MessageSquare },
 ];
 
 function Sidebar() {

@@ -1,0 +1,89 @@
+import { useState } from 'react';
+import { Search, Plus, Boxes, Clock, User } from 'lucide-react';
+import Layout from '../../components/Layout';
+import '../../style/app_portofolio_style/main.css';
+
+const applications = [
+    { name: 'GarasiBMW Portal', category: 'Operasional', owner: 'Raka Adi', status: 'Active', updated: '20 Jul 2026' },
+    { name: 'HRIS Telkomsel', category: 'Human Resource', owner: 'Siti Rahma', status: 'Active', updated: '18 Jul 2026' },
+    { name: 'App Catalog SSO', category: 'Infrastructure', owner: 'Dimas Prayoga', status: 'Active', updated: '22 Jul 2026' },
+    { name: 'Finance Dashboard', category: 'Finance', owner: 'Wulan Sari', status: 'Maintenance', updated: '15 Jul 2026' },
+    { name: 'Inventory System', category: 'Operasional', owner: 'Fajar Nugroho', status: 'Inactive', updated: '10 Jun 2026' },
+    { name: 'Monitoring Grafana', category: 'Infrastructure', owner: 'Raka Adi', status: 'Active', updated: '23 Jul 2026' },
+];
+
+const statusColor = {
+    Active: 'badge-active',
+    Maintenance: 'badge-maintenance',
+    Inactive: 'badge-inactive',
+};
+
+function AppPortofolioMain() {
+    const [searchTerm, setSearchTerm] = useState('');
+
+    const filteredApps = applications.filter((app) =>
+        app.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        app.category.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    return (
+        <Layout title="App Portofolio">
+            <div className="portofolio-content">
+                <div className="portofolio-toolbar">
+                    <div className="portofolio-search">
+                        <Search size={18} strokeWidth={2} />
+                        <input
+                            type="text"
+                            placeholder="Cari aplikasi atau kategori..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                        />
+                    </div>
+                    <button className="portofolio-add-btn">
+                        <Plus size={18} strokeWidth={2.2} />
+                        Tambah Aplikasi
+                    </button>
+                </div>
+
+                <p className="portofolio-count">{filteredApps.length} aplikasi ditemukan</p>
+
+                {filteredApps.length === 0 ? (
+                    <div className="portofolio-empty">
+                        Tidak ada aplikasi yang cocok dengan pencarian.
+                    </div>
+                ) : (
+                    <div className="app-card-grid">
+                        {filteredApps.map((app) => (
+                            <div className="app-card" key={app.name}>
+                                <div className="app-card-top">
+                                    <div className="app-card-icon">
+                                        <Boxes size={22} strokeWidth={2} color="#FFFFFF" />
+                                    </div>
+                                    <span className={`status-badge ${statusColor[app.status]}`}>
+                                        {app.status}
+                                    </span>
+                                </div>
+
+                                <h3 className="app-card-name">{app.name}</h3>
+                                <span className="app-card-category">{app.category}</span>
+
+                                <div className="app-card-footer">
+                                    <div className="app-card-meta">
+                                        <User size={14} strokeWidth={2} />
+                                        <span>{app.owner}</span>
+                                    </div>
+                                    <div className="app-card-meta">
+                                        <Clock size={14} strokeWidth={2} />
+                                        <span>{app.updated}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                )}
+            </div>
+        </Layout>
+    );
+}
+
+export default AppPortofolioMain;
