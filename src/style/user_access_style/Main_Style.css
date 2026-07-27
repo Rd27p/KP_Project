@@ -1,0 +1,339 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;500;600;700&display=swap');
+
+.user-access-content {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+/* Toolbar (Main page) */
+.user-access-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.user-access-title {
+    font-family: 'Poppins', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: #1F2A44;
+    letter-spacing: -0.3px;
+}
+
+.user-access-subtitle {
+    margin-top: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #7A7A7A;
+}
+
+.user-access-add-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 22px;
+    background: linear-gradient(135deg, #D3324A 0%, #A50224 100%);
+    color: #FFFFFF;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    border: none;
+    border-radius: 14px;
+    cursor: pointer;
+    box-shadow: 6px 6px 14px #C5C5C5,
+                -6px -6px 14px #FFFFFF;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    white-space: nowrap;
+}
+
+.user-access-add-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 8px 8px 18px #C5C5C5,
+                -8px -8px 18px #FFFFFF;
+}
+
+.user-access-add-btn:active {
+    transform: translateY(0);
+    box-shadow: inset 3px 3px 8px #A50224,
+                inset -3px -3px 8px #D3324A;
+}
+
+/* Back button (Registration page) */
+.user-access-back-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    align-self: flex-start;
+    padding: 10px 18px;
+    background: #E7E7E7;
+    border: none;
+    border-radius: 12px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: #1F2A44;
+    cursor: pointer;
+    box-shadow: 4px 4px 10px #C5C5C5,
+                -4px -4px 10px #FFFFFF;
+    transition: all 0.2s ease;
+}
+
+.user-access-back-btn:hover {
+    color: #D3324A;
+    box-shadow: 2px 2px 6px #C5C5C5,
+                -2px -2px 6px #FFFFFF;
+}
+
+/* Empty State */
+.user-access-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 12px;
+    padding: 60px 30px;
+    background: #E7E7E7;
+    border-radius: 22px;
+    box-shadow: 10px 10px 20px #C5C5C5,
+                -10px -10px 20px #FFFFFF;
+}
+
+.user-access-empty-icon {
+    width: 64px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 18px;
+    background: linear-gradient(135deg, #D3324A 0%, #A50224 100%);
+    color: #FFFFFF;
+    margin-bottom: 8px;
+}
+
+.user-access-empty-title {
+    font-family: 'Poppins', sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: #1F2A44;
+}
+
+.user-access-empty-text {
+    font-size: 13px;
+    font-weight: 500;
+    color: #7A7A7A;
+    max-width: 420px;
+    line-height: 1.6;
+    margin-bottom: 8px;
+}
+
+/* Success State (Registration page) */
+.user-access-success {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 12px;
+    padding: 60px 30px;
+    background: #E7E7E7;
+    border-radius: 22px;
+    box-shadow: 10px 10px 20px #C5C5C5,
+                -10px -10px 20px #FFFFFF;
+}
+
+.user-access-success-icon {
+    width: 64px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 18px;
+    background: linear-gradient(135deg, #1E8E52 0%, #16693D 100%);
+    color: #FFFFFF;
+    margin-bottom: 8px;
+}
+
+.user-access-success h2 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: #1F2A44;
+}
+
+.user-access-success p {
+    font-size: 13px;
+    font-weight: 500;
+    color: #7A7A7A;
+    max-width: 420px;
+    line-height: 1.6;
+    margin-bottom: 8px;
+}
+
+.user-access-success strong {
+    color: #1F2A44;
+}
+
+/* Form Card (Registration page) */
+.user-access-form-card {
+    background: #E7E7E7;
+    padding: 32px 36px;
+    border-radius: 22px;
+    box-shadow: 10px 10px 20px #C5C5C5,
+                -10px -10px 20px #FFFFFF;
+}
+
+.user-access-form {
+    margin-top: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+}
+
+.user-access-form-section {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.user-access-section-title {
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: #A50224;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #D5D5D5;
+}
+
+.user-access-form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+/* Form Group (dipakai bareng form-group dari Login) */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-group label {
+    font-size: 12px;
+    font-weight: 700;
+    color: #1F2A44;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 12px 16px;
+    border: none;
+    border-radius: 12px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: #1F2A44;
+    background: #E7E7E7;
+    box-shadow: inset 4px 4px 10px #C5C5C5,
+                inset -4px -4px 10px #FFFFFF;
+    transition: all 0.25s ease;
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+    color: #A0A0A0;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    box-shadow: inset 4px 4px 10px #C5C5C5,
+                inset -4px -4px 10px #FFFFFF,
+                0 0 0 3px rgba(211, 50, 74, 0.25);
+}
+
+.form-group select {
+    cursor: pointer;
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 90px;
+    font-family: 'Inter', sans-serif;
+}
+
+/* Error message */
+.user-access-error {
+    margin-top: 20px;
+    padding: 14px 16px;
+    background: rgba(165, 2, 36, 0.08);
+    color: #A50224;
+    border-left: 4px solid #D3324A;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+/* Submit button */
+.user-access-submit-btn {
+    padding: 14px 20px;
+    background: linear-gradient(135deg, #D3324A 0%, #A50224 100%);
+    color: #FFFFFF;
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    box-shadow: 6px 6px 14px #C5C5C5,
+                -6px -6px 14px #FFFFFF;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.user-access-submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 8px 8px 18px #C5C5C5,
+                -8px -8px 18px #FFFFFF;
+}
+
+.user-access-submit-btn:active {
+    transform: translateY(0);
+    box-shadow: inset 3px 3px 8px #A50224,
+                inset -3px -3px 8px #D3324A;
+}
+
+/* Responsive */
+@media (max-width: 700px) {
+    .user-access-form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .user-access-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .user-access-add-btn {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 500px) {
+    .user-access-form-card {
+        padding: 24px 22px;
+    }
+}

@@ -72,7 +72,7 @@ function AppPortofolioMain() {
                             <div
                                 className="app-card"
                                 key={app.id}
-                                onClick={() => navigate(`/applications/${app.id}`)} onKeyDown={this.handleKeyDown}
+                                onClick={() => navigate(`/applications/${app.id}`)}
                                 role="button"
                                 tabIndex={0}
                             >

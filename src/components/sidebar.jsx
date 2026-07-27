@@ -29,11 +29,18 @@ const menuItems = [
         label: 'Request', 
         icon: Inbox,
         children: [
-            { label: 'Apppilcation Request', path: '/request/application-registrationrequest' },
-            { label: 'Use Case Request', path: '/request/use-case-request' },
+            { label: 'Application Registration', path: '/request/app-registration' },
+            { label: 'Use Case Request', path: '/request/use-case' },
         ], 
     },
-    { label: 'Feedback', path: '/feedback', icon: MessageSquare },
+    { 
+        label: 'Feedback', 
+        icon: MessageSquare,
+        children: [
+            { label: 'Result', path: '/feedback/result' },
+            { label: 'Bot Registration', path: '/feedback/bot-registration' },
+        ], 
+    },
 ];
 
 function Sidebar() {
