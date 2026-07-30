@@ -119,7 +119,6 @@ const toneVar = {
   neutral: '#C7CCDA',
 };
 
-/** Ring gauge kecil untuk kartu "Health Pulse" */
 function HealthPulseRing({ percent = 0, label = 'Sehat' }) {
   const radius = 70;
   const circumference = 2 * Math.PI * radius;

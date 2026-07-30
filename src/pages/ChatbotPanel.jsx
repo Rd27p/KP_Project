@@ -10,13 +10,11 @@ export default function ChatbotPanel({ isOpen, onClose }) {
 
   const handleSend = () => {
     if (!input.trim()) return;
-
-    // Add user message
+    
     const userMsg = { id: messages.length + 1, text: input, sender: 'user' };
     setMessages([...messages, userMsg]);
     setInput('');
 
-    // Simulate bot response
     setTimeout(() => {
       const botMsg = {
         id: messages.length + 2,

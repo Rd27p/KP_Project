@@ -74,9 +74,6 @@ export default function Settings() {
 
   const handleSave = (e) => {
     e.preventDefault();
-
-    // Simpan perubahan username/email ke localStorage supaya
-    // Header & Profile ikut ter-update. Ganti dengan panggilan API asli kamu.
     const updatedUser = { ...storedUser, ...account };
     localStorage.setItem('user', JSON.stringify(updatedUser));
 
