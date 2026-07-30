@@ -52,9 +52,9 @@ export default function Sidebar() {
   return (
     <aside className="sidebar">
       <div className="brand">
-        <div className="brand-mark">N</div>
+        <div className="brand-mark">A</div>
         <div>
-          <div className="brand-text">NOAH</div>
+          <div className="brand-text">APPHUB</div>
           <div className="brand-sub">Application Hub</div>
         </div>
       </div>
