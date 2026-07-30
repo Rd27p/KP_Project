@@ -27,6 +27,8 @@ function Profile({ user }) {
         ? user.username.slice(0, 2).toUpperCase()
         : 'GU';
 
+    if (!user) return null;
+
     return (
         <div className="profile-wrapper" ref={menuRef}>
             <button className="profile-trigger" onClick={() => setOpen((prev) => !prev)}>

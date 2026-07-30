@@ -20,8 +20,16 @@ function UserAccessMain() {
     const navigate = useNavigate();
 
     return (
-        <Layout title="User Access">
+        <Layout title="User Access" subtitle="Pantau dan kelola permintaan akses pengguna dengan alur yang lebih jelas dan mudah dipahami.">
             <div className="user-access-content">
+                <div className="user-access-hero">
+                    <div>
+                        <div className="user-access-hero-eyebrow">Review akses</div>
+                        <h2>Pastikan izin aplikasi tetap aman dan terkontrol.</h2>
+                    </div>
+                    <div className="user-access-hero-meta">Ajukan permintaan akses atau tinjau statusnya dari satu halaman.</div>
+                </div>
+
                 <div className="user-access-toolbar">
                     <div>
                         <h1 className="user-access-title">Permintaan Akses Pengguna</h1>

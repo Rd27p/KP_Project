@@ -3,7 +3,7 @@
 .request-content {
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    gap: 20px;
     font-family: 'Inter', 'Segoe UI', sans-serif;
     max-width: 1000px;
     margin: 0 auto;
@@ -16,6 +16,40 @@
 }
 
 /* Header (Request_Main) */
+.request-hero {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 20px 22px;
+    background: linear-gradient(135deg, rgba(213, 50, 74, 0.1), rgba(31, 42, 68, 0.04));
+    border: 1px solid rgba(213, 50, 74, 0.12);
+    border-radius: 18px;
+}
+
+.request-hero-eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #A50224;
+    margin-bottom: 6px;
+}
+
+.request-hero h2 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 700;
+    color: #1F2A44;
+}
+
+.request-hero-meta {
+    max-width: 300px;
+    font-size: 12px;
+    color: #7A7A7A;
+    line-height: 1.5;
+}
+
 .request-header h1,
 .request-title {
     font-family: 'Poppins', sans-serif;
@@ -42,19 +76,18 @@
     display: flex;
     align-items: center;
     gap: 18px;
-    background: #E7E7E7;
-    padding: 24px;
-    border-radius: 20px;
-    box-shadow: 8px 8px 18px #C5C5C5,
-                -8px -8px 18px #FFFFFF;
+    background: #ffffff;
+    padding: 22px;
+    border-radius: 18px;
+    border: 1px solid #eef0f5;
+    box-shadow: 0 12px 28px rgba(31, 42, 68, 0.06);
     cursor: pointer;
     transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
 .request-option-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 10px 10px 22px #C5C5C5,
-                -10px -10px 22px #FFFFFF;
+    transform: translateY(-2px);
+    box-shadow: 0 16px 34px rgba(31, 42, 68, 0.1);
 }
 
 .request-option-icon {
@@ -97,11 +130,11 @@
 .request-stepper {
     display: flex;
     align-items: flex-start;
-    background: #E7E7E7;
-    padding: 22px 28px;
+    background: #ffffff;
+    padding: 20px 24px;
     border-radius: 18px;
-    box-shadow: 8px 8px 16px #C5C5C5,
-                -8px -8px 16px #FFFFFF;
+    border: 1px solid #eef0f5;
+    box-shadow: 0 10px 24px rgba(31, 42, 68, 0.06);
 }
 
 .request-stepper-item {
@@ -198,11 +231,11 @@
 
 /* Form Card */
 .request-form-card {
-    background: #E7E7E7;
-    padding: 32px 36px;
-    border-radius: 22px;
-    box-shadow: 10px 10px 20px #C5C5C5,
-                -10px -10px 20px #FFFFFF;
+    background: #ffffff;
+    padding: 28px 30px;
+    border-radius: 20px;
+    border: 1px solid #eef0f5;
+    box-shadow: 0 14px 34px rgba(31, 42, 68, 0.08);
     display: flex;
     flex-direction: column;
     gap: 24px;
@@ -210,15 +243,13 @@
 
 .request-form-badge {
     align-self: center;
-    padding: 8px 20px;
-    background: #E7E7E7;
-    border-radius: 20px;
+    padding: 8px 16px;
+    background: rgba(213, 50, 74, 0.08);
+    border-radius: 999px;
     font-family: 'Poppins', sans-serif;
     font-size: 13px;
     font-weight: 600;
-    color: #1F2A44;
-    box-shadow: inset 3px 3px 6px #C5C5C5,
-                inset -3px -3px 6px #FFFFFF;
+    color: #A50224;
 }
 
 .request-form-grid {

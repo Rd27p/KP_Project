@@ -22,8 +22,16 @@ function RequestMain() {
     const navigate = useNavigate();
 
     return (
-        <Layout title="Request">
+        <Layout title="Request" subtitle="Pilih jenis permintaan yang paling sesuai dengan kebutuhan Anda agar proses berjalan lebih cepat.">
             <div className="request-content">
+                <div className="request-hero">
+                    <div>
+                        <div className="request-hero-eyebrow">Alur yang lebih jelas</div>
+                        <h2>Ajukan permintaan dengan panduan yang lebih informatif.</h2>
+                    </div>
+                    <div className="request-hero-meta">Satu halaman untuk memulai registrasi aplikasi atau kebutuhan use case baru.</div>
+                </div>
+
                 <div className="request-header">
                     <h1 className="request-title">Request</h1>
                     <p className="request-subtitle">

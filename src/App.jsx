@@ -10,7 +10,10 @@ import AppRegis from './pages/request/App_Regis';
 import UseCaseRegis from './pages/request/Use_Case_Regis';
 import BotRegis from './pages/feedback/Bot_Regis';
 import Result from './pages/feedback/Result';
-import './App.css'
+import Profile from './pages/Profile';
+import Settings from './pages/Settings';
+import Layout from './components/Layout';
+import './App.css';
 
 function App() {
   return (
@@ -18,7 +21,10 @@ function App() {
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/login" element={<Login />} />
+
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/settings" element={<Settings />} />
+
         <Route path="/applications" element={<AppPortofolioMain />} />
         <Route path="/applications/:id" element={<AppProfile />} />
         <Route path="/user-access" element={<UserAccessMain />} />
@@ -28,9 +34,11 @@ function App() {
         <Route path="/request/use-case" element={<UseCaseRegis />} />
         <Route path="/feedback/result" element={<Result />} />
         <Route path="/feedback/bot-registration" element={<BotRegis />} />
+
+        <Route path="/profile" element={<Layout><Profile /></Layout>} />
       </Routes>
     </BrowserRouter>
   );
 }
 
-export default App
+export default App;

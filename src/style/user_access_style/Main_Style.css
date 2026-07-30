@@ -10,6 +10,40 @@
 }
 
 /* Toolbar (Main page) */
+.user-access-hero {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 20px 22px;
+    background: linear-gradient(135deg, rgba(213, 50, 74, 0.1), rgba(31, 42, 68, 0.04));
+    border: 1px solid rgba(213, 50, 74, 0.12);
+    border-radius: 18px;
+}
+
+.user-access-hero-eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #A50224;
+    margin-bottom: 6px;
+}
+
+.user-access-hero h2 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 700;
+    color: #1F2A44;
+}
+
+.user-access-hero-meta {
+    max-width: 300px;
+    font-size: 12px;
+    color: #7A7A7A;
+    line-height: 1.5;
+}
+
 .user-access-toolbar {
     display: flex;
     align-items: center;

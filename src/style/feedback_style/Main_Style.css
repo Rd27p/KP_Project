@@ -157,11 +157,11 @@
 
 /* Resolution card */
 .feedback-resolution-card {
-    background: #E7E7E7;
-    padding: 28px 32px;
-    border-radius: 22px;
-    box-shadow: 10px 10px 20px #C5C5C5,
-                -10px -10px 20px #FFFFFF;
+    background: #ffffff;
+    padding: 24px 26px;
+    border-radius: 20px;
+    border: 1px solid #eef0f5;
+    box-shadow: 0 14px 34px rgba(31, 42, 68, 0.08);
 }
 
 .feedback-resolution-title {
@@ -234,11 +234,11 @@
 .feedback-stepper {
     display: flex;
     align-items: flex-start;
-    background: #E7E7E7;
-    padding: 22px 28px;
+    background: #ffffff;
+    padding: 20px 24px;
     border-radius: 18px;
-    box-shadow: 8px 8px 16px #C5C5C5,
-                -8px -8px 16px #FFFFFF;
+    border: 1px solid #eef0f5;
+    box-shadow: 0 10px 24px rgba(31, 42, 68, 0.06);
 }
 
 .feedback-stepper-item {
@@ -309,11 +309,11 @@
 
 /* Form Card (Bot_Regis + Result complain form) */
 .feedback-form-card {
-    background: #E7E7E7;
-    padding: 32px 36px;
-    border-radius: 22px;
-    box-shadow: 10px 10px 20px #C5C5C5,
-                -10px -10px 20px #FFFFFF;
+    background: #ffffff;
+    padding: 28px 30px;
+    border-radius: 20px;
+    border: 1px solid #eef0f5;
+    box-shadow: 0 14px 34px rgba(31, 42, 68, 0.08);
     display: flex;
     flex-direction: column;
     gap: 24px;
@@ -324,15 +324,13 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    padding: 8px 20px;
-    background: #E7E7E7;
-    border-radius: 20px;
+    padding: 8px 16px;
+    background: rgba(213, 50, 74, 0.08);
+    border-radius: 999px;
     font-family: 'Poppins', sans-serif;
     font-size: 13px;
     font-weight: 600;
-    color: #1F2A44;
-    box-shadow: inset 3px 3px 6px #C5C5C5,
-                inset -3px -3px 6px #FFFFFF;
+    color: #A50224;
 }
 
 .feedback-form-grid {

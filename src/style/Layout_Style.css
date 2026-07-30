@@ -1,17 +1,90 @@
-.layout {
-    display: flex;
-    min-height: 100vh;
-    background: #E7E7E7;
+/* ==========================================================
+   Design tokens — dipakai di seluruh komponen (Sidebar, Header,
+   Dashboard, ProgressBar). Layout_Style.css di-import sekali di
+   root sehingga variabel ini tersedia secara global.
+   ========================================================== */
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  --navy: #1F2A44;
+  --navy-2: #28365a;
+  --red: #D3324A;
+  --red-deep: #A50224;
+  --surface: #EEEFF3;
+  --card: #FFFFFF;
+  --ink: #1F2A44;
+  --ink-soft: #6B7488;
+  --line: #E4E6EE;
+  --green: #1E9E6B;
+  --green-soft: #E4F6EE;
+  --amber: #DB9A2A;
+  --amber-soft: #FBF1DF;
+  --red-soft: #FBE7EA;
+  --shadow-1: 8px 8px 18px rgba(31, 42, 68, 0.08), -8px -8px 18px rgba(255, 255, 255, 0.7);
+  --shadow-press: inset 4px 4px 10px rgba(31, 42, 68, 0.1), inset -4px -4px 10px rgba(255, 255, 255, 0.6);
+  --font-display: 'Space Grotesk', 'Inter', sans-serif;
+  --font-body: 'Inter', sans-serif;
 }
 
-.layout-main {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    min-width: 0;
+* {
+  box-sizing: border-box;
 }
 
-.layout-content {
-    flex: 1;
-    padding: 32px;
+body {
+  font-family: var(--font-body);
+  background: var(--surface);
+  color: var(--ink);
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, .display {
+  font-family: var(--font-display);
+  letter-spacing: -0.01em;
+}
+
+/* Angka jadi rapi & konsisten lebarnya di seluruh dashboard */
+.kpi-num,
+.ticket-num,
+.util-cell span,
+.server-table td {
+  font-variant-numeric: tabular-nums;
+}
+
+.app-shell {
+  display: grid;
+  grid-template-columns: 250px 1fr;
+  min-height: 100vh;
+}
+
+.app-shell .main {
+  padding: 26px 34px 50px 34px;
+}
+
+.page-intro {
+  margin-bottom: 20px;
+  padding: 18px 20px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, rgba(213, 50, 74, 0.08), rgba(31, 42, 68, 0.03));
+  border: 1px solid rgba(213, 50, 74, 0.12);
+}
+
+.page-intro-title {
+  font-size: 18px;
+  font-weight: 700;
+  font-family: var(--font-display);
+  color: var(--ink);
+}
+
+.page-intro-subtitle {
+  margin-top: 4px;
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  line-height: 1.5;
+}
+
+::selection {
+  background: var(--red);
+  color: #fff;
 }
