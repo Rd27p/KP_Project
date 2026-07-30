@@ -2,17 +2,6 @@ import { Search, Bell, Bot } from 'lucide-react';
 import Profile from '../pages/Profile';
 import '../style/Header_Style.css';
 
-/**
- * Header
- * Topbar halaman: sapaan + tanggal, search, tombol AI chatbot,
- * notifikasi, dan Profile dropdown.
- *
- * Props:
- *  - user        : object    -> data user login dari localStorage (dikirim Layout)
- *  - hasAlert    : bool      -> tampilkan dot merah di ikon notifikasi
- *  - onOpenChat  : function  -> dipanggil saat tombol "Tanya AI" diklik,
- *                                membuka ChatbotPanel di sisi kanan (dari Layout)
- */
 export default function Header({ user, hasAlert = true, onOpenChat, showSearch = false }) {
   const today = new Date().toLocaleDateString('id-ID', {
     weekday: 'long',
