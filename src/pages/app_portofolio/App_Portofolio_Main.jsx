@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Search, Plus, Boxes, Clock, User } from 'lucide-react';
-import Layout from '../../components/layout';
+import Layout from '../../components/Layout';
 import { applications } from './Application_Data';
 import '../../style/app_portofolio_style/Main_Style.css';
 
@@ -30,8 +30,20 @@ function AppPortofolioMain() {
     });
 
     return (
-        <Layout title="App Portofolio">
+        <Layout>
             <div className="portofolio-content">
+                <div className="portofolio-hero-merged">
+                    <div className="portofolio-hero-left">
+                        <div className="portofolio-hero-eyebrow">Lihat daftar aplikasi</div>
+                        <h1 className="portofolio-hero-title">App Portofolio</h1>
+                        <p className="portofolio-hero-desc">Lihat daftar aplikasi, status, owner, dan update terakhir dari satu tempat yang lebih terarah.</p>
+                    </div>
+                    <div className="portofolio-hero-right">
+                        <div className="stat-pill"><strong>{applications.length}</strong><span>Total aplikasi</span></div>
+                        <div className="stat-pill"><strong>{new Set(applications.map((app) => app.category)).size}</strong><span>Kategori</span></div>
+                    </div>
+                </div>
+
                 <div className="portofolio-toolbar">
                     <div className="portofolio-search">
                         <Search size={18} strokeWidth={2} />

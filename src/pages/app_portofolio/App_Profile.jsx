@@ -16,7 +16,7 @@ import {
     FileText,
     Mail,
 } from 'lucide-react';
-import Layout from '../../components/layout';
+import Layout from '../../components/Layout';
 import { applications } from './Application_Data';
 import '../../style/app_portofolio_style/App_Profile_Style.css';
 

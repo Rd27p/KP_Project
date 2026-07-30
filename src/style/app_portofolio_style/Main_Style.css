@@ -9,6 +9,91 @@
     margin: 0 auto;
 }
 
+.portofolio-hero-merged {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 28px 30px;
+    background: linear-gradient(135deg, var(--navy) 0%, #24365c 100%);
+    color: #fff;
+    border-radius: 20px;
+    box-shadow: var(--shadow-1);
+}
+
+.portofolio-hero-left {
+    flex: 1;
+    min-width: 0;
+}
+
+.portofolio-hero-right {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+.portofolio-hero-eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #8fa0c6;
+    margin-bottom: 6px;
+}
+
+.portofolio-hero-title {
+    font-size: 28px;
+    font-weight: 700;
+    font-family: 'Space Grotesk', sans-serif;
+    margin: 0 0 8px 0;
+    letter-spacing: -0.01em;
+}
+
+.portofolio-hero-desc {
+    font-size: 13px;
+    color: #d7def0;
+    line-height: 1.5;
+    margin: 0;
+    max-width: 480px;
+}
+
+/* Legacy hero styling for backward compatibility */
+.portofolio-hero {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 22px 24px;
+    background: linear-gradient(135deg, var(--navy) 0%, #24365c 100%);
+    color: #fff;
+    border-radius: 20px;
+    box-shadow: var(--shadow-1);
+}
+
+.stat-pill {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 12px 14px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.14);
+    min-width: 90px;
+}
+
+.stat-pill strong {
+    font-size: 16px;
+    font-weight: 700;
+    color: #fff;
+}
+
+.stat-pill span {
+    font-size: 11px;
+    color: #d7def0;
+    margin-top: 2px;
+}
+
 .portofolio-toolbar {
     display: flex;
     align-items: center;
@@ -23,12 +108,11 @@
     gap: 10px;
     flex: 1;
     min-width: 240px;
-    padding: 12px 18px;
-    background: #E7E7E7;
+    padding: 12px 16px;
+    background: var(--card);
     border-radius: 14px;
-    box-shadow: inset 4px 4px 10px #C5C5C5,
-                inset -4px -4px 10px #FFFFFF;
-    color: #7A7A7A;
+    box-shadow: var(--shadow-1);
+    color: var(--ink-soft);
 }
 
 .portofolio-search input {
@@ -39,11 +123,11 @@
     font-family: 'Inter', sans-serif;
     font-size: 14px;
     font-weight: 500;
-    color: #1F2A44;
+    color: var(--ink);
 }
 
 .portofolio-search input::placeholder {
-    color: #7A7A7A;
+    color: var(--ink-soft);
 }
 
 .portofolio-add-btn {
@@ -90,30 +174,29 @@
 }
 
 .filter-chip {
-    padding: 9px 18px;
-    background: #E7E7E7;
-    border: none;
-    border-radius: 20px;
+    padding: 9px 16px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 999px;
     font-family: 'Inter', sans-serif;
     font-size: 13px;
     font-weight: 600;
-    color: #7A7A7A;
+    color: var(--ink-soft);
     cursor: pointer;
-    box-shadow: 4px 4px 10px #C5C5C5,
-                -4px -4px 10px #FFFFFF;
+    box-shadow: var(--shadow-1);
     transition: all 0.2s ease;
     white-space: nowrap;
 }
 
 .filter-chip:hover {
-    color: #D3324A;
+    color: var(--red);
 }
 
 .filter-chip.active {
-    color: #FFFFFF;
-    background: linear-gradient(135deg, #D3324A 0%, #A50224 100%);
-    box-shadow: inset 2px 2px 6px #A50224,
-                inset -2px -2px 6px #D3324A;
+    color: #fff;
+    background: linear-gradient(135deg, var(--red) 0%, var(--red-deep) 100%);
+    border-color: transparent;
+    box-shadow: 0 6px 16px rgba(213, 50, 74, 0.24);
 }
 
 .app-card-grid {
@@ -126,19 +209,18 @@
     display: flex;
     flex-direction: column;
     gap: 14px;
-    background: #E7E7E7;
-    padding: 22px;
-    border-radius: 20px;
-    box-shadow: 8px 8px 18px #C5C5C5,
-                -8px -8px 18px #FFFFFF;
+    background: var(--card);
+    padding: 20px;
+    border-radius: 18px;
+    border: 1px solid #eef0f5;
+    box-shadow: 0 12px 28px rgba(31, 42, 68, 0.06);
     transition: transform 0.25s ease, box-shadow 0.25s ease;
     cursor: pointer;
 }
 
 .app-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 10px 10px 22px #C5C5C5,
-                -10px -10px 22px #FFFFFF;
+    transform: translateY(-3px);
+    box-shadow: 0 16px 34px rgba(31, 42, 68, 0.1);
 }
 
 .app-card-top {
@@ -217,11 +299,11 @@
 .portofolio-empty {
     text-align: center;
     padding: 40px 20px;
-    background: #E7E7E7;
+    background: var(--card);
     border-radius: 18px;
-    box-shadow: inset 4px 4px 10px #C5C5C5,
-                inset -4px -4px 10px #FFFFFF;
-    color: #7A7A7A;
+    border: 1px solid #eef0f5;
+    box-shadow: 0 12px 28px rgba(31, 42, 68, 0.06);
+    color: var(--ink-soft);
     font-size: 14px;
     font-weight: 500;
 }
