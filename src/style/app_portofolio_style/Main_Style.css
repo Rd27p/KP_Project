@@ -7,6 +7,7 @@
     font-family: 'Inter', 'Segoe UI', sans-serif;
     max-width: 1100px;
     margin: 0 auto;
+    padding: 0 4px;
 }
 
 .portofolio-hero-merged {
@@ -14,7 +15,7 @@
     align-items: center;
     justify-content: space-between;
     gap: 24px;
-    padding: 28px 30px;
+    padding: 18px 20px;
     background: linear-gradient(135deg, var(--navy) 0%, #24365c 100%);
     color: #fff;
     border-radius: 20px;
