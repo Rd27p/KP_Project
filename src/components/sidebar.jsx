@@ -43,7 +43,6 @@ const navItems = [
 ];
 
 export default function Sidebar() {
-  // Grup dengan children dibuka default, meniru pola desain awal
   const [openGroups, setOpenGroups] = useState({ Request: true, Feedback: true });
 
   const toggleGroup = (label) => {
