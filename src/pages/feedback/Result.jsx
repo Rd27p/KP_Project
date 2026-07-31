@@ -1,14 +1,13 @@
 import { useState } from 'react';
 import {
     FileText,
-    FolderOpen,
-    CheckCircle2,
     ArrowLeft,
     Check,
     MessageSquareWarning,
 } from 'lucide-react';
 import Layout from '../../components/Layout';
-import ProgressBarList from '../../components/ProgressBar';
+import ProgressBar from '../../components/ProgressBar';
+import Table from '../../components/Table';
 import '../../style/feedback_style/Main_Style.css';
 
 const complaintSources = [
@@ -26,13 +25,15 @@ const topCategories = [
     { label: 'RH Visit', value: 58 },
     { label: 'KPI', value: 45 },
 ];
+const maxCategoryValue = Math.max(...topCategories.map((c) => c.value));
 
 const resolutionStatus = [
-    { label: 'Already Resolved', count: 512, tone: 'resolved' },
-    { label: 'Closed by Dev', count: 188, tone: 'closed' },
-    { label: 'Check', count: 96, tone: 'check' },
-    { label: 'None', count: 89, tone: 'none' },
+    { label: 'Already Resolved', count: 512, tone: 'resolved', color: 'var(--green)' },
+    { label: 'Closed by Dev', count: 188, tone: 'closed', color: 'var(--navy)' },
+    { label: 'Check', count: 96, tone: 'check', color: 'var(--amber)' },
+    { label: 'None', count: 89, tone: 'none', color: 'var(--ink-soft)' },
 ];
+const totalResolution = resolutionStatus.reduce((sum, item) => sum + item.count, 0);
 
 const complainSteps = [
     { id: 1, label: 'Personal Information' },
@@ -53,6 +54,40 @@ const initialComplainData = {
     role: '',
     description: '',
 };
+
+const sourceColumns = [
+    { key: 'label', label: 'Source' },
+    { key: 'value', label: 'Complaints', className: 'table-num' },
+    {
+        key: 'share',
+        label: 'Share',
+        className: 'table-num',
+        render: (row) => `${((row.value / totalComplaint) * 100).toFixed(1)}%`,
+    },
+];
+
+const resolutionColumns = [
+    {
+        key: 'label',
+        label: 'Status',
+        render: (row) => (
+            <span className="table-status-cell">
+                <span className="status-dot" style={{ background: row.color }} />
+                {row.label}
+            </span>
+        ),
+    },
+    { key: 'count', label: 'Count', className: 'table-num' },
+    {
+        key: 'progress',
+        label: 'Proportion',
+        render: (row) => (
+            <div className="table-progress-cell">
+                <ProgressBar value={(row.count / totalResolution) * 100} color={row.color} height={7} />
+            </div>
+        ),
+    },
+];
 
 function Result() {
     const [view, setView] = useState('dashboard'); // 'dashboard' | 'complain'
@@ -88,7 +123,7 @@ function Result() {
     if (view === 'complain') {
         if (submitted) {
             return (
-                <Layout title="Feedback">
+                <Layout>
                     <div className="feedback-content">
                         <div className="feedback-success">
                             <div className="feedback-success-icon">
@@ -110,7 +145,7 @@ function Result() {
         }
 
         return (
-            <Layout title="Feedback">
+            <Layout>
                 <div className="feedback-content">
                     <button className="feedback-back-btn" onClick={backToDashboard}>
                         <ArrowLeft size={16} strokeWidth={2} />
@@ -132,11 +167,7 @@ function Result() {
                                                 : ''
                                         }`}
                                     >
-                                        {currentStep > step.id ? (
-                                            <Check size={14} strokeWidth={3} />
-                                        ) : (
-                                            step.id
-                                        )}
+                                        {currentStep > step.id ? <Check size={14} strokeWidth={3} /> : step.id}
                                     </div>
                                     <span
                                         className={`feedback-stepper-label ${
@@ -146,9 +177,7 @@ function Result() {
                                         {step.label}
                                     </span>
                                 </div>
-                                {index < complainSteps.length - 1 && (
-                                    <div className="feedback-stepper-line" />
-                                )}
+                                {index < complainSteps.length - 1 && <div className="feedback-stepper-line" />}
                             </div>
                         ))}
                     </div>
@@ -329,69 +358,73 @@ function Result() {
     }
 
     return (
-        <Layout title="Feedback">
+        <Layout>
             <div className="feedback-content">
-                <div className="feedback-toolbar">
-                    <div>
-                        <h1 className="feedback-title">Result Feedback</h1>
-                        <p className="feedback-subtitle">
-                            Ringkasan keluhan dan umpan balik pengguna dari seluruh sumber.
-                        </p>
+                {/* Merged hero: title/subtitle/button on top, stat below, all inside the navy card */}
+                <div className="feedback-hero-card">
+                    <div className="feedback-hero-top">
+                        <div>
+                            <h1 className="feedback-hero-title">Result Feedback</h1>
+                            <p className="feedback-hero-subtitle">
+                                Ringkasan keluhan dan umpan balik pengguna dari seluruh sumber.
+                            </p>
+                        </div>
+                        <button className="feedback-complain-btn" onClick={() => setView('complain')}>
+                            <MessageSquareWarning size={18} strokeWidth={2.2} />
+                            I Want to Complain
+                        </button>
                     </div>
-                    <button className="feedback-complain-btn" onClick={() => setView('complain')}>
-                        <MessageSquareWarning size={18} strokeWidth={2.2} />
-                        I Want to Complain
-                    </button>
-                </div>
 
-                <div className="feedback-stats-grid">
-                    <div className="feedback-stat-card feedback-stat-total">
-                        <div className="feedback-stat-icon">
+                    <div className="feedback-hero-stat">
+                        <div className="feedback-hero-icon">
                             <FileText size={22} strokeWidth={2.2} color="#FFFFFF" />
                         </div>
-                        <div className="feedback-stat-info">
-                            <span className="feedback-stat-value">{totalComplaint}</span>
-                            <span className="feedback-stat-label">Total Complaint</span>
+                        <div>
+                            <span className="feedback-hero-value">{totalComplaint}</span>
+                            <span className="feedback-hero-label">Total Complaint (all sources)</span>
                         </div>
                     </div>
-
-                    {complaintSources.map((source) => (
-                        <div className="feedback-stat-card" key={source.label}>
-                            <div className="feedback-stat-icon feedback-stat-icon-muted">
-                                <FolderOpen size={20} strokeWidth={2} />
-                            </div>
-                            <div className="feedback-stat-info">
-                                <span className="feedback-stat-value">{source.value}</span>
-                                <span className="feedback-stat-label">{source.label}</span>
-                            </div>
-                        </div>
-                    ))}
                 </div>
 
                 <div className="feedback-split">
-                    <ProgressBarList title="Top Complaint Category" data={topCategories} />
-
-                    <div className="feedback-resolution-card">
-                        <h2 className="feedback-resolution-title">Complaint Resolution Status</h2>
-                        <div className="feedback-resolution-list">
-                            {resolutionStatus.map((item) => (
-                                <div className="feedback-resolution-row" key={item.label}>
-                                    <div className="feedback-resolution-left">
-                                        <CheckCircle2
-                                            size={16}
-                                            strokeWidth={2}
-                                            className={`feedback-resolution-icon feedback-resolution-icon-${item.tone}`}
-                                        />
-                                        <span>{item.label}</span>
+                    <div className="panel">
+                        <div className="panel-head">
+                            <div>
+                                <div className="panel-title">Top Complaint Category</div>
+                                <div className="panel-note">Share of total by issue type</div>
+                            </div>
+                        </div>
+                        <div className="category-list">
+                            {topCategories.map((cat) => (
+                                <div className="category-row" key={cat.label}>
+                                    <div className="category-row-top">
+                                        <span>{cat.label}</span>
+                                        <span className="category-value">{cat.value}</span>
                                     </div>
-                                    <span className={`feedback-resolution-badge feedback-resolution-badge-${item.tone}`}>
-                                        {item.count}
-                                    </span>
+                                    <ProgressBar
+                                        value={(cat.value / maxCategoryValue) * 100}
+                                        color="var(--red)"
+                                        height={7}
+                                    />
                                 </div>
                             ))}
                         </div>
                     </div>
+
+                    <Table
+                        title="Complaint Sources"
+                        columns={sourceColumns}
+                        data={complaintSources}
+                        emptyMessage="Belum ada sumber keluhan."
+                    />
                 </div>
+
+                <Table
+                    title="Complaint Resolution Status"
+                    columns={resolutionColumns}
+                    data={resolutionStatus}
+                    emptyMessage="Belum ada data resolusi."
+                />
             </div>
         </Layout>
     );
