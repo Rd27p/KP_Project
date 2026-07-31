@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Check, Download } from 'lucide-react';
+import { Check, Download, ListChecks } from 'lucide-react';
 import Layout from '../../components/Layout';
 import '../../style/request_style/Main_Style.css';
 
@@ -41,7 +41,7 @@ function UseCaseRegis() {
 
     if (submitted) {
         return (
-            <Layout title="Use Case Request">
+            <Layout>
                 <div className="request-content">
                     <div className="request-success">
                         <div className="request-success-icon">
@@ -62,9 +62,22 @@ function UseCaseRegis() {
     }
 
     return (
-        <Layout title="Use Case Request">
+        <Layout>
             <div className="request-content">
                 <div className="request-breadcrumb">Request / Use Case Request</div>
+
+                {/* Page header, matches AppRegis/BotRegis pattern */}
+                <div className="request-page-header">
+                    <div className="request-page-header-icon">
+                        <ListChecks size={22} strokeWidth={2.2} color="#FFFFFF" />
+                    </div>
+                    <div>
+                        <h1 className="request-page-header-title">Use Case Request</h1>
+                        <p className="request-page-header-subtitle">
+                            Ajukan use case baru untuk aplikasi yang sudah terdaftar, lengkap dengan dokumen pendukung.
+                        </p>
+                    </div>
+                </div>
 
                 {/* Tabs */}
                 <div className="request-tabs">

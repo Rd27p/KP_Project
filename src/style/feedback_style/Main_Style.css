@@ -255,6 +255,89 @@
     min-width: 140px;
 }
 
+/* Page header used by BotRegis (icon + title + subtitle) */
+.regis-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: var(--card);
+    border-radius: 18px;
+    padding: 20px 22px;
+    box-shadow: var(--shadow-1);
+}
+
+.regis-header-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-2) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.regis-header-title {
+    font-family: var(--font-display);
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--ink);
+    margin: 0;
+}
+
+.regis-header-subtitle {
+    margin-top: 4px;
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    line-height: 1.5;
+}
+
+/* Small inline hint under a field */
+.form-hint {
+    font-size: 11.5px;
+    color: var(--ink-soft);
+}
+
+.form-hint-center {
+    text-align: center;
+    margin-top: -4px;
+}
+
+/* Category chips (BotRegis step 2) */
+.feedback-category-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+
+.feedback-category-chip {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 11px 14px;
+    background: var(--surface);
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink);
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: all 0.2s ease;
+}
+
+.feedback-category-chip input {
+    display: none;
+}
+
+.feedback-category-chip:hover {
+    border-color: var(--line);
+}
+
+.feedback-category-chip.active {
+    color: #fff;
+    background: linear-gradient(135deg, var(--red) 0%, var(--red-deep) 100%);
+}
+
 /* Stepper (complain form) */
 .feedback-stepper {
     display: flex;
@@ -509,6 +592,9 @@
     .feedback-stepper {
         overflow-x: auto;
     }
+    .feedback-category-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
 }
 
 @media (max-width: 600px) {
@@ -524,5 +610,11 @@
     }
     .feedback-stepper-label {
         display: none;
+    }
+    .feedback-category-grid {
+        grid-template-columns: 1fr;
+    }
+    .regis-header {
+        align-items: flex-start;
     }
 }

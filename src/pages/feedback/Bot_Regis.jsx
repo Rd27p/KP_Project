@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Check, Bot } from 'lucide-react';
+import { Check, Bot, ArrowLeft } from 'lucide-react';
 import Layout from '../../components/Layout';
 import { applications } from '../app_portofolio/Application_Data';
 import '../../style/feedback_style/Main_Style.css';
@@ -68,7 +68,7 @@ function BotRegis() {
 
     if (submitted) {
         return (
-            <Layout title="Feedback">
+            <Layout>
                 <div className="feedback-content">
                     <div className="feedback-success">
                         <div className="feedback-success-icon">
@@ -80,8 +80,8 @@ function BotRegis() {
                             di channel <strong>{formData.telegramChannel}</strong>. Tiket dari bot
                             akan diteruskan ke helpdesk yang terdaftar.
                         </p>
-                        <button className="feedback-btn-primary" onClick={() => navigate('/feedback')}>
-                            Kembali ke Feedback
+                        <button className="feedback-btn-primary" onClick={() => navigate('/feedback/result')}>
+                            Kembali ke Result Feedback
                         </button>
                     </div>
                 </div>
@@ -90,9 +90,25 @@ function BotRegis() {
     }
 
     return (
-        <Layout title="Feedback">
+        <Layout>
             <div className="feedback-content">
-                <div className="feedback-breadcrumb">Leave Feedback / Bot Registration</div>
+                <button className="feedback-back-btn" onClick={() => navigate('/feedback/result')}>
+                    <ArrowLeft size={16} strokeWidth={2} />
+                    Kembali
+                </button>
+
+                {/* Page header, no "Feedback" wording anywhere */}
+                <div className="regis-header">
+                    <div className="regis-header-icon">
+                        <Bot size={22} strokeWidth={2.2} color="#FFFFFF" />
+                    </div>
+                    <div>
+                        <h1 className="regis-header-title">Register Telegram Bot</h1>
+                        <p className="regis-header-subtitle">
+                            Daftarkan bot Telegram untuk aplikasi kamu agar tiket otomatis masuk ke helpdesk terkait.
+                        </p>
+                    </div>
+                </div>
 
                 {/* Stepper */}
                 <div className="feedback-stepper">
@@ -164,6 +180,9 @@ function BotRegis() {
                                         onChange={handleChange}
                                         disabled={!formData.application}
                                     />
+                                    {!formData.application && (
+                                        <span className="form-hint">Pilih aplikasi dulu untuk mengisi kolom ini.</span>
+                                    )}
                                 </div>
 
                                 <div className="form-group">
@@ -172,7 +191,7 @@ function BotRegis() {
                                         id="joinLink"
                                         name="joinLink"
                                         type="text"
-                                        placeholder="https://t.me/..."
+                                        placeholder="https://t.me/... (opsional)"
                                         value={formData.joinLink}
                                         onChange={handleChange}
                                     />
@@ -215,7 +234,7 @@ function BotRegis() {
                         <>
                             <span className="feedback-form-badge">Ticket Categories</span>
                             <p className="feedback-form-note">
-                                Pilih kategori tiket yang akan ditangani oleh bot ini.
+                                Pilih kategori tiket yang akan ditangani oleh bot ini. Minimal satu kategori.
                             </p>
 
                             <div className="feedback-category-grid">
@@ -237,6 +256,12 @@ function BotRegis() {
                                     );
                                 })}
                             </div>
+
+                            {formData.categories.length > 0 && (
+                                <p className="form-hint form-hint-center">
+                                    {formData.categories.length} kategori dipilih
+                                </p>
+                            )}
 
                             <div className="feedback-form-actions">
                                 <button className="feedback-btn-secondary" onClick={handleBack}>
