@@ -102,6 +102,7 @@ export default function Sidebar() {
           }
 
           return (
+            
             <NavLink
               key={item.path}
               to={item.path}

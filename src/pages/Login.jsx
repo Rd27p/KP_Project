@@ -25,9 +25,9 @@ function Login() {
     return (
         <div className="login-container">
             <div className="login-card">
-                <div className="login-badge">NOAH Application Hub</div>
+                <div className="login-badge">Application Hub</div>
                 <h2>Welcome back</h2>
-                <p className="login-subtitle">Masuk dengan akun perusahaan untuk melihat aplikasi, akses, dan status permintaan.</p>
+                <p className="login-subtitle">Log in with your company account to view applications, access, and request status.</p>
                 {error && <div className="error-message">{error}</div>}
                 <form onSubmit={handleSubmit} className="login-form">
                     <div className="form-group">
@@ -51,13 +51,13 @@ function Login() {
                         />
                     </div>
                     <button type="submit" className="login-btn">
-                        Masuk ke dashboard
+                        Log In
                     </button>
                 </form>
 
                 <div className="login-help-card">
-                    <div className="login-help-title">Butuh bantuan?</div>
-                    <div className="login-help-text">Gunakan akun SSO perusahaan Anda. Jika belum memiliki akses, hubungi admin atau tim support.</div>
+                    <div className="login-help-title">Need Help?</div>
+                    <div className="login-help-text">Use your company SSO account. If you do not yet have access, contact the administrator or the support team.</div>
                 </div>
             </div>
         </div>
