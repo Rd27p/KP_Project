@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Check } from 'lucide-react';
+import { Check, ClipboardList } from 'lucide-react';
 import Layout from '../../components/Layout';
 import '../../style/request_style/Main_Style.css';
 
@@ -69,7 +69,7 @@ function AppRegis() {
 
     if (submitted) {
         return (
-            <Layout title="Application Registration">
+            <Layout>
                 <div className="request-content">
                     <div className="request-success">
                         <div className="request-success-icon">
@@ -90,9 +90,22 @@ function AppRegis() {
     }
 
     return (
-        <Layout title="Application Registration">
+        <Layout>
             <div className="request-content">
                 <div className="request-breadcrumb">Request / Application Registration</div>
+
+                {/* Page header, no "Feedback" wording, matches BotRegis pattern */}
+                <div className="request-page-header">
+                    <div className="request-page-header-icon">
+                        <ClipboardList size={22} strokeWidth={2.2} color="#FFFFFF" />
+                    </div>
+                    <div>
+                        <h1 className="request-page-header-title">Application Registration</h1>
+                        <p className="request-page-header-subtitle">
+                            Daftarkan aplikasi baru beserta detail teknis dan pemilik asetnya.
+                        </p>
+                    </div>
+                </div>
 
                 {/* Stepper */}
                 <div className="request-stepper">
