@@ -56,10 +56,16 @@ h1, h2, h3, .display {
   display: grid;
   grid-template-columns: 250px 1fr;
   min-height: 100vh;
+  transition: grid-template-columns 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.app-shell.collapsed {
+  grid-template-columns: 74px 1fr;
 }
 
 .app-shell .main {
   padding: 26px 34px 50px 34px;
+  min-width: 0;
 }
 
 ::selection {

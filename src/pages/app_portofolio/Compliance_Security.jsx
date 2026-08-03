@@ -51,7 +51,7 @@ function ComplianceSecurity() {
 
     if (!app) {
         return (
-            <Layout title="Compliance & Security">
+            <Layout>
                 <div className="profile-notfound">
                     <p>Aplikasi tidak ditemukan.</p>
                     <button className="profile-back-btn" onClick={() => navigate('/applications')}>
@@ -76,7 +76,7 @@ function ComplianceSecurity() {
     const hasAnyContent = complianceItems.length > 0 || complianceStandards.length > 0 || app.piiHandling;
 
     return (
-        <Layout title="Compliance & Security">
+        <Layout>
             <div className="app-profile-content">
                 <button className="profile-back-btn" onClick={() => navigate('/applications')}>
                     <ArrowLeft size={16} strokeWidth={2} />

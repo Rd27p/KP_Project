@@ -12,6 +12,7 @@ import {
     ChevronLeft,
     ChevronRight,
     Command,
+    Sparkles,
 } from 'lucide-react';
 import Layout from '../../components/Layout';
 import { applications } from './Application_Data';
@@ -22,6 +23,164 @@ const statusColor = {
     Maintenance: 'badge-maintenance',
     Inactive: 'badge-inactive',
 };
+
+const statusDotColor = {
+    Active: '#1E8E52',
+    Maintenance: '#E8720C',
+    Inactive: '#9AA1B4',
+};
+
+const GALAXY_PALETTE = ['#D3324A', '#1F2A44', '#1E8E52', '#E8720C', '#6C5CE7', '#00A8B5', '#B5406A'];
+const GOLDEN_ANGLE = 137.508 * (Math.PI / 180);
+
+/**
+ * GalaxyView
+ * ----------------
+ * Alternatif dari List/Grid yang sengaja dibuat "di luar ekspektasi": tiap kategori
+ * jadi hub yang besarnya proporsional dengan jumlah aplikasi di dalamnya, dan tiap
+ * aplikasi jadi titik kecil yang tersebar mengorbit hub-nya dengan pola phyllotaxis
+ * (pola sunflower/bunga matahari) — bukan grid kaku, tapi organik.
+ *
+ * Twist utamanya: mengetik di search TIDAK menghilangkan titik. Titik yang cocok
+ * menyala terang & sedikit membesar, sisanya cuma meredup. Peta ini jadi stabil dari
+ * waktu ke waktu, jadi orang lama-lama hafal "di mana" app favoritnya berada—alih-alih
+ * layout yang selalu reflow setiap kali mengetik seperti list/grid biasa.
+ */
+function GalaxyView({ allApps, categories, isMatch, navigate }) {
+    const [hoveredApp, setHoveredApp] = useState(null);
+    const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 });
+
+    const width = 960;
+    const height = 560;
+    const center = { x: width / 2, y: height / 2 };
+
+    const groups = useMemo(() => {
+        return categories.map((category) => ({
+            category,
+            apps: allApps.filter((app) => app.category === category),
+        }));
+    }, [allApps, categories]);
+
+    const maxCount = Math.max(1, ...groups.map((g) => g.apps.length));
+    const outerRadius = Math.min(230, 110 + groups.length * 16);
+    const minHubR = 30;
+    const maxHubR = 92;
+
+    function hubRadiusFor(count) {
+        const t = Math.sqrt(count / maxCount);
+        return minHubR + t * (maxHubR - minHubR);
+    }
+
+    function handleDotEnter(app, e) {
+        setHoveredApp(app);
+        setTooltipPos({ x: e.clientX, y: e.clientY });
+    }
+
+    function handleDotMove(e) {
+        setTooltipPos({ x: e.clientX, y: e.clientY });
+    }
+
+    return (
+        <div className="galaxy-frame">
+            <svg viewBox={`0 0 ${width} ${height}`} className="galaxy-svg" role="img" aria-label="Peta orbit aplikasi per kategori">
+                {groups.map((group, gi) => {
+                    const angle = (2 * Math.PI * gi) / groups.length - Math.PI / 2;
+                    const hubX = center.x + outerRadius * Math.cos(angle);
+                    const hubY = center.y + outerRadius * Math.sin(angle);
+                    const hubR = hubRadiusFor(group.apps.length);
+                    const color = GALAXY_PALETTE[gi % GALAXY_PALETTE.length];
+
+                    return (
+                        <g key={group.category}>
+                            <circle
+                                cx={hubX}
+                                cy={hubY}
+                                r={hubR}
+                                fill={color}
+                                fillOpacity={0.08}
+                                stroke={color}
+                                strokeOpacity={0.35}
+                                strokeWidth={1.5}
+                            />
+                            <text
+                                x={hubX}
+                                y={hubY - hubR - 10}
+                                textAnchor="middle"
+                                fontFamily="Space Grotesk, sans-serif"
+                                fontWeight="700"
+                                fontSize="13"
+                                fill={color}
+                            >
+                                {group.category}
+                            </text>
+                            <text
+                                x={hubX}
+                                y={hubY - hubR + 4}
+                                textAnchor="middle"
+                                fontFamily="Inter, sans-serif"
+                                fontSize="10.5"
+                                fill="var(--ink-soft)"
+                            >
+                                {group.apps.length} app
+                            </text>
+
+                            {group.apps.map((app, ai) => {
+                                const t = (ai + 0.5) / group.apps.length;
+                                const r = hubR * 0.82 * Math.sqrt(t);
+                                const theta = ai * GOLDEN_ANGLE;
+                                const dx = hubX + r * Math.cos(theta);
+                                const dy = hubY + r * Math.sin(theta);
+                                const matched = isMatch(app);
+
+                                return (
+                                    <circle
+                                        key={app.id}
+                                        cx={dx}
+                                        cy={dy}
+                                        r={matched ? 5.5 : 4}
+                                        fill={statusDotColor[app.status] || '#9AA1B4'}
+                                        opacity={matched ? 1 : 0.2}
+                                        stroke={matched ? '#fff' : 'none'}
+                                        strokeWidth={matched ? 1.5 : 0}
+                                        style={{ cursor: 'pointer', transition: 'opacity 0.2s ease, r 0.2s ease' }}
+                                        onMouseEnter={(e) => handleDotEnter(app, e)}
+                                        onMouseMove={handleDotMove}
+                                        onMouseLeave={() => setHoveredApp(null)}
+                                        onClick={() => navigate(`/applications/${app.id}`)}
+                                    />
+                                );
+                            })}
+                        </g>
+                    );
+                })}
+            </svg>
+
+            <div className="galaxy-legend">
+                {Object.entries(statusDotColor).map(([status, color]) => (
+                    <div className="galaxy-legend-item" key={status}>
+                        <span className="galaxy-legend-dot" style={{ background: color }} />
+                        {status}
+                    </div>
+                ))}
+                <div className="galaxy-legend-note">Ukuran hub = jumlah aplikasi · titik terang = cocok dengan pencarian</div>
+            </div>
+
+            {hoveredApp && (
+                <div
+                    className="galaxy-tooltip"
+                    style={{ left: tooltipPos.x + 16, top: tooltipPos.y + 16 }}
+                >
+                    <div className="galaxy-tooltip-name">{hoveredApp.name}</div>
+                    <div className="galaxy-tooltip-meta">{hoveredApp.category} · {hoveredApp.owner}</div>
+                    <div className="galaxy-tooltip-row">
+                        <span className={`status-badge ${statusColor[hoveredApp.status]}`}>{hoveredApp.status}</span>
+                        <span className="galaxy-tooltip-updated">{hoveredApp.updated}</span>
+                    </div>
+                </div>
+            )}
+        </div>
+    );
+}
 
 const PAGE_SIZE = 24;
 
@@ -54,6 +213,16 @@ function AppPortofolioMain() {
             return matchesSearch && matchesCategory;
         });
     }, [searchTerm, activeCategory]);
+
+    // Dipakai khusus oleh Galaxy view: predikat yang sama dengan filteredApps,
+    // tapi tidak menghapus item dari render—cuma menentukan mana yang "menyala".
+    const isMatch = (app) => {
+        const matchesSearch =
+            app.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            app.category.toLowerCase().includes(searchTerm.toLowerCase());
+        const matchesCategory = activeCategory === 'All' || app.category === activeCategory;
+        return matchesSearch && matchesCategory;
+    };
 
     const sortedApps = useMemo(() => {
         const dir = sortConfig.dir === 'asc' ? 1 : -1;
@@ -198,17 +367,15 @@ function AppPortofolioMain() {
                         <Search size={18} strokeWidth={2} />
                         <input
                             type="text"
-                            placeholder="Cari aplikasi atau kategori..."
+                            placeholder="Cari aplikasi, kategori, owner..."
                             value={searchTerm}
                             onChange={(e) => handleSearchChange(e.target.value)}
                         />
+                        <button type="button" className="search-cmdk-badge" onClick={openPalette} title="Buka pencarian cepat (⌘K)">
+                            <Command size={12} strokeWidth={2} />
+                            <span>⌘K</span>
+                        </button>
                     </div>
-                    <button type="button" className="cmdk-hint-btn" onClick={openPalette}>
-                        <Command size={14} strokeWidth={2} />
-                        Cari cepat
-                        <span className="cmdk-kbd">⌘</span>
-                        <span className="cmdk-kbd">K</span>
-                    </button>
                     <button className="portofolio-add-btn">
                         <Plus size={18} strokeWidth={2.2} />
                         Tambah Aplikasi
@@ -228,7 +395,11 @@ function AppPortofolioMain() {
                 </div>
 
                 <div className="portofolio-view-row">
-                    <p className="portofolio-count">{filteredApps.length} aplikasi ditemukan</p>
+                    <p className="portofolio-count">
+                        {viewMode === 'galaxy'
+                            ? `Menyorot ${filteredApps.length} dari ${applications.length} aplikasi`
+                            : `${filteredApps.length} aplikasi ditemukan`}
+                    </p>
                     <div className="view-toggle" role="tablist" aria-label="Mode tampilan">
                         <button
                             type="button"
@@ -246,10 +417,25 @@ function AppPortofolioMain() {
                             <LayoutGrid size={14} strokeWidth={2} />
                             Grid
                         </button>
+                        <button
+                            type="button"
+                            className={`view-toggle-btn view-toggle-btn-galaxy ${viewMode === 'galaxy' ? 'active' : ''}`}
+                            onClick={() => handleViewModeChange('galaxy')}
+                        >
+                            <Sparkles size={14} strokeWidth={2} />
+                            Galaxy
+                        </button>
                     </div>
                 </div>
 
-                {filteredApps.length === 0 ? (
+                {viewMode === 'galaxy' ? (
+                    <GalaxyView
+                        allApps={applications}
+                        categories={categories.filter((c) => c !== 'All')}
+                        isMatch={isMatch}
+                        navigate={navigate}
+                    />
+                ) : filteredApps.length === 0 ? (
                     <div className="portofolio-empty">
                         Tidak ada aplikasi yang cocok dengan pencarian atau filter.
                     </div>
@@ -342,7 +528,7 @@ function AppPortofolioMain() {
                     </div>
                 )}
 
-                {filteredApps.length > PAGE_SIZE && (
+                {viewMode !== 'galaxy' && filteredApps.length > PAGE_SIZE && (
                     <div className="pagination">
                         <button
                             type="button"

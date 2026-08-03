@@ -52,7 +52,7 @@ function TechInfo() {
 
     if (!app) {
         return (
-            <Layout title="Tech Info">
+            <Layout>
                 <div className="profile-notfound">
                     <p>Aplikasi tidak ditemukan.</p>
                     <button className="profile-back-btn" onClick={() => navigate('/applications')}>
@@ -78,7 +78,7 @@ function TechInfo() {
     const hasAnyContent = techItems.length > 0 || techStack.length > 0;
 
     return (
-        <Layout title="Tech Info">
+        <Layout>
             <div className="app-profile-content">
                 <button className="profile-back-btn" onClick={() => navigate('/applications')}>
                     <ArrowLeft size={16} strokeWidth={2} />
