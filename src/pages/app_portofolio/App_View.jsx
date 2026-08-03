@@ -172,7 +172,7 @@ function AppView() {
 
     if (!app) {
         return (
-            <Layout title="App View">
+            <Layout>
                 <div className="profile-notfound">
                     <p>Aplikasi tidak ditemukan.</p>
                     <button className="profile-back-btn" onClick={() => navigate('/applications')}>
@@ -185,7 +185,7 @@ function AppView() {
     }
 
     return (
-        <Layout title="App View">
+        <Layout>
             <div className="app-profile-content">
                 <button className="profile-back-btn" onClick={() => navigate('/applications')}>
                     <ArrowLeft size={16} strokeWidth={2} />

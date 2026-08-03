@@ -6,6 +6,24 @@ import '../style/Layout_Style.css';
 
 export default function Layout({ children, title, subtitle, showSearch = false }) {
   const [isChatOpen, setIsChatOpen] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(() => {
+    try {
+      return localStorage.getItem('sidebar_collapsed') === 'true';
+    } catch {
+      return false;
+    }
+  });
+
+  const toggleSidebar = () => {
+    setIsCollapsed((prev) => {
+      const next = !prev;
+      try {
+        localStorage.setItem('sidebar_collapsed', String(next));
+      } catch {}
+      return next;
+    });
+  };
+
   const [user] = useState(() => {
     try {
       const stored = localStorage.getItem('user');
@@ -16,8 +34,8 @@ export default function Layout({ children, title, subtitle, showSearch = false }
   });
 
   return (
-    <div className="app-shell">
-      <Sidebar />
+    <div className={`app-shell ${isCollapsed ? 'collapsed' : ''}`}>
+      <Sidebar isCollapsed={isCollapsed} onToggle={toggleSidebar} />
       <main className="main">
         <Header
           user={user}

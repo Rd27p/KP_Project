@@ -152,7 +152,6 @@ function Result() {
                         Kembali ke Result Feedback
                     </button>
 
-                    <div className="feedback-breadcrumb">Leave Feedback / Complain</div>
 
                     <div className="feedback-stepper">
                         {complainSteps.map((step, index) => (

@@ -55,7 +55,7 @@ function UserAccessRegis() {
 
     if (success) {
         return (
-            <Layout title="User Access - Registration">
+            <Layout>
                 <div className="user-access-content">
                     <div className="user-access-success">
                         <div className="user-access-success-icon">
@@ -80,7 +80,7 @@ function UserAccessRegis() {
     }
 
     return (
-        <Layout title="User Access - Registration">
+        <Layout>
             <div className="user-access-content">
                 <button className="user-access-back-btn" onClick={() => navigate('/user-access')}>
                     <ArrowLeft size={16} strokeWidth={2} />

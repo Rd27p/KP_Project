@@ -64,7 +64,6 @@ function UseCaseRegis() {
     return (
         <Layout>
             <div className="request-content">
-                <div className="request-breadcrumb">Request / Use Case Request</div>
 
                 {/* Page header, matches AppRegis/BotRegis pattern */}
                 <div className="request-page-header">

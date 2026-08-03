@@ -4,13 +4,63 @@
   display: flex;
   flex-direction: column;
   gap: 6px;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow-x: hidden;
 }
 
 .brand {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 10px;
-  padding: 6px 10px 30px 10px;
+  padding: 6px 6px 30px 6px;
+}
+
+.brand-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sidebar-toggle-btn {
+  background: transparent;
+  border: none;
+  color: #8891ab;
+  padding: 6px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+}
+
+.sidebar-toggle-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
+.sidebar.collapsed {
+  padding: 28px 12px;
+  align-items: center;
+}
+
+.sidebar.collapsed .brand {
+  flex-direction: column;
+  padding: 0 0 24px 0;
+  gap: 14px;
+}
+
+.sidebar.collapsed .nav-list {
+  align-items: center;
+  width: 100%;
+}
+
+.sidebar.collapsed .nav-item {
+  justify-content: center;
+  padding: 12px;
+  width: 44px;
+  height: 44px;
 }
 
 .brand-mark {
@@ -59,6 +109,13 @@
   gap: 2px;
 }
 
+.nav-divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.12);
+  margin: 6px 6px;
+  width: auto;
+}
+
 .nav-item {
   display: flex;
   align-items: center;
@@ -83,7 +140,8 @@
   color: #fff;
 }
 
-.nav-item.active {
+.nav-item.active,
+.nav-item.parent-active {
   background: linear-gradient(135deg, var(--red) 0%, var(--red-deep) 100%);
   color: white;
   box-shadow: 0 6px 16px rgba(213, 50, 74, 0.35);

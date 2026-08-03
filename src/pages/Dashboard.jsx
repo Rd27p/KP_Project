@@ -13,6 +13,7 @@ import {
   Lock,
   CheckCircle2,
   ArrowUpDown,
+  Clock,
 } from 'lucide-react';
 import { Link, useSearchParams } from 'react-router-dom';
 import Layout from '../components/Layout';
@@ -89,16 +90,16 @@ const alarms = [
 ];
 
 const statusBreakdown = [
-  { label: 'Live', value: 109, pct: 85.2, tone: 'green' },
-  { label: 'On Review', value: 12, pct: 9.4, tone: 'amber' },
-  { label: 'Draft', value: 7, pct: 5.4, tone: 'neutral' },
+  { label: 'Live', value: 109, pct: 85.2, tone: 'green', delta: '+3' },
+  { label: 'On Review', value: 12, pct: 9.4, tone: 'amber', delta: '+1' },
+  { label: 'Draft', value: 7, pct: 5.4, tone: 'neutral', delta: '-2' },
 ];
 
 const tickets = [
-  { label: 'Request Baru', value: 24, icon: Inbox },
-  { label: 'Use Case', value: 9, icon: ClipboardList },
-  { label: 'Security Assessment', value: 5, icon: ShieldCheck },
-  { label: 'Complaint', value: 7, icon: MessageSquareWarning },
+  { label: 'Request Baru', value: 24, icon: Inbox, trend: '+5', trendType: 'up', link: '/request/app' },
+  { label: 'Use Case', value: 9, icon: ClipboardList, trend: '+2', trendType: 'up', link: '/request/use-case' },
+  { label: 'Security Assessment', value: 5, icon: ShieldCheck, trend: '0', trendType: 'neutral', link: '/feedback/result' },
+  { label: 'Complaint', value: 7, icon: MessageSquareWarning, trend: '+3', trendType: 'up', link: '/feedback/result' },
 ];
 
 const healthPulseLegend = [
@@ -123,6 +124,8 @@ const toneVar = {
   green: 'var(--green)',
   neutral: '#C7CCDA',
 };
+
+const lastUpdated = '03 Agu 2026, 15:38 WIB';
 
 function HealthPulseRing({ percent = 0, label = 'Sehat' }) {
   const radius = 70;
@@ -209,11 +212,18 @@ export default function Dashboard() {
       <div className="dashboard">
         <div className="dashboard-hero">
           <div>
-            <div className="dashboard-hero-eyebrow">Ringkasan operasional</div>
+            <div className="dashboard-hero-eyebrow">
+              <span className="pulse-dot" />
+              Ringkasan operasional
+            </div>
             <h2>Wujudkan visibilitas aplikasi dalam satu layar.</h2>
             <p>Pantau kesehatan aplikasi, alarm aktif, dan status permintaan tanpa harus berpindah halaman.</p>
+            <div className="last-updated-badge">
+              <Clock size={11} />
+              Diperbarui {lastUpdated}
+            </div>
           </div>
-          <Link to="/feedback/result" className="hero-action">Lihat alarm & status</Link>
+          <Link to="/feedback/result" className="hero-action">Lihat alarm &amp; status</Link>
         </div>
 
         {/* ---------- VIEW TABS ---------- */}
@@ -301,80 +311,145 @@ export default function Dashboard() {
 
         {/* ---------- EXECUTIVE SUMMARY ---------- */}
         {view === VIEWS.EXECUTIVE && (
-          <div className="grid-2">
-            <div className="panel">
-              <div className="panel-head">
-                <div>
-                  <div className="panel-title">Status Aplikasi</div>
-                  <div className="panel-note">Distribusi dari 128 aplikasi terdaftar</div>
-                </div>
-                <Link to="/applications" className="link-btn">Lihat semua aplikasi →</Link>
-              </div>
+          <>
+            {/* 3-column exec grid: Status | Health | Alarms */}
+            <div className="exec-grid">
 
-              <div className="status-bar">
-                {statusBreakdown.map((s, i) => (
-                  <div key={i} style={{ width: `${s.pct}%`, background: toneVar[s.tone] }} />
-                ))}
-              </div>
-              <div className="status-legend">
-                {statusBreakdown.map((s, i) => (
-                  <div className="status-legend-item" key={i}>
-                    <span className="status-legend-dot" style={{ background: toneVar[s.tone] }} />
-                    {s.label} <b>{s.value}</b>
+              {/* Status Breakdown */}
+              <div className="panel">
+                <div className="panel-head">
+                  <div>
+                    <div className="panel-title">Status Aplikasi</div>
+                    <div className="panel-note">Distribusi 128 aplikasi terdaftar</div>
                   </div>
-                ))}
-              </div>
-
-              <div className="panel-head" style={{ marginTop: 22 }}>
-                <div>
-                  <div className="panel-title" style={{ fontSize: 14 }}>
-                    Ringkasan Ticketing
-                  </div>
+                  <Link to="/applications" className="link-btn">Lihat semua →</Link>
                 </div>
-              </div>
-              <div className="ticket-grid">
-                {tickets.map((t) => {
-                  const Icon = t.icon;
-                  return (
-                    <div className="ticket-card" key={t.label}>
-                      <div className="ticket-icon">
-                        <Icon size={15} />
+
+                <div className="status-bar">
+                  {statusBreakdown.map((s, i) => (
+                    <div key={i} style={{ width: `${s.pct}%`, background: toneVar[s.tone] }} />
+                  ))}
+                </div>
+
+                <div className="status-breakdown-list">
+                  {statusBreakdown.map((s, i) => (
+                    <div className="status-breakdown-row" key={i}>
+                      <div className="status-breakdown-left">
+                        <span className="status-legend-dot" style={{ background: toneVar[s.tone] }} />
+                        <span className="status-breakdown-label">{s.label}</span>
                       </div>
-                      <div className="ticket-num">{t.value}</div>
-                      <div className="ticket-label">{t.label}</div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-
-            <div className="panel">
-              <div className="panel-head">
-                <div>
-                  <div className="panel-title">Health Pulse</div>
-                  <div className="panel-note">Rata-rata seluruh kategori</div>
-                </div>
-              </div>
-              <div className="ring-wrap">
-                <HealthPulseRing percent={92.6} />
-                <div className="ring-legend">
-                  {healthPulseLegend.map((l, i) => (
-                    <div className="ring-legend-item" key={i}>
-                      <span className="ring-legend-dot" style={{ background: toneVar[l.tone] }} />
-                      {l.label}
+                      <div className="status-breakdown-right">
+                        <span className="status-breakdown-count">{s.value}</span>
+                        <span className="status-breakdown-pct">{s.pct}%</span>
+                        <span className={`status-breakdown-delta ${s.delta.startsWith('+') ? 'delta-up' : 'delta-down'}`}>
+                          {s.delta}
+                        </span>
+                      </div>
                     </div>
                   ))}
                 </div>
-                <button
-                  type="button"
-                  className="link-btn"
-                  onClick={() => switchView(VIEWS.OPERATIONAL, HEALTH_SECTION_ID)}
-                >
-                  Lihat breakdown per kategori →
-                </button>
+              </div>
+
+              {/* Health Snapshot */}
+              <div className="panel">
+                <div className="panel-head">
+                  <div>
+                    <div className="panel-title">Health Pulse</div>
+                    <div className="panel-note">Rata-rata seluruh kategori</div>
+                  </div>
+                  <button
+                    type="button"
+                    className="link-btn"
+                    onClick={() => switchView(VIEWS.OPERATIONAL, HEALTH_SECTION_ID)}
+                  >
+                    Detail →
+                  </button>
+                </div>
+
+                <div className="health-snapshot-wrap">
+                  <HealthPulseRing percent={92.6} label="Sehat" />
+                  <div className="health-mini-list">
+                    {healthCategories.map((cat) => {
+                      const Icon = cat.icon;
+                      return (
+                        <div className="health-mini-row" key={cat.key}>
+                          <div className="health-mini-left">
+                            <span className="health-mini-icon" style={{ color: toneVar[cat.tone] }}>
+                              <Icon size={13} />
+                            </span>
+                            <span className="health-mini-label">{cat.label}</span>
+                          </div>
+                          <div className="health-mini-right">
+                            <ProgressBar value={cat.pct} color={toneVar[cat.tone]} height={6} />
+                            <span className="health-mini-pct" style={{ color: toneVar[cat.tone] }}>
+                              {cat.pct}%
+                            </span>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+
+              {/* Active Alarms */}
+              <div className="panel">
+                <div className="panel-head">
+                  <div>
+                    <div className="panel-title">Alarm Aktif</div>
+                    <div className="panel-note">3 memerlukan tindakan segera</div>
+                  </div>
+                  <button
+                    type="button"
+                    className="link-btn"
+                    onClick={() => switchView(VIEWS.OPERATIONAL, ALARM_SECTION_ID)}
+                  >
+                    Lihat semua →
+                  </button>
+                </div>
+
+                <div className="exec-alarm-list">
+                  {alarms.map((alarm, i) => (
+                    <div className={`exec-alarm-row ${alarm.severity}`} key={i}>
+                      <div className="exec-alarm-body">
+                        <div className="exec-alarm-title">{alarm.title}</div>
+                        <div className="exec-alarm-meta">{alarm.meta}</div>
+                      </div>
+                      <div className="exec-alarm-footer">
+                        <span className={`sev-chip sev-${alarm.severity}`}>
+                          {alarm.severity === 'critical' ? 'Critical' : 'Warning'}
+                        </span>
+                        <Link to={`/applications/${alarm.appSlug}`} className="alarm-action">
+                          Tindak →
+                        </Link>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
-          </div>
+
+            {/* Ticket Action Row */}
+            <div className="exec-actions">
+              {tickets.map((t) => {
+                const Icon = t.icon;
+                return (
+                  <Link to={t.link || '#'} className="exec-action-card" key={t.label}>
+                    <div className="exec-action-top">
+                      <div className="exec-action-icon">
+                        <Icon size={16} />
+                      </div>
+                      <span className={`exec-action-trend ${t.trendType === 'up' ? 'trend-up' : 'trend-neutral'}`}>
+                        {t.trend !== '0' ? t.trend : '—'}
+                      </span>
+                    </div>
+                    <div className="exec-action-num">{t.value}</div>
+                    <div className="exec-action-label">{t.label}</div>
+                  </Link>
+                );
+              })}
+            </div>
+          </>
         )}
 
         {/* ---------- OPERATIONAL DETAIL ---------- */}

@@ -92,7 +92,6 @@ function AppRegis() {
     return (
         <Layout>
             <div className="request-content">
-                <div className="request-breadcrumb">Request / Application Registration</div>
 
                 {/* Page header, no "Feedback" wording, matches BotRegis pattern */}
                 <div className="request-page-header">

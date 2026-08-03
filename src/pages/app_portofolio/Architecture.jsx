@@ -51,7 +51,7 @@ function Architecture() {
 
     if (!app) {
         return (
-            <Layout title="Architecture">
+            <Layout>
                 <div className="profile-notfound">
                     <p>Aplikasi tidak ditemukan.</p>
                     <button className="profile-back-btn" onClick={() => navigate('/applications')}>
@@ -76,7 +76,7 @@ function Architecture() {
         architectureItems.length > 0 || integrations.length > 0 || dependencies.length > 0 || app.architectureNotes;
 
     return (
-        <Layout title="Architecture">
+        <Layout>
             <div className="app-profile-content">
                 <button className="profile-back-btn" onClick={() => navigate('/applications')}>
                     <ArrowLeft size={16} strokeWidth={2} />
