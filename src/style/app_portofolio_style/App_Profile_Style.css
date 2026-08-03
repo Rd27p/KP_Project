@@ -3,10 +3,8 @@
 .app-profile-content {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 18px;
     font-family: 'Inter', 'Segoe UI', sans-serif;
-    max-width: 980px;
-    margin: 0 auto;
 }
 
 .profile-back-btn {
@@ -16,14 +14,14 @@
     align-self: flex-start;
     padding: 10px 16px;
     background: linear-gradient(135deg, #ffffff 0%, #f1f3f8 100%);
-    border: 1px solid #e5e8ef;
+    border: 1px solid var(--line);
     border-radius: 12px;
     font-family: 'Inter', sans-serif;
     font-size: 13px;
     font-weight: 600;
     color: #1F2A44;
     cursor: pointer;
-    box-shadow: 0 8px 20px rgba(31, 42, 68, 0.06);
+    box-shadow: var(--shadow-1);
     transition: all 0.2s ease;
 }
 
@@ -36,10 +34,10 @@
 /* Header Card */
 .profile-header-card {
     background: #ffffff;
-    padding: 28px 30px;
+    padding: 22px 24px;
     border-radius: 20px;
-    box-shadow: 0 14px 34px rgba(31, 42, 68, 0.08);
-    border: 1px solid #eef0f5;
+    box-shadow: var(--shadow-1);
+    border: 1px solid var(--line);
     animation: profileSlideUp 0.5s ease-out;
 }
 
@@ -101,8 +99,8 @@
     background: #ffffff;
     padding: 16px 18px;
     border-radius: 16px;
-    box-shadow: 0 10px 24px rgba(31, 42, 68, 0.06);
-    border: 1px solid #eef0f5;
+    box-shadow: var(--shadow-1);
+    border: 1px solid var(--line);
 }
 
 .profile-info-icon {
@@ -156,14 +154,14 @@
     width: 100%;
     padding: 13px 14px;
     background: #ffffff;
-    border: 1px solid #eef0f5;
+    border: 1px solid var(--line);
     border-radius: 14px;
     font-family: 'Inter', sans-serif;
     font-size: 13px;
     font-weight: 600;
     color: #A50224;
     cursor: pointer;
-    box-shadow: 0 10px 24px rgba(31, 42, 68, 0.06);
+    box-shadow: var(--shadow-1);
     transition: all 0.2s ease;
 }
 
@@ -239,4 +237,215 @@
     .profile-info-grid {
         grid-template-columns: 1fr;
     }
+}
+
+/* ---------- Sub-navigation tabs (Profile / Architecture / Compliance / Tech Info / App View) ---------- */
+.profile-tabs {
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+    background: var(--surface);
+    padding: 4px;
+    border-radius: 999px;
+    width: fit-content;
+}
+
+.profile-tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border: none;
+    background: transparent;
+    color: var(--ink-soft);
+    text-decoration: none;
+    font-family: 'Inter', sans-serif;
+    font-size: 12.5px;
+    font-weight: 700;
+    padding: 8px 16px;
+    border-radius: 999px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.15s ease, color 0.15s ease;
+}
+
+.profile-tab:hover {
+    color: #1F2A44;
+}
+
+.profile-tab.active {
+    background: var(--navy);
+    color: #fff;
+}
+
+/* ---------- Chip list (tech stack, integrations, compliance standards, dsb) ---------- */
+.chip-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 6px;
+}
+
+.chip {
+    display: inline-flex;
+    align-items: center;
+    padding: 5px 12px;
+    background: var(--surface);
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #1F2A44;
+}
+
+.section-card {
+    background: #ffffff;
+    padding: 22px 24px;
+    border-radius: 20px;
+    box-shadow: var(--shadow-1);
+    border: 1px solid var(--line);
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.section-card-title {
+    font-family: 'Poppins', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    color: #1F2A44;
+}
+
+.section-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 36px 20px;
+    text-align: center;
+    color: var(--ink-soft);
+    font-size: 13px;
+}
+
+/* ---------- App View: live screenshot preview ---------- */
+.screenshot-panel {
+    background: #ffffff;
+    border-radius: 20px;
+    box-shadow: var(--shadow-1);
+    border: 1px solid var(--line);
+    overflow: hidden;
+}
+
+.screenshot-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--line);
+    flex-wrap: wrap;
+}
+
+.screenshot-url {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #1F2A44;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.screenshot-actions {
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.screenshot-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    background: var(--surface);
+    border: none;
+    border-radius: 10px;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    color: #1F2A44;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.screenshot-btn:hover {
+    color: #A50224;
+}
+
+.screenshot-btn.primary {
+    background: linear-gradient(135deg, #D3324A 0%, #A50224 100%);
+    color: #fff;
+}
+
+.screenshot-btn.primary:hover {
+    color: #fff;
+    transform: translateY(-1px);
+}
+
+.screenshot-frame {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    background: var(--surface);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.screenshot-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top;
+    display: block;
+}
+
+.screenshot-loading,
+.screenshot-fallback {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    color: var(--ink-soft);
+    font-size: 13px;
+    font-weight: 500;
+    text-align: center;
+    padding: 24px;
+}
+
+.screenshot-spinner {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    border: 3px solid #dfe2ea;
+    border-top-color: #A50224;
+    animation: screenshotSpin 0.8s linear infinite;
+}
+
+@keyframes screenshotSpin {
+    to { transform: rotate(360deg); }
+}
+
+.screenshot-hint {
+    padding: 14px 20px;
+    font-size: 12px;
+    color: var(--ink-soft);
+    border-top: 1px solid var(--line);
+    line-height: 1.5;
+}
+
+.screenshot-hint b {
+    color: #1F2A44;
 }

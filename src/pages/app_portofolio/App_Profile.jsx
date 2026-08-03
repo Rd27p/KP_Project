@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation, Link } from 'react-router-dom';
 import {
     ArrowLeft,
     Boxes,
@@ -25,6 +25,30 @@ const statusColor = {
     Maintenance: 'badge-maintenance',
     Inactive: 'badge-inactive',
 };
+
+function AppDetailTabs({ id }) {
+    const { pathname } = useLocation();
+    const tabs = [
+        { label: 'Profile', path: `/applications/${id}` },
+        { label: 'Architecture', path: `/applications/${id}/architecture` },
+        { label: 'Compliance & Security', path: `/applications/${id}/compliance-security` },
+        { label: 'Tech Info', path: `/applications/${id}/tech-info` },
+        { label: 'App View', path: `/applications/${id}/app-view` },
+    ];
+    return (
+        <div className="profile-tabs" role="tablist" aria-label="Detail aplikasi">
+            {tabs.map((tab) => (
+                <Link
+                    key={tab.path}
+                    to={tab.path}
+                    className={`profile-tab ${pathname === tab.path ? 'active' : ''}`}
+                >
+                    {tab.label}
+                </Link>
+            ))}
+        </div>
+    );
+}
 
 function AppProfile() {
     const { id } = useParams();
@@ -87,6 +111,8 @@ function AppProfile() {
                     <p className="profile-app-description">{app.description}</p>
                 </div>
 
+                <AppDetailTabs id={id} />
+
                 <div className="profile-info-grid">
                     {mainInfoItems.map((item) => {
                         const Icon = item.icon;
@@ -129,7 +155,7 @@ function AppProfile() {
                                             </div>
                                             <div className="profile-info-body">
                                                 <span className="profile-info-label">{item.label}</span>
-                                                < span className="profile-info-value">{item.value}</span>
+                                                <span className="profile-info-value">{item.value}</span>
                                             </div>
                                         </div>
                                     );
