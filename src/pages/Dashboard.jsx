@@ -1,3 +1,4 @@
+import { useMemo, useState } from 'react';
 import {
   LayoutGrid,
   AlertTriangle,
@@ -11,8 +12,9 @@ import {
   Activity,
   Lock,
   CheckCircle2,
+  ArrowUpDown,
 } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import Layout from '../components/Layout';
 import ProgressBar from '../components/ProgressBar';
 import '../style/Dashboard_Style.css';
@@ -70,16 +72,19 @@ const alarms = [
     title: 'Payment Gateway API — response time > 8s',
     meta: 'Operation · 12 menit lalu',
     severity: 'critical',
+    appSlug: 'payment-gateway-api',
   },
   {
     title: 'CRM Suite — sertifikat SSL akan kedaluwarsa',
     meta: 'Security · 1 jam lalu',
     severity: 'warning',
+    appSlug: 'crm-suite',
   },
   {
     title: 'Inventory Service — CPU usage 94%',
     meta: 'Performance · 2 jam lalu',
     severity: 'critical',
+    appSlug: 'inventory-service',
   },
 ];
 
@@ -149,7 +154,56 @@ function HealthPulseRing({ percent = 0, label = 'Sehat' }) {
   );
 }
 
+const VIEWS = {
+  EXECUTIVE: 'executive',
+  OPERATIONAL: 'operational',
+};
+
 export default function Dashboard() {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const view = searchParams.get('view') === VIEWS.OPERATIONAL ? VIEWS.OPERATIONAL : VIEWS.EXECUTIVE;
+
+  const ALARM_SECTION_ID = 'alarm-section';
+  const HEALTH_SECTION_ID = 'health-detail-section';
+
+  const [sortConfig, setSortConfig] = useState({ key: 'util', dir: 'desc' });
+
+  const sortedServers = useMemo(() => {
+    const dir = sortConfig.dir === 'asc' ? 1 : -1;
+    return [...servers].sort((a, b) => {
+      const aVal = a[sortConfig.key];
+      const bVal = b[sortConfig.key];
+      if (typeof aVal === 'number' && typeof bVal === 'number') return (aVal - bVal) * dir;
+      return String(aVal).localeCompare(String(bVal)) * dir;
+    });
+  }, [sortConfig]);
+
+  function switchView(nextView, targetId) {
+    const next = new URLSearchParams(searchParams);
+    next.set('view', nextView);
+    setSearchParams(next);
+    if (targetId) {
+      requestAnimationFrame(() => {
+        document.getElementById(targetId)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    }
+  }
+
+  function toggleSort(key) {
+    setSortConfig((prev) => ({
+      key,
+      dir: prev.key === key && prev.dir === 'desc' ? 'asc' : 'desc',
+    }));
+  }
+
+  const sortableColumns = [
+    { key: 'app', label: 'Aplikasi' },
+    { key: 'category', label: 'Kategori' },
+    { key: 'total', label: 'Server' },
+    { key: 'util', label: 'Utilisasi' },
+    { key: 'status', label: 'Status' },
+  ];
+
   return (
     <Layout showSearch>
       <div className="dashboard">
@@ -162,232 +216,293 @@ export default function Dashboard() {
           <Link to="/feedback/result" className="hero-action">Lihat alarm & status</Link>
         </div>
 
-      {/* ---------- KPI ROW ---------- */}
-      <div className="kpi-row">
-        {kpis.map((kpi) => {
-          const Icon = kpi.icon;
-          return (
-            <div key={kpi.key} className={`kpi-card ${kpi.hero ? 'kpi-hero' : ''}`}>
-              <div className="kpi-top">
-                <div
-                  className="kpi-icon"
-                  style={
-                    !kpi.hero
-                      ? {
-                          background: `var(--${kpi.tone}-soft, var(--surface))`,
-                          color: toneVar[kpi.tone] || 'var(--red)',
-                        }
-                      : undefined
-                  }
-                >
-                  <Icon size={19} />
-                </div>
-                {kpi.trend && (
-                  <div className={`trend-chip trend-${kpi.trendType}`}>{kpi.trend}</div>
-                )}
-              </div>
+        {/* ---------- VIEW TABS ---------- */}
+        <div className="view-tabs" role="tablist" aria-label="Mode tampilan dashboard">
+          <button
+            type="button"
+            role="tab"
+            aria-selected={view === VIEWS.EXECUTIVE}
+            className={`view-tab ${view === VIEWS.EXECUTIVE ? 'active' : ''}`}
+            onClick={() => switchView(VIEWS.EXECUTIVE)}
+          >
+            Executive Summary
+          </button>
+          <button
+            type="button"
+            role="tab"
+            aria-selected={view === VIEWS.OPERATIONAL}
+            className={`view-tab ${view === VIEWS.OPERATIONAL ? 'active' : ''}`}
+            onClick={() => switchView(VIEWS.OPERATIONAL)}
+          >
+            Operational Detail
+          </button>
+        </div>
 
-              <div>
-                <div
-                  className="kpi-num"
-                  style={kpi.tone === 'red' ? { color: 'var(--red-deep)' } : undefined}
-                >
-                  {kpi.value}
-                </div>
-                <div className="kpi-label">{kpi.label}</div>
-              </div>
+        {/* ---------- KPI (1 kartu navy, 4 segmen internal — selalu tampil di kedua view) ---------- */}
+        <div className="kpi-unified">
+          {kpis.map((kpi) => {
+            const Icon = kpi.icon;
+            const jumpTargetId =
+              kpi.key === 'alarm' ? ALARM_SECTION_ID : kpi.key === 'health' ? HEALTH_SECTION_ID : null;
+            const clickable = Boolean(jumpTargetId);
 
-              <div className="kpi-sub">{kpi.sub}</div>
-
-              {kpi.spark && (
-                <div className="mini-spark">
-                  {kpi.spark.map((h, i) => (
-                    <i
-                      key={i}
-                      className={i === kpi.spark.length - 1 ? 'on' : ''}
-                      style={{ height: `${h}%` }}
-                    />
-                  ))}
-                </div>
-              )}
-            </div>
-          );
-        })}
-      </div>
-
-      {/* ---------- ROW 2: Healthiness + Alarms ---------- */}
-      <div className="grid-2">
-        <div className="panel">
-          <div className="panel-head">
-            <div>
-              <div className="panel-title">Healthiness per Kategori</div>
-              <div className="panel-note">Diurutkan dari yang paling butuh perhatian</div>
-            </div>
-            <span className="link-btn">Lihat detail →</span>
-          </div>
-
-          {healthCategories.map((cat) => {
-            const Icon = cat.icon;
             return (
-              <div className="health-row" key={cat.key}>
-                <div
-                  className="health-icon"
-                  style={{ background: `var(--${cat.tone}-soft)`, color: toneVar[cat.tone] }}
-                >
-                  <Icon size={16} />
-                </div>
-                <div className="health-body">
-                  <div className="health-top">
-                    <span>{cat.label}</span>
-                    <span className="pct" style={{ color: toneVar[cat.tone] }}>
-                      {cat.pct}%
-                    </span>
+              <div
+                key={kpi.key}
+                className={`kpi-segment ${clickable ? 'kpi-segment-clickable' : ''}`}
+                role={clickable ? 'button' : undefined}
+                tabIndex={clickable ? 0 : undefined}
+                onClick={clickable ? () => switchView(VIEWS.OPERATIONAL, jumpTargetId) : undefined}
+                onKeyDown={
+                  clickable
+                    ? (e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault();
+                          switchView(VIEWS.OPERATIONAL, jumpTargetId);
+                        }
+                      }
+                    : undefined
+                }
+              >
+                <div className="kpi-segment-top">
+                  <div className="kpi-segment-icon" style={{ color: toneVar[kpi.tone] || '#fff' }}>
+                    <Icon size={19} />
                   </div>
-                  <ProgressBar value={cat.pct} color={toneVar[cat.tone]} />
+                  {kpi.trend && <div className="kpi-segment-trend">{kpi.trend}</div>}
                 </div>
+
+                <div>
+                  <div
+                    className="kpi-segment-num"
+                    style={kpi.tone === 'red' ? { color: '#FF8FA3' } : undefined}
+                  >
+                    {kpi.value}
+                  </div>
+                  <div className="kpi-segment-label">{kpi.label}</div>
+                </div>
+
+                <div className="kpi-segment-sub">{kpi.sub}</div>
+
+                {kpi.spark && (
+                  <div className="mini-spark">
+                    {kpi.spark.map((h, i) => (
+                      <i
+                        key={i}
+                        className={i === kpi.spark.length - 1 ? 'on' : ''}
+                        style={{ height: `${h}%` }}
+                      />
+                    ))}
+                  </div>
+                )}
               </div>
             );
           })}
         </div>
 
-        <div className="panel">
-          <div className="panel-head">
-            <div>
-              <div className="panel-title">Alarm Kritis</div>
-              <div className="panel-note">3 memerlukan tindakan segera</div>
-            </div>
-          </div>
-
-          {alarms.map((alarm, i) => (
-            <div className="alarm-item" key={i}>
-              <div className={`alarm-dot ${alarm.severity === 'warning' ? 'alarm-dot-warning' : ''}`} />
-              <div style={{ flex: 1 }}>
-                <div className="alarm-title">{alarm.title}</div>
-                <div className="alarm-meta">{alarm.meta}</div>
-              </div>
-              <span className={`sev-chip sev-${alarm.severity}`}>
-                {alarm.severity === 'critical' ? 'Critical' : 'Warning'}
-              </span>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* ---------- ROW 3: Status + Ticketing / Health Pulse ---------- */}
-      <div className="grid-2">
-        <div className="panel">
-          <div className="panel-head">
-            <div>
-              <div className="panel-title">Status Aplikasi</div>
-              <div className="panel-note">Distribusi dari 128 aplikasi terdaftar</div>
-            </div>
-          </div>
-
-          <div className="status-bar">
-            {statusBreakdown.map((s, i) => (
-              <div key={i} style={{ width: `${s.pct}%`, background: toneVar[s.tone] }} />
-            ))}
-          </div>
-          <div className="status-legend">
-            {statusBreakdown.map((s, i) => (
-              <div className="status-legend-item" key={i}>
-                <span className="status-legend-dot" style={{ background: toneVar[s.tone] }} />
-                {s.label} <b>{s.value}</b>
-              </div>
-            ))}
-          </div>
-
-          <div className="panel-head" style={{ marginTop: 22 }}>
-            <div>
-              <div className="panel-title" style={{ fontSize: 14 }}>
-                Ringkasan Ticketing
-              </div>
-            </div>
-          </div>
-          <div className="ticket-grid">
-            {tickets.map((t) => {
-              const Icon = t.icon;
-              return (
-                <div className="ticket-card" key={t.label}>
-                  <div className="ticket-icon">
-                    <Icon size={15} />
-                  </div>
-                  <div className="ticket-num">{t.value}</div>
-                  <div className="ticket-label">{t.label}</div>
+        {/* ---------- EXECUTIVE SUMMARY ---------- */}
+        {view === VIEWS.EXECUTIVE && (
+          <div className="grid-2">
+            <div className="panel">
+              <div className="panel-head">
+                <div>
+                  <div className="panel-title">Status Aplikasi</div>
+                  <div className="panel-note">Distribusi dari 128 aplikasi terdaftar</div>
                 </div>
-              );
-            })}
-          </div>
-        </div>
+                <Link to="/applications" className="link-btn">Lihat semua aplikasi →</Link>
+              </div>
 
-        <div className="panel">
-          <div className="panel-head">
-            <div>
-              <div className="panel-title">Health Pulse</div>
-              <div className="panel-note">Rata-rata seluruh kategori</div>
-            </div>
-          </div>
-          <div className="ring-wrap">
-            <HealthPulseRing percent={92.6} />
-            <div className="ring-legend">
-              {healthPulseLegend.map((l, i) => (
-                <div className="ring-legend-item" key={i}>
-                  <span className="ring-legend-dot" style={{ background: toneVar[l.tone] }} />
-                  {l.label}
+              <div className="status-bar">
+                {statusBreakdown.map((s, i) => (
+                  <div key={i} style={{ width: `${s.pct}%`, background: toneVar[s.tone] }} />
+                ))}
+              </div>
+              <div className="status-legend">
+                {statusBreakdown.map((s, i) => (
+                  <div className="status-legend-item" key={i}>
+                    <span className="status-legend-dot" style={{ background: toneVar[s.tone] }} />
+                    {s.label} <b>{s.value}</b>
+                  </div>
+                ))}
+              </div>
+
+              <div className="panel-head" style={{ marginTop: 22 }}>
+                <div>
+                  <div className="panel-title" style={{ fontSize: 14 }}>
+                    Ringkasan Ticketing
+                  </div>
                 </div>
-              ))}
+              </div>
+              <div className="ticket-grid">
+                {tickets.map((t) => {
+                  const Icon = t.icon;
+                  return (
+                    <div className="ticket-card" key={t.label}>
+                      <div className="ticket-icon">
+                        <Icon size={15} />
+                      </div>
+                      <div className="ticket-num">{t.value}</div>
+                      <div className="ticket-label">{t.label}</div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div className="panel">
+              <div className="panel-head">
+                <div>
+                  <div className="panel-title">Health Pulse</div>
+                  <div className="panel-note">Rata-rata seluruh kategori</div>
+                </div>
+              </div>
+              <div className="ring-wrap">
+                <HealthPulseRing percent={92.6} />
+                <div className="ring-legend">
+                  {healthPulseLegend.map((l, i) => (
+                    <div className="ring-legend-item" key={i}>
+                      <span className="ring-legend-dot" style={{ background: toneVar[l.tone] }} />
+                      {l.label}
+                    </div>
+                  ))}
+                </div>
+                <button
+                  type="button"
+                  className="link-btn"
+                  onClick={() => switchView(VIEWS.OPERATIONAL, HEALTH_SECTION_ID)}
+                >
+                  Lihat breakdown per kategori →
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
+        )}
 
-      {/* ---------- SERVER TABLE ---------- */}
-      <div className="panel">
-        <div className="panel-head">
-          <div>
-            <div className="panel-title">Total Server per Aplikasi</div>
-            <div className="panel-note">Utilisasi server yang menangani masing-masing aplikasi</div>
-          </div>
-          <span className="link-btn">Lihat semua 128 aplikasi →</span>
-        </div>
+        {/* ---------- OPERATIONAL DETAIL ---------- */}
+        {view === VIEWS.OPERATIONAL && (
+          <>
+            <div className="grid-2">
+              <div className="panel" id={HEALTH_SECTION_ID}>
+                <div className="panel-head">
+                  <div>
+                    <div className="panel-title">Healthiness per Kategori</div>
+                    <div className="panel-note">Diurutkan dari yang paling butuh perhatian</div>
+                  </div>
+                  <Link to="/applications?sort=health" className="link-btn">Lihat detail →</Link>
+                </div>
 
-        <table className="server-table">
-          <thead>
-            <tr>
-              <th>Aplikasi</th>
-              <th>Kategori</th>
-              <th>Server</th>
-              <th>Utilisasi</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {servers.map((row) => (
-              <tr key={row.app}>
-                <td>
-                  <div className="app-name-cell">
-                    <span className="app-dot" style={{ background: toneVar[row.tone] }} />
-                    {row.app}
+                {healthCategories.map((cat) => {
+                  const Icon = cat.icon;
+                  return (
+                    <div className="health-row" key={cat.key}>
+                      <div
+                        className="health-icon"
+                        style={{ background: `var(--${cat.tone}-soft)`, color: toneVar[cat.tone] }}
+                      >
+                        <Icon size={16} />
+                      </div>
+                      <div className="health-body">
+                        <div className="health-top">
+                          <span>{cat.label}</span>
+                          <span className="pct" style={{ color: toneVar[cat.tone] }}>
+                            {cat.pct}%
+                          </span>
+                        </div>
+                        <ProgressBar value={cat.pct} color={toneVar[cat.tone]} />
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              <div className="panel" id={ALARM_SECTION_ID}>
+                <div className="panel-head">
+                  <div>
+                    <div className="panel-title">Alarm Kritis</div>
+                    <div className="panel-note">3 memerlukan tindakan segera</div>
                   </div>
-                </td>
-                <td>{row.category}</td>
-                <td>{row.total}</td>
-                <td>
-                  <div className="util-cell">
-                    <ProgressBar value={row.util} color={toneVar[row.tone]} height={7} />
-                    <span>{row.util}%</span>
+                </div>
+
+                {alarms.map((alarm, i) => (
+                  <div className="alarm-item" key={i}>
+                    <div className={`alarm-dot ${alarm.severity === 'warning' ? 'alarm-dot-warning' : ''}`} />
+                    <div style={{ flex: 1 }}>
+                      <div className="alarm-title">{alarm.title}</div>
+                      <div className="alarm-meta">{alarm.meta}</div>
+                    </div>
+                    <span className={`sev-chip sev-${alarm.severity}`}>
+                      {alarm.severity === 'critical' ? 'Critical' : 'Warning'}
+                    </span>
+                    <Link to={`/applications/${alarm.appSlug}`} className="alarm-action">
+                      Tindak lanjut
+                    </Link>
                   </div>
-                </td>
-                <td>
-                  <span className={`status-pill ${row.status === 'Live' ? 'pill-live' : 'pill-review'}`}>
-                    {row.status}
-                  </span>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+                ))}
+              </div>
+            </div>
+
+            {/* ---------- SERVER TABLE (sortable) ---------- */}
+            <div className="panel">
+              <div className="panel-head">
+                <div>
+                  <div className="panel-title">Total Server per Aplikasi</div>
+                  <div className="panel-note">Klik header kolom untuk mengurutkan</div>
+                </div>
+                <Link to="/applications" className="link-btn">Lihat semua 128 aplikasi →</Link>
+              </div>
+
+              <table className="server-table">
+                <thead>
+                  <tr>
+                    {sortableColumns.map((col) => (
+                      <th
+                        key={col.key}
+                        className="sortable-th"
+                        onClick={() => toggleSort(col.key)}
+                        aria-sort={
+                          sortConfig.key === col.key
+                            ? sortConfig.dir === 'asc'
+                              ? 'ascending'
+                              : 'descending'
+                            : 'none'
+                        }
+                      >
+                        <span>
+                          {col.label}
+                          <ArrowUpDown size={12} className={sortConfig.key === col.key ? 'sort-icon active' : 'sort-icon'} />
+                        </span>
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {sortedServers.map((row) => (
+                    <tr key={row.app}>
+                      <td>
+                        <div className="app-name-cell">
+                          <span className="app-dot" style={{ background: toneVar[row.tone] }} />
+                          {row.app}
+                        </div>
+                      </td>
+                      <td>{row.category}</td>
+                      <td>{row.total}</td>
+                      <td>
+                        <div className="util-cell">
+                          <ProgressBar value={row.util} color={toneVar[row.tone]} height={7} />
+                          <span>{row.util}%</span>
+                        </div>
+                      </td>
+                      <td>
+                        <span className={`status-pill ${row.status === 'Live' ? 'pill-live' : 'pill-review'}`}>
+                          {row.status}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </>
+        )}
       </div>
     </Layout>
   );

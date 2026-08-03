@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import {
   LayoutDashboard,
   Grid3x3,
@@ -43,7 +43,19 @@ const navItems = [
 ];
 
 export default function Sidebar() {
-  const [openGroups, setOpenGroups] = useState({ Request: true, Feedback: true });
+  const { pathname } = useLocation();
+
+  // Default tertutup. Kalau URL saat ini persis salah satu child grup,
+  // grup itu otomatis kebuka duluan biar item aktifnya tidak "hilang" di balik dropdown tertutup.
+  const [openGroups, setOpenGroups] = useState(() => {
+    const initial = {};
+    navItems.forEach((item) => {
+      if (item.children) {
+        initial[item.label] = item.children.some((child) => child.path === pathname);
+      }
+    });
+    return initial;
+  });
 
   const toggleGroup = (label) => {
     setOpenGroups((prev) => ({ ...prev, [label]: !prev[label] }));
@@ -102,7 +114,6 @@ export default function Sidebar() {
           }
 
           return (
-            
             <NavLink
               key={item.path}
               to={item.path}
