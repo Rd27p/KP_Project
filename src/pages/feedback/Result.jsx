@@ -359,30 +359,17 @@ function Result() {
     return (
         <Layout>
             <div className="feedback-content">
-                {/* Merged hero: title/subtitle/button on top, stat below, all inside the navy card */}
+                {/* Hero card matching Security Assessment style */}
                 <div className="feedback-hero-card">
-                    <div className="feedback-hero-top">
-                        <div>
-                            <h1 className="feedback-hero-title">Result Feedback</h1>
-                            <p className="feedback-hero-subtitle">
-                                Ringkasan keluhan dan umpan balik pengguna dari seluruh sumber.
-                            </p>
-                        </div>
-                        <button className="feedback-complain-btn" onClick={() => setView('complain')}>
-                            <MessageSquareWarning size={18} strokeWidth={2.2} />
-                            I Want to Complain
-                        </button>
+                    <div>
+                        <p className="feedback-eyebrow">Result Feedback</p>
+                        <h1>Keluhan dan Umpan Balik Pengguna</h1>
+                        <p>Ringkasan keluhan dan umpan balik pengguna dari seluruh sumber.</p>
                     </div>
-
-                    <div className="feedback-hero-stat">
-                        <div className="feedback-hero-icon">
-                            <FileText size={22} strokeWidth={2.2} color="#FFFFFF" />
-                        </div>
-                        <div>
-                            <span className="feedback-hero-value">{totalComplaint}</span>
-                            <span className="feedback-hero-label">Total Complaint (all sources)</span>
-                        </div>
-                    </div>
+                    <button className="feedback-complain-btn" onClick={() => setView('complain')}>
+                        <MessageSquareWarning size={18} strokeWidth={2.2} />
+                        I Want to Complain
+                    </button>
                 </div>
 
                 <div className="feedback-split">

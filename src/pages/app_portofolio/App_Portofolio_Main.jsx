@@ -2,7 +2,6 @@ import { useState, useMemo, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
     Search,
-    Plus,
     Boxes,
     Clock,
     User,
@@ -376,10 +375,6 @@ function AppPortofolioMain() {
                             <span>⌘K</span>
                         </button>
                     </div>
-                    <button className="portofolio-add-btn">
-                        <Plus size={18} strokeWidth={2.2} />
-                        Tambah Aplikasi
-                    </button>
                 </div>
 
                 <div className="portofolio-filters">

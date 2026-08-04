@@ -28,7 +28,6 @@ function UseCaseRegis() {
     };
 
     const handleSubmit = () => {
-        // TODO: Kirim formData + file ke API backend untuk diproses.
         console.log('Use case request submitted:', formData, {
             notaDinasFile,
             businessReqFile,

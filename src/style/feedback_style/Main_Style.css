@@ -36,13 +36,37 @@
 /* Merged hero card: title/subtitle/button + stat, all inside one navy panel */
 .feedback-hero-card {
     display: flex;
-    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
     gap: 20px;
-    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-2) 100%);
+    padding: 24px 26px;
+    border-radius: 20px;
+    background: linear-gradient(135deg, var(--navy) 0%, #24365c 100%);
     color: #fff;
-    border-radius: 18px;
-    padding: 20px 22px;
     box-shadow: var(--shadow-1);
+}
+
+.feedback-eyebrow {
+    margin: 0 0 8px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #8fa0c6;
+}
+
+.feedback-hero-card h1 {
+    margin: 0 0 8px;
+    font-size: 28px;
+    color: #fff;
+    font-family: 'Space Grotesk', sans-serif;
+}
+
+.feedback-hero-card > div p {
+    margin: 0;
+    color: #d7def0;
+    max-width: 680px;
+    line-height: 1.6;
 }
 
 .feedback-hero-top {
@@ -55,16 +79,18 @@
 
 .feedback-hero-title {
     font-family: var(--font-display);
-    font-size: 20px;
+    font-size: 28px;
     font-weight: 700;
     color: #fff;
-    margin: 0;
+    margin: 0 0 8px 0;
+    letter-spacing: -0.01em;
 }
 
 .feedback-hero-subtitle {
     margin-top: 4px;
     font-size: 13px;
-    color: #b7c0da;
+    color: #d7def0;
+    line-height: 1.6;
 }
 
 .feedback-complain-btn {
@@ -77,9 +103,9 @@
     font-size: 13px;
     font-weight: 700;
     border: none;
-    border-radius: 12px;
+    border-radius: 14px;
     cursor: pointer;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
     transition: transform 0.2s ease;
     white-space: nowrap;
     flex-shrink: 0;
@@ -132,9 +158,10 @@
 /* Reused dashboard panel */
 .panel {
     background: var(--card);
-    border-radius: 18px;
+    border-radius: 20px;
     padding: 22px 24px;
     box-shadow: var(--shadow-1);
+    border: 1px solid var(--line);
 }
 
 .panel-head {
@@ -181,9 +208,10 @@
 /* Table card (used by the Table component) */
 .table-card {
     background: var(--card);
-    border-radius: 18px;
+    border-radius: 20px;
     padding: 22px 24px;
     box-shadow: var(--shadow-1);
+    border: 1px solid var(--line);
 }
 
 .table-title {
@@ -344,8 +372,9 @@
     align-items: flex-start;
     background: var(--card);
     padding: 20px 24px;
-    border-radius: 18px;
+    border-radius: 20px;
     box-shadow: var(--shadow-1);
+    border: 1px solid var(--line);
 }
 
 .feedback-stepper-item {
@@ -413,8 +442,9 @@
 .feedback-form-card {
     background: var(--card);
     padding: 26px 28px;
-    border-radius: 18px;
+    border-radius: 20px;
     box-shadow: var(--shadow-1);
+    border: 1px solid var(--line);
     display: flex;
     flex-direction: column;
     gap: 22px;
@@ -548,8 +578,9 @@
     gap: 10px;
     padding: 56px 30px;
     background: var(--card);
-    border-radius: 18px;
+    border-radius: 20px;
     box-shadow: var(--shadow-1);
+    border: 1px solid var(--line);
 }
 
 .feedback-success-icon {
