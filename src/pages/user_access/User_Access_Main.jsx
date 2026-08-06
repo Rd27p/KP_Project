@@ -23,11 +23,6 @@ function UserAccessMain() {
         <Layout>
             <div className="user-access-content">
                 <div className="user-access-hero">
-                    <div className="user-access-hero-left">
-                        <div className="user-access-hero-eyebrow">Review akses</div>
-                        <h1 className="user-access-hero-title">Permintaan Akses Pengguna</h1>
-                        <p className="user-access-hero-desc">Pastikan izin aplikasi tetap aman dan terkontrol. Ajukan permintaan akses atau tinjau statusnya dari satu halaman.</p>
-                    </div>
                     <button
                         className="user-access-add-btn"
                         onClick={() => navigate('/user-access/register')}

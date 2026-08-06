@@ -78,18 +78,6 @@ function Infra() {
     return (
         <Layout>
             <div className="infra-page">
-                <div className="infra-hero">
-                    <div>
-                        <p className="infra-eyebrow">Infrastructure Visibility</p>
-                        <h1>Pantau infrastruktur secara terpusat</h1>
-                        <p>Ikhtisar status layanan, performa server, dan kondisi jaringan dalam satu tampilan yang mudah dibaca.</p>
-                    </div>
-                    <div className="infra-hero-badge">
-                        <span className="infra-dot" />
-                        Semua sistem berjalan normal
-                    </div>
-                </div>
-
                 <div className="infra-summary-grid">
                     {summaryCards.map((card) => {
                         const Icon = card.icon;

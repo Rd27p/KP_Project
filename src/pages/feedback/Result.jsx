@@ -158,20 +158,18 @@ function Result() {
                             <div className="feedback-stepper-item" key={step.id}>
                                 <div className="feedback-stepper-node">
                                     <div
-                                        className={`feedback-stepper-circle ${
-                                            currentStep === step.id
-                                                ? 'active'
-                                                : currentStep > step.id
+                                        className={`feedback-stepper-circle ${currentStep === step.id
+                                            ? 'active'
+                                            : currentStep > step.id
                                                 ? 'completed'
                                                 : ''
-                                        }`}
+                                            }`}
                                     >
                                         {currentStep > step.id ? <Check size={14} strokeWidth={3} /> : step.id}
                                     </div>
                                     <span
-                                        className={`feedback-stepper-label ${
-                                            currentStep === step.id ? 'active' : ''
-                                        }`}
+                                        className={`feedback-stepper-label ${currentStep === step.id ? 'active' : ''
+                                            }`}
                                     >
                                         {step.label}
                                     </span>
@@ -361,11 +359,6 @@ function Result() {
             <div className="feedback-content">
                 {/* Hero card matching Security Assessment style */}
                 <div className="feedback-hero-card">
-                    <div>
-                        <p className="feedback-eyebrow">Result Feedback</p>
-                        <h1>Keluhan dan Umpan Balik Pengguna</h1>
-                        <p>Ringkasan keluhan dan umpan balik pengguna dari seluruh sumber.</p>
-                    </div>
                     <button className="feedback-complain-btn" onClick={() => setView('complain')}>
                         <MessageSquareWarning size={18} strokeWidth={2.2} />
                         I Want to Complain

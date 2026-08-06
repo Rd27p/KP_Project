@@ -210,21 +210,6 @@ export default function Dashboard() {
   return (
     <Layout showSearch>
       <div className="dashboard">
-        <div className="dashboard-hero">
-          <div>
-            <div className="dashboard-hero-eyebrow">
-              <span className="pulse-dot" />
-              Ringkasan operasional
-            </div>
-            <h2>Wujudkan visibilitas aplikasi dalam satu layar.</h2>
-            <p>Pantau kesehatan aplikasi, alarm aktif, dan status permintaan tanpa harus berpindah halaman.</p>
-            <div className="last-updated-badge">
-              <Clock size={11} />
-              Diperbarui {lastUpdated}
-            </div>
-          </div>
-          <Link to="/feedback/result" className="hero-action">Lihat alarm &amp; status</Link>
-        </div>
 
         {/* ---------- VIEW TABS ---------- */}
         <div className="view-tabs" role="tablist" aria-label="Mode tampilan dashboard">
@@ -266,11 +251,11 @@ export default function Dashboard() {
                 onKeyDown={
                   clickable
                     ? (e) => {
-                        if (e.key === 'Enter' || e.key === ' ') {
-                          e.preventDefault();
-                          switchView(VIEWS.OPERATIONAL, jumpTargetId);
-                        }
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        switchView(VIEWS.OPERATIONAL, jumpTargetId);
                       }
+                    }
                     : undefined
                 }
               >

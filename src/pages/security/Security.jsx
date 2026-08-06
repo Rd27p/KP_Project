@@ -70,18 +70,6 @@ function Security() {
     return (
         <Layout>
             <div className="security-page">
-                <div className="security-hero">
-                    <div>
-                        <p className="security-eyebrow">Security Assessment</p>
-                        <h1>Monitor keamanan aplikasi dan infrastruktur</h1>
-                        <p>Ringkasan kontrol keamanan, status perlindungan, serta tindakan yang perlu diprioritaskan.</p>
-                    </div>
-                    <div className="security-hero-badge">
-                        <span className="security-dot" />
-                        All controls healthy
-                    </div>
-                </div>
-
                 <div className="security-summary-grid">
                     {summaryCards.map((card) => {
                         const Icon = card.icon;
