@@ -1,28 +1,70 @@
-import { useState } from 'react';
-import { X, Send } from 'lucide-react';
-import '../style/ChatbotPanel_Style.css';
+import { useState } from "react";
+import { X, Send } from "lucide-react";
+import "../style/ChatbotPanel_Style.css";
 
 export default function ChatbotPanel({ isOpen, onClose }) {
   const [messages, setMessages] = useState([
-    { id: 1, text: 'Halo! Ada yang bisa saya bantu mengenai aplikasi Anda?', sender: 'bot' },
+    {
+      id: 1,
+      text: "Halo! Ada yang bisa saya bantu mengenai aplikasi Anda?",
+      sender: "bot",
+    },
   ]);
-  const [input, setInput] = useState('');
+  const [input, setInput] = useState("");
 
-  const handleSend = () => {
+  const handleSend = async () => {
     if (!input.trim()) return;
-    
-    const userMsg = { id: messages.length + 1, text: input, sender: 'user' };
-    setMessages([...messages, userMsg]);
-    setInput('');
 
-    setTimeout(() => {
+    const userMessage = input;
+
+    const userMsg = {
+      id: Date.now(),
+      text: userMessage,
+      sender: "user",
+    };
+
+    setMessages((prev) => [...prev, userMsg]);
+    setInput("");
+
+    try {
+      const response = await fetch("http://localhost:11434/api/chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          model: "gemma4:12b",
+          messages: [
+            {
+              role: "user",
+              content: userMessage,
+            },
+          ],
+          stream: false,
+        }),
+      });
+
+      const data = await response.json();
+
       const botMsg = {
-        id: messages.length + 2,
-        text: 'Terima kasih atas pertanyaannya. Bagaimana saya bisa membantu lebih lanjut?',
-        sender: 'bot',
+        id: Date.now() + 1,
+        text: data.message.content,
+        sender: "bot",
       };
+
       setMessages((prev) => [...prev, botMsg]);
-    }, 500);
+    } catch (error) {
+      console.error(error);
+
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: Date.now() + 1,
+          text: "Tidak dapat terhubung dengan AI.",
+          sender: "bot",
+        },
+      ]);
+    }
   };
 
   if (!isOpen) return null;
@@ -51,7 +93,7 @@ export default function ChatbotPanel({ isOpen, onClose }) {
             placeholder="Tanya sesuatu..."
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            onKeyPress={(e) => e.key === 'Enter' && handleSend()}
+            onKeyPress={(e) => e.key === "Enter" && handleSend()}
           />
           <button className="chatbot-send-btn" onClick={handleSend}>
             <Send size={18} />

@@ -16,6 +16,8 @@ import {
   PanelLeftOpen,
 } from 'lucide-react';
 import '../style/Sidebar_Style.css';
+import { Users2 } from 'lucide-react';
+import { UserCheck } from 'lucide-react';
 
 const navItems = [
   { label: 'Executive Summary', path: '/dashboard', icon: LayoutDashboard },
@@ -25,6 +27,7 @@ const navItems = [
   { label: 'TSA Information', path: '/tsa-information', icon: FileText },
   { label: 'OSS Data Integration', path: '/oss-data', icon: Database },
   { label: 'Security Assessment', path: '/security-assessment', icon: ShieldCheck },
+  { label: 'Log User', path: 'log-user', icon: UserCheck },
   { label: 'User Access', path: '/user-access', icon: KeyRound, hasDivider: true },
   {
     label: 'Request',
