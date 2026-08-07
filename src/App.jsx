@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
+import Infra from './pages/infrastructure_visibilty/Infra';
 import AppPortofolioMain from './pages/app_portofolio/App_Portofolio_Main';
 import AppProfile from './pages/app_portofolio/App_Profile';
 import Architecture from './pages/app_portofolio/Architecture';
@@ -15,6 +16,7 @@ import BotRegis from './pages/feedback/Bot_Regis';
 import Result from './pages/feedback/Result';
 import Profile from './pages/Profile';
 import Settings from './pages/Settings';
+import Security from './pages/security/Security';
 import Layout from './components/Layout';
 import './App.css';
 
@@ -27,6 +29,7 @@ function App() {
 
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/settings" element={<Settings />} />
+        <Route path="/infrastructure" element={<Infra />} />
 
         <Route path="/applications" element={<AppPortofolioMain />} />
         <Route path="/applications/:id" element={<AppProfile />} />
@@ -43,6 +46,7 @@ function App() {
 
         <Route path="/feedback/result" element={<Result />} />
         <Route path="/feedback/bot-registration" element={<BotRegis />} />
+        <Route path="/security-assessment" element={<Security />} />
 
         <Route path="/profile" element={<Layout><Profile /></Layout>} />
       </Routes>

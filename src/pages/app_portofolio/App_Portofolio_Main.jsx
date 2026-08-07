@@ -2,7 +2,6 @@ import { useState, useMemo, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
     Search,
-    Plus,
     Boxes,
     Clock,
     User,
@@ -350,17 +349,6 @@ function AppPortofolioMain() {
     return (
         <Layout>
             <div className="portofolio-content">
-                <div className="portofolio-hero-merged">
-                    <div className="portofolio-hero-left">
-                        <div className="portofolio-hero-eyebrow">Lihat daftar aplikasi</div>
-                        <h1 className="portofolio-hero-title">App Portofolio</h1>
-                        <p className="portofolio-hero-desc">Lihat daftar aplikasi, status, owner, dan update terakhir dari satu tempat yang lebih terarah.</p>
-                    </div>
-                    <div className="portofolio-hero-right">
-                        <div className="stat-pill"><strong>{applications.length}</strong><span>Total aplikasi</span></div>
-                        <div className="stat-pill"><strong>{new Set(applications.map((app) => app.category)).size}</strong><span>Kategori</span></div>
-                    </div>
-                </div>
 
                 <div className="portofolio-toolbar">
                     <div className="portofolio-search">
@@ -371,15 +359,11 @@ function AppPortofolioMain() {
                             value={searchTerm}
                             onChange={(e) => handleSearchChange(e.target.value)}
                         />
-                        <button type="button" className="search-cmdk-badge" onClick={openPalette} title="Buka pencarian cepat (⌘K)">
+                        <button type="button" className="search-cmdk-badge" onClick={openPalette} title="Buka pencarian cepat">
                             <Command size={12} strokeWidth={2} />
-                            <span>⌘K</span>
+                            <span>⌘/CTRL + K</span>
                         </button>
                     </div>
-                    <button className="portofolio-add-btn">
-                        <Plus size={18} strokeWidth={2.2} />
-                        Tambah Aplikasi
-                    </button>
                 </div>
 
                 <div className="portofolio-filters">
