@@ -8,6 +8,7 @@ import Architecture from './pages/app_portofolio/Architecture';
 import ComplianceSecurity from './pages/app_portofolio/Compliance_Security';
 import TechInfo from './pages/app_portofolio/Tech_Info';
 import AppView from './pages/app_portofolio/App_View';
+import Compare from './pages/app_portofolio/Compare';
 import UserAccessMain from './pages/user_access/User_Access_Main';
 import UserAccessRegis from './pages/user_access/User_Access_Regis';
 import AppRegis from './pages/request/App_Regis';
@@ -17,6 +18,9 @@ import Result from './pages/feedback/Result';
 import Profile from './pages/Profile';
 import Settings from './pages/Settings';
 import Security from './pages/security/Security';
+import TSATeam from './pages/tsa/TSA_Team';
+import TSAInformation from './pages/tsa/TSA_Information';
+import OSSData from './pages/oss/OSS_Data';
 import Layout from './components/Layout';
 import './App.css';
 
@@ -32,6 +36,7 @@ function App() {
         <Route path="/infrastructure" element={<Infra />} />
 
         <Route path="/applications" element={<AppPortofolioMain />} />
+        <Route path="/applications/compare" element={<Compare />} />
         <Route path="/applications/:id" element={<AppProfile />} />
         <Route path="/applications/:id/architecture" element={<Architecture />} />
         <Route path="/applications/:id/compliance-security" element={<ComplianceSecurity />} />
@@ -47,6 +52,9 @@ function App() {
         <Route path="/feedback/result" element={<Result />} />
         <Route path="/feedback/bot-registration" element={<BotRegis />} />
         <Route path="/security-assessment" element={<Security />} />
+        <Route path="/tsa-team" element={<TSATeam />} />
+        <Route path="/tsa-information" element={<TSAInformation />} />
+        <Route path="/oss-data" element={<OSSData />} />
 
         <Route path="/profile" element={<Layout><Profile /></Layout>} />
       </Routes>
