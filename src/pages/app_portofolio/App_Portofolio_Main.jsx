@@ -364,6 +364,9 @@ function AppPortofolioMain() {
                             <span>⌘/CTRL + K</span>
                         </button>
                     </div>
+                    <button type="button" className="portofolio-compare-btn" title="Bandingkan aplikasi terpilih" onClick={() => navigate('/applications/compare')}>
+                        Compare Apps
+                    </button>
                 </div>
 
                 <div className="portofolio-filters">

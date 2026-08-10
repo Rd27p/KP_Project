@@ -1,7 +1,53 @@
 import { useEffect, useRef, useState } from 'react';
-import { Search, X, Bell, Bot } from 'lucide-react';
+import { useLocation, Link } from 'react-router-dom';
+import { Search, X, Bell, Bot, ChevronRight } from 'lucide-react';
 import Profile from '../pages/Profile';
+import { applications } from '../pages/app_portofolio/Application_Data';
 import '../style/Header_Style.css';
+
+// Label tampilan untuk tiap segmen route statis. Segmen yang tidak terdaftar
+// di sini otomatis di-format dari path-nya (mis. "app-view" -> "App View").
+const ROUTE_LABELS = {
+  dashboard: 'Executive Summary',
+  settings: 'Settings',
+  infrastructure: 'Infrastructure Visibility',
+  applications: 'App Portofolio',
+  compare: 'Compare',
+  architecture: 'Architecture',
+  'compliance-security': 'Compliance & Security',
+  'tech-info': 'Tech Info',
+  'app-view': 'App View',
+  'user-access': 'User Access',
+  register: 'Register',
+  request: 'Request',
+  'app-registration': 'Application Registration',
+  'use-case': 'Use Case Request',
+  feedback: 'Feedback',
+  result: 'Result',
+  'bot-registration': 'Bot Registration',
+  'security-assessment': 'Security Assessment',
+  'tsa-information': 'TSA Information Management',
+  'oss-data': 'OSS Data Integration',
+  profile: 'Profile',
+};
+
+function formatFallbackLabel(segment) {
+  return segment.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
+}
+
+function useBreadcrumb() {
+  const { pathname } = useLocation();
+  const segments = pathname.split('/').filter(Boolean);
+
+  return segments.map((segment, index) => {
+    const path = `/${segments.slice(0, index + 1).join('/')}`;
+    const isAppId = segments[index - 1] === 'applications' && segment !== 'compare';
+    const matchedApp = isAppId ? applications?.find((a) => String(a.id) === segment) : null;
+    const label = matchedApp?.name || ROUTE_LABELS[segment] || formatFallbackLabel(segment);
+
+    return { label, path, isLast: index === segments.length - 1 };
+  });
+}
 
 export default function Header({
   user,
@@ -15,6 +61,7 @@ export default function Header({
 }) {
   const [searchValue, setSearchValue] = useState('');
   const searchInputRef = useRef(null);
+  const breadcrumb = useBreadcrumb();
 
   const today = new Date().toLocaleDateString('id-ID', {
     weekday: 'long',
@@ -68,6 +115,23 @@ export default function Header({
   return (
     <div className="topbar">
       <div className="topbar-copy">
+        {breadcrumb.length > 0 && (
+          <nav className="breadcrumb" aria-label="Breadcrumb">
+            {breadcrumb.map((item) => (
+              <span className="breadcrumb-item" key={item.path}>
+                {item.isLast ? (
+                  <span className="breadcrumb-current">{item.label}</span>
+                ) : (
+                  <Link to={item.path} className="breadcrumb-link">
+                    {item.label}
+                  </Link>
+                )}
+                {!item.isLast && <ChevronRight size={12} className="breadcrumb-sep" />}
+              </span>
+            ))}
+          </nav>
+        )}
+
         <div className="greet-eyebrow">{today}</div>
         <div className="greet-title">
           {greeting}, {firstName} <span className="accent">👋</span>
