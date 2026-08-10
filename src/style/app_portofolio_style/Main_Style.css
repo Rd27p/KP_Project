@@ -431,7 +431,7 @@
     border-radius: 14px;
     cursor: pointer;
     box-shadow: 6px 6px 14px #C5C5C5,
-                -6px -6px 14px #FFFFFF;
+        -6px -6px 14px #FFFFFF;
     transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     white-space: nowrap;
 }
@@ -439,13 +439,13 @@
 .portofolio-add-btn:hover {
     transform: translateY(-2px);
     box-shadow: 8px 8px 18px #C5C5C5,
-                -8px -8px 18px #FFFFFF;
+        -8px -8px 18px #FFFFFF;
 }
 
 .portofolio-add-btn:active {
     transform: translateY(0);
     box-shadow: inset 3px 3px 8px #A50224,
-                inset -3px -3px 8px #D3324A;
+        inset -3px -3px 8px #D3324A;
 }
 
 .portofolio-count {
@@ -844,8 +844,15 @@
 }
 
 @keyframes cmdkPop {
-    from { opacity: 0; transform: translateY(-8px) scale(0.98); }
-    to { opacity: 1; transform: translateY(0) scale(1); }
+    from {
+        opacity: 0;
+        transform: translateY(-8px) scale(0.98);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
 }
 
 .cmdk-input-row {
@@ -1179,8 +1186,15 @@
 }
 
 @keyframes pivotDrilldownIn {
-    from { opacity: 0; transform: translateY(-6px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(-6px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .pivot-drilldown-head {
@@ -1238,6 +1252,166 @@
 
 .pivot-drilldown-compare-btn:hover {
     transform: translateY(-1px);
+}
+
+/* ---------- Compare upgrade: diff highlight, remove-per-column, sticky, totals, empty CTA ---------- */
+
+/* Toolbar above the comparison table: highlight toggle + diff summary badge */
+.compare-table-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+}
+
+.compare-highlight-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 14px;
+    border-radius: 12px;
+    border: 1px solid var(--line);
+    background: var(--card);
+    color: var(--ink-soft);
+    font-size: 12.5px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.compare-highlight-toggle:hover {
+    color: var(--ink);
+    box-shadow: var(--shadow-1);
+}
+
+.compare-highlight-toggle.active {
+    background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+    border-color: transparent;
+    color: #fff;
+}
+
+.compare-diff-badge {
+    padding: 7px 12px;
+    border-radius: 999px;
+    background: var(--surface);
+    color: var(--ink-soft);
+    font-size: 12px;
+    font-weight: 700;
+}
+
+/* Remove-per-column button in table header */
+.compare-th-app {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.compare-th-remove {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 7px;
+    border: none;
+    background: rgba(0, 0, 0, 0.06);
+    color: var(--ink-soft);
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: all 0.15s ease;
+}
+
+.compare-th-remove:hover {
+    background: var(--red);
+    color: #fff;
+}
+
+/* Sticky header row + sticky first column */
+.compare-table-wrap {
+    max-height: 62vh;
+    overflow: auto;
+}
+
+.compare-table thead th {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+}
+
+.compare-table th:first-child,
+.compare-table td:first-child {
+    position: sticky;
+    left: 0;
+    z-index: 1;
+    background: var(--card);
+    box-shadow: 2px 0 0 var(--line);
+}
+
+.compare-table thead th:first-child {
+    z-index: 3;
+    background: var(--surface);
+}
+
+.compare-table tr:nth-child(even) td:first-child {
+    background: var(--surface);
+}
+
+/* Diff highlight */
+tr.diff-row {
+    background: rgba(251, 191, 36, 0.05);
+}
+
+td.diff-cell {
+    background: rgba(251, 191, 36, 0.28) !important;
+}
+
+/* Empty state CTA */
+.compare-empty-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 6px;
+    padding: 10px 18px;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--red) 0%, var(--red-deep) 100%);
+    color: #fff;
+    font-size: 12.5px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 8px 18px rgba(213, 50, 74, 0.24);
+    transition: transform 0.15s ease;
+}
+
+.compare-empty-cta:hover {
+    transform: translateY(-1px);
+}
+
+/* Pivot table: Total row & column */
+.pivot-total-col {
+    color: var(--red) !important;
+}
+
+.pivot-total-cell {
+    font-weight: 700;
+    color: var(--navy);
+}
+
+.pivot-total-cell.grand {
+    color: var(--red);
+    font-size: 14px;
+}
+
+.pivot-total-row td {
+    background: var(--surface);
+    border-top: 2px solid var(--line);
+}
+
+.pivot-total-row .pivot-row-label {
+    color: var(--red);
 }
 
 @media (max-width: 700px) {

@@ -18,7 +18,6 @@ import Result from './pages/feedback/Result';
 import Profile from './pages/Profile';
 import Settings from './pages/Settings';
 import Security from './pages/security/Security';
-import TSATeam from './pages/tsa/TSA_Team';
 import TSAInformation from './pages/tsa/TSA_Information';
 import OSSData from './pages/oss/OSS_Data';
 import Layout from './components/Layout';
@@ -52,7 +51,6 @@ function App() {
         <Route path="/feedback/result" element={<Result />} />
         <Route path="/feedback/bot-registration" element={<BotRegis />} />
         <Route path="/security-assessment" element={<Security />} />
-        <Route path="/tsa-team" element={<TSATeam />} />
         <Route path="/tsa-information" element={<TSAInformation />} />
         <Route path="/oss-data" element={<OSSData />} />
 

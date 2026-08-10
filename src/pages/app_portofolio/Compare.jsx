@@ -1,6 +1,6 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Search, Check, Trash2, Columns3, Grid2x2, X } from 'lucide-react';
+import { ArrowLeft, Search, Check, Trash2, Columns3, Grid2x2, X, Highlighter } from 'lucide-react';
 import Layout from '../../components/Layout';
 import { applications } from './Application_Data';
 import '../../style/app_portofolio_style/Main_Style.css';
@@ -41,6 +41,8 @@ function Compare() {
   const [pivotRowField, setPivotRowField] = useState('category');
   const [pivotColField, setPivotColField] = useState('status');
   const [drilldown, setDrilldown] = useState(null); // { rowValue, colValue, apps }
+  const [highlightDiff, setHighlightDiff] = useState(false);
+  const filterInputRef = useRef(null);
 
   const filteredApps = useMemo(() => {
     const q = filter.toLowerCase();
@@ -67,7 +69,29 @@ function Compare() {
     });
   };
 
+  const removeFromCompare = (id) => {
+    setSelectedIds((prev) => prev.filter((value) => value !== id));
+  };
+
   const clearSelection = () => setSelectedIds([]);
+
+  const focusSearch = () => filterInputRef.current?.focus();
+
+  // ---------- Diff perbandingan (dipakai untuk highlight & badge ringkasan) ----------
+  const fieldDiffs = useMemo(() => {
+    if (selectedApps.length < 2) return [];
+    return compareFields.map((field) => {
+      const values = selectedApps.map((app) => app[field.key] ?? '-');
+      return { key: field.key, differs: !values.every((v) => v === values[0]) };
+    });
+  }, [selectedApps]);
+
+  const diffByKey = useMemo(
+    () => Object.fromEntries(fieldDiffs.map((f) => [f.key, f.differs])),
+    [fieldDiffs]
+  );
+
+  const diffCount = fieldDiffs.filter((f) => f.differs).length;
 
   // ---------- Pivot table ----------
   const pivotRowLabel = PIVOT_FIELDS.find((f) => f.key === pivotRowField)?.label;
@@ -89,7 +113,6 @@ function Compare() {
   function handlePivotRowChange(value) {
     setPivotRowField(value);
     setDrilldown(null);
-    // Baris & kolom tidak boleh sama field-nya (matriks jadi tidak berguna kalau sama).
     if (value === pivotColField) {
       const fallback = PIVOT_FIELDS.find((f) => f.key !== value);
       setPivotColField(fallback.key);
@@ -150,6 +173,7 @@ function Compare() {
               <div className="compare-filter">
                 <Search size={18} strokeWidth={2} />
                 <input
+                  ref={filterInputRef}
                   type="text"
                   placeholder="Cari aplikasi untuk dibandingkan..."
                   value={filter}
@@ -186,38 +210,74 @@ function Compare() {
 
             <div className="compare-panel-column">
               {selectedApps.length >= 2 ? (
-                <div className="compare-table-wrap">
-                  <table className="compare-table">
-                    <thead>
-                      <tr>
-                        <th>Field</th>
-                        {selectedApps.map((app) => (
-                          <th key={app.id}>{app.name}</th>
-                        ))}
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {compareFields.map((field) => (
-                        <tr key={field.key}>
-                          <td>{field.label}</td>
+                <>
+                  <div className="compare-table-toolbar">
+                    <button
+                      type="button"
+                      className={`compare-highlight-toggle ${highlightDiff ? 'active' : ''}`}
+                      onClick={() => setHighlightDiff((v) => !v)}
+                    >
+                      <Highlighter size={14} strokeWidth={2} />
+                      Highlight perbedaan
+                    </button>
+                    <span className="compare-diff-badge">
+                      {diffCount} dari {compareFields.length} field berbeda
+                    </span>
+                  </div>
+
+                  <div className="compare-table-wrap">
+                    <table className="compare-table">
+                      <thead>
+                        <tr>
+                          <th>Field</th>
                           {selectedApps.map((app) => (
-                            <td key={app.id}>
-                              {field.key === 'status' ? (
-                                <span className={`status-badge ${statusColor[app.status]}`}>{app.status}</span>
-                              ) : (
-                                app[field.key] || '-'
-                              )}
-                            </td>
+                            <th key={app.id}>
+                              <div className="compare-th-app">
+                                <span>{app.name}</span>
+                                <button
+                                  type="button"
+                                  className="compare-th-remove"
+                                  onClick={() => removeFromCompare(app.id)}
+                                  aria-label={`Hapus ${app.name} dari perbandingan`}
+                                  title="Hapus dari perbandingan"
+                                >
+                                  <X size={13} strokeWidth={2.4} />
+                                </button>
+                              </div>
+                            </th>
                           ))}
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
+                      </thead>
+                      <tbody>
+                        {compareFields.map((field) => {
+                          const rowDiffers = highlightDiff && diffByKey[field.key];
+                          return (
+                            <tr key={field.key} className={rowDiffers ? 'diff-row' : ''}>
+                              <td>{field.label}</td>
+                              {selectedApps.map((app) => (
+                                <td key={app.id} className={rowDiffers ? 'diff-cell' : ''}>
+                                  {field.key === 'status' ? (
+                                    <span className={`status-badge ${statusColor[app.status]}`}>{app.status}</span>
+                                  ) : (
+                                    app[field.key] || '-'
+                                  )}
+                                </td>
+                              ))}
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
+                </>
               ) : (
                 <div className="compare-empty-state">
                   <p>Pilih setidaknya 2 aplikasi untuk melihat perbandingan.</p>
                   <p>Kamu bisa memilih sampai 4 aplikasi sekaligus, dari sini atau dari tab Pivot.</p>
+                  <button type="button" className="compare-empty-cta" onClick={focusSearch}>
+                    <Search size={14} strokeWidth={2} />
+                    Cari aplikasi
+                  </button>
                 </div>
               )}
             </div>
@@ -252,33 +312,49 @@ function Compare() {
                     {pivotCols.map((col) => (
                       <th key={col}>{col}</th>
                     ))}
+                    <th className="pivot-total-col">Total</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {pivotRows.map((row) => (
-                    <tr key={row}>
-                      <td className="pivot-row-label">{row}</td>
-                      {pivotCols.map((col) => {
-                        const apps = appsInCell(row, col);
-                        const isActiveCell = drilldown?.rowValue === row && drilldown?.colValue === col;
-                        return (
-                          <td key={col}>
-                            {apps.length > 0 ? (
-                              <button
-                                type="button"
-                                className={`pivot-cell-btn ${isActiveCell ? 'active' : ''}`}
-                                onClick={() => setDrilldown({ rowValue: row, colValue: col, apps })}
-                              >
-                                {apps.length}
-                              </button>
-                            ) : (
-                              <span className="pivot-cell-empty">–</span>
-                            )}
-                          </td>
-                        );
-                      })}
-                    </tr>
-                  ))}
+                  {pivotRows.map((row) => {
+                    const rowApps = pivotCols.map((col) => appsInCell(row, col));
+                    const rowTotal = rowApps.reduce((sum, apps) => sum + apps.length, 0);
+                    return (
+                      <tr key={row}>
+                        <td className="pivot-row-label">{row}</td>
+                        {pivotCols.map((col, i) => {
+                          const apps = rowApps[i];
+                          const isActiveCell = drilldown?.rowValue === row && drilldown?.colValue === col;
+                          return (
+                            <td key={col}>
+                              {apps.length > 0 ? (
+                                <button
+                                  type="button"
+                                  className={`pivot-cell-btn ${isActiveCell ? 'active' : ''}`}
+                                  onClick={() => setDrilldown({ rowValue: row, colValue: col, apps })}
+                                >
+                                  {apps.length}
+                                </button>
+                              ) : (
+                                <span className="pivot-cell-empty">–</span>
+                              )}
+                            </td>
+                          );
+                        })}
+                        <td className="pivot-total-cell">{rowTotal}</td>
+                      </tr>
+                    );
+                  })}
+                  <tr className="pivot-total-row">
+                    <td className="pivot-row-label">Total</td>
+                    {pivotCols.map((col) => {
+                      const colTotal = pivotRows.reduce((sum, row) => sum + appsInCell(row, col).length, 0);
+                      return (
+                        <td key={col} className="pivot-total-cell">{colTotal}</td>
+                      );
+                    })}
+                    <td className="pivot-total-cell grand">{applications.length}</td>
+                  </tr>
                 </tbody>
               </table>
             </div>

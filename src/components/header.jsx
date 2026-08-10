@@ -26,8 +26,7 @@ const ROUTE_LABELS = {
   result: 'Result',
   'bot-registration': 'Bot Registration',
   'security-assessment': 'Security Assessment',
-  'tsa-team': 'TSA Team',
-  'tsa-information': 'TSA Information',
+  'tsa-information': 'TSA Information Management',
   'oss-data': 'OSS Data Integration',
   profile: 'Profile',
 };
