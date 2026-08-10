@@ -1,143 +1,354 @@
+import React, { useState, useMemo } from 'react';
 import {
-    Activity,
-    AlertTriangle,
-    CheckCircle2,
-    KeyRound,
-    Lock,
-    ShieldCheck,
+    Search,
+    Download,
+    Plus,
+    ChevronLeft,
+    ChevronRight,
+    ChevronDown,
+    FileText,
 } from 'lucide-react';
 import Layout from '../../components/Layout';
 import '../../style/security_style/Main_Style.css';
 
-const summaryCards = [
-    {
-        title: 'Risk Level',
-        value: 'Medium',
-        detail: '2 item butuh perhatian',
-        icon: AlertTriangle,
-        tone: 'warning',
-    },
-    {
-        title: 'Control Coverage',
-        value: '94%',
-        detail: 'Kebijakan aktif berjalan',
-        icon: ShieldCheck,
-        tone: 'good',
-    },
-    {
-        title: 'MFA Enabled',
-        value: '87%',
-        detail: 'Pengguna terverifikasi',
-        icon: Lock,
-        tone: 'neutral',
-    },
-    {
-        title: 'Incident Trend',
-        value: 'Stable',
-        detail: 'Tidak ada insiden kritis',
-        icon: Activity,
-        tone: 'good',
-    },
+// ─── Sample Data ────────────────────────────────────────────────────────────
+const PHASES = [
+    { label: 'Red Teaming Phase X Term 1 - 2025', source: '(Source_data_application)' },
+    { label: 'Red Teaming Phase IX Term 2 - 2024', source: '(Source_data_application)' },
 ];
 
-const controls = [
-    {
-        name: 'Access Review',
-        detail: 'Hak akses harian telah diverifikasi oleh tim IT',
-    },
-    {
-        name: 'Encryption Standard',
-        detail: 'TLS 1.3 dan AES-256 aktif pada layanan utama',
-    },
-    {
-        name: 'Secrets Rotation',
-        detail: 'Kunci rahasia diperbarui dalam 30 hari terakhir',
-    },
-];
+function makeRows(names) {
+    return names.map((name) => ({
+        name,
+        open: { critical: 0, high: 1, medium: 2, low: 2, total: 5 },
+        close: { critical: 0, high: 1, medium: 2, low: 2, total: 4 },
+    }));
+}
 
-const actions = [
-    {
-        title: 'Tinjau policy MFA',
-        text: 'Aktifkan MFA untuk akun administrator yang belum tercover.',
-    },
-    {
-        title: 'Refresh backup test',
-        text: 'Lakukan uji pemulihan pada sistem core sebelum akhir bulan.',
-    },
-];
+const ALL_APPS = makeRows([
+    'Covmo', 'NAVA', 'Cyclops', 'Digipos', 'Order Management',
+    'MyTelkomsel', 'Orbit', 'Enterprise Portal', 'Digiflazz', 'SocketIO',
+    'Billing System', 'CRM Core', 'API Gateway', 'Auth Service', 'DataVault',
+    'TelcoBI', 'NetworkOps', 'CloudManager', 'Incident Hub', 'LogStream',
+    'PatchBot', 'AppShield', 'ZeroTrust', 'SecureDNS', 'VaultKey',
+    'PolicyEngine', 'RiskRadar', 'ThreatMap', 'AuditLog', 'ComplianceX',
+]);
 
+const PAGE_SIZES = [5, 10, 20, 50];
+
+// ─── Component ───────────────────────────────────────────────────────────────
 function Security() {
+    const [search, setSearch] = useState('');
+    const [phaseOpen, setPhaseOpen] = useState(false);
+    const [selectedPhase, setSelectedPhase] = useState(0);
+    const [page, setPage] = useState(1);
+    const [pageSize, setPageSize] = useState(5);
+    const [showSizeDropdown, setShowSizeDropdown] = useState(false);
+
+    const filtered = useMemo(() => {
+        const q = search.toLowerCase();
+        return ALL_APPS.filter((a) => a.name.toLowerCase().includes(q));
+    }, [search]);
+
+    const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
+    const currentPage = Math.min(page, totalPages);
+    const paged = filtered.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+
+    function handleSearch(val) {
+        setSearch(val);
+        setPage(1);
+    }
+
+    function handlePageSize(size) {
+        setPageSize(size);
+        setPage(1);
+        setShowSizeDropdown(false);
+    }
+
+    function handlePhase(idx) {
+        setSelectedPhase(idx);
+        setPhaseOpen(false);
+        setPage(1);
+    }
+
+    // Pagination page numbers
+    function getPageNumbers() {
+        const pages = [];
+        if (totalPages <= 7) {
+            for (let i = 1; i <= totalPages; i++) pages.push(i);
+        } else {
+            pages.push(1);
+            if (currentPage > 3) pages.push('…');
+            for (
+                let i = Math.max(2, currentPage - 1);
+                i <= Math.min(totalPages - 1, currentPage + 1);
+                i++
+            ) pages.push(i);
+            if (currentPage < totalPages - 2) pages.push('…');
+            pages.push(totalPages);
+        }
+        return pages;
+    }
+
+    const phase = PHASES[selectedPhase];
+    const startItem = (currentPage - 1) * pageSize + 1;
+    const endItem = Math.min(currentPage * pageSize, filtered.length);
+
     return (
         <Layout>
-            <div className="security-page">
-                <div className="security-summary-grid">
-                    {summaryCards.map((card) => {
-                        const Icon = card.icon;
-                        return (
-                            <div className={`security-summary-card ${card.tone}`} key={card.title}>
-                                <div className="security-summary-icon">
-                                    <Icon size={18} strokeWidth={2} />
-                                </div>
-                                <div>
-                                    <p className="security-summary-title">{card.title}</p>
-                                    <h3>{card.value}</h3>
-                                    <span>{card.detail}</span>
-                                </div>
-                            </div>
-                        );
-                    })}
+            <div className="sa-page">
+                {/* ── Header ───────────────────────────────────────── */}
+                <div className="sa-header">
+                    <div className="sa-header-left">
+                        <h1 className="sa-title">Security Assessment</h1>
+                    </div>
+                    <div className="sa-header-right">
+                        <span className="sa-data-date">Data as of 2 Jul 2026 09:00</span>
+                        <button className="sa-export-btn">
+                            <Download size={14} strokeWidth={2.2} />
+                            Export Report
+                        </button>
+                    </div>
                 </div>
 
-                <div className="security-grid">
-                    <section className="security-card">
-                        <div className="security-card-header">
-                            <div>
-                                <p className="security-card-label">Current Controls</p>
-                                <h2>Kontrol keamanan utama</h2>
-                            </div>
-                            <span className="security-chip">Protected</span>
+                {/* ── Toolbar ──────────────────────────────────────── */}
+                <div className="sa-toolbar">
+                    <div className="sa-toolbar-left">
+                        {/* Search */}
+                        <div className="sa-search">
+                            <Search size={14} strokeWidth={2} className="sa-search-icon" />
+                            <input
+                                type="text"
+                                placeholder="Search applications by name..."
+                                value={search}
+                                onChange={(e) => handleSearch(e.target.value)}
+                            />
                         </div>
 
-                        <div className="security-list">
-                            {controls.map((item) => (
-                                <div className="security-list-item" key={item.name}>
-                                    <div className="security-list-main">
-                                        <div className="security-list-icon">
-                                            <KeyRound size={16} strokeWidth={2} />
-                                        </div>
-                                        <div>
-                                            <h3>{item.name}</h3>
-                                            <p>{item.detail}</p>
-                                        </div>
-                                    </div>
-                                    <span className="security-status">OK</span>
+                        {/* Phase Filter */}
+                        <div className="sa-dropdown-wrap">
+                            <button
+                                className="sa-phase-btn"
+                                onClick={() => setPhaseOpen((v) => !v)}
+                            >
+                                Phase Filter
+                                <ChevronDown size={14} strokeWidth={2.2} />
+                            </button>
+                            {phaseOpen && (
+                                <div className="sa-dropdown-menu">
+                                    {PHASES.map((p, i) => (
+                                        <button
+                                            key={i}
+                                            className={`sa-dropdown-item ${selectedPhase === i ? 'active' : ''}`}
+                                            onClick={() => handlePhase(i)}
+                                        >
+                                            {p.label}
+                                        </button>
+                                    ))}
                                 </div>
-                            ))}
+                            )}
                         </div>
-                    </section>
+                    </div>
 
-                    <section className="security-card">
-                        <div className="security-card-header">
-                            <div>
-                                <p className="security-card-label">Recommended Actions</p>
-                                <h2>Prioritas tindakan</h2>
+                    <div className="sa-toolbar-right">
+                        {/* Showing count */}
+                        <span className="sa-showing">
+                            Showing{' '}
+                            <strong>
+                                {startItem}–{endItem}
+                            </strong>{' '}
+                            of <strong>{filtered.length}</strong> applications
+                        </span>
+
+                        {/* SHOW per-page */}
+                        <div className="sa-show-wrap">
+                            <span className="sa-show-label">SHOW</span>
+                            <div className="sa-dropdown-wrap">
+                                <button
+                                    className="sa-show-btn"
+                                    onClick={() => setShowSizeDropdown((v) => !v)}
+                                >
+                                    {pageSize}
+                                    <ChevronDown size={12} strokeWidth={2.2} />
+                                </button>
+                                {showSizeDropdown && (
+                                    <div className="sa-dropdown-menu sa-dropdown-menu--right">
+                                        {PAGE_SIZES.map((s) => (
+                                            <button
+                                                key={s}
+                                                className={`sa-dropdown-item ${pageSize === s ? 'active' : ''}`}
+                                                onClick={() => handlePageSize(s)}
+                                            >
+                                                {s}
+                                            </button>
+                                        ))}
+                                    </div>
+                                )}
                             </div>
                         </div>
 
-                        <div className="security-alert-list">
-                            {actions.map((action) => (
-                                <div className="security-alert-item" key={action.title}>
-                                    <div className="security-alert-icon">
-                                        <CheckCircle2 size={18} strokeWidth={2} />
+                        {/* Add button */}
+                        <button className="sa-add-btn">
+                            <Plus size={14} strokeWidth={2.5} />
+                            Add Security Assessment
+                        </button>
+                    </div>
+                </div>
+
+                {/* ── Table ────────────────────────────────────────── */}
+                <div className="sa-table-wrap">
+                    <table className="sa-table">
+                        {/* Section header */}
+                        <thead>
+                            <tr className="sa-section-row">
+                                <td colSpan={8}>
+                                    <div className="sa-section-inner">
+                                        <strong>{phase.label}</strong>
+                                        <span>Source Data : {phase.source}</span>
                                     </div>
-                                    <div>
-                                        <h3>{action.title}</h3>
-                                        <p>{action.text}</p>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </section>
+                                </td>
+                            </tr>
+                            <tr className="sa-col-header">
+                                <th className="sa-th-name">App Name</th>
+                                <th>Status</th>
+                                <th>Severity Critical</th>
+                                <th>Severity High</th>
+                                <th>Severity Medium</th>
+                                <th>Severity Low</th>
+                                <th>Total</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {paged.length === 0 ? (
+                                <tr>
+                                    <td colSpan={8} className="sa-empty">
+                                        No applications found.
+                                    </td>
+                                </tr>
+                            ) : (
+                                paged.map((app) => (
+                                    <React.Fragment key={app.name}>
+                                        {/* Open row */}
+                                        <tr className="sa-tr">
+                                            <td className="sa-td-name" rowSpan={2}>
+                                                {app.name}
+                                            </td>
+                                            <td>
+                                                <span className="sa-badge sa-badge--open">Open</span>
+                                            </td>
+                                            <td>
+                                                <span className="sa-sev sa-sev--critical">
+                                                    {app.open.critical}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span className="sa-sev sa-sev--high">
+                                                    {app.open.high}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span className="sa-sev sa-sev--medium">
+                                                    {app.open.medium}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span className="sa-sev sa-sev--low">
+                                                    {app.open.low}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span className="sa-total">{app.open.total}</span>
+                                            </td>
+                                            <td>
+                                                <button className="sa-action-btn" title="View report">
+                                                    <FileText size={15} strokeWidth={1.8} />
+                                                </button>
+                                            </td>
+                                        </tr>
+
+                                        {/* Close row */}
+                                        <tr className="sa-tr sa-tr--close">
+                                            <td>
+                                                <span className="sa-badge sa-badge--close">Close</span>
+                                            </td>
+                                            <td>
+                                                <span className="sa-sev sa-sev--critical">
+                                                    {app.close.critical}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span className="sa-sev sa-sev--high">
+                                                    {app.close.high}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span className="sa-sev sa-sev--medium">
+                                                    {app.close.medium}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span className="sa-sev sa-sev--low">
+                                                    {app.close.low}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span className="sa-total">{app.close.total}</span>
+                                            </td>
+                                            <td>
+                                                <button className="sa-action-btn" title="View report">
+                                                    <FileText size={15} strokeWidth={1.8} />
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </React.Fragment>
+                                ))
+                            )}
+                        </tbody>
+                    </table>
+                </div>
+
+                {/* ── Footer / Pagination ──────────────────────────── */}
+                <div className="sa-footer">
+                    <span className="sa-footer-info">
+                        Showing <strong>{startItem}</strong> – <strong>{endItem}</strong> of{' '}
+                        <strong>{filtered.length.toLocaleString()}</strong> applications
+                    </span>
+
+                    <div className="sa-pagination">
+                        <button
+                            className="sa-page-btn sa-page-nav"
+                            onClick={() => setPage((p) => Math.max(1, p - 1))}
+                            disabled={currentPage === 1}
+                        >
+                            <ChevronLeft size={14} strokeWidth={2.5} />
+                        </button>
+
+                        {getPageNumbers().map((p, i) =>
+                            p === '…' ? (
+                                <span key={`ellipsis-${i}`} className="sa-page-ellipsis">
+                                    …
+                                </span>
+                            ) : (
+                                <button
+                                    key={p}
+                                    className={`sa-page-btn ${currentPage === p ? 'active' : ''}`}
+                                    onClick={() => setPage(p)}
+                                >
+                                    {p}
+                                </button>
+                            )
+                        )}
+
+                        <button
+                            className="sa-page-btn sa-page-nav"
+                            onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                            disabled={currentPage === totalPages}
+                        >
+                            <ChevronRight size={14} strokeWidth={2.5} />
+                        </button>
+                    </div>
                 </div>
             </div>
         </Layout>

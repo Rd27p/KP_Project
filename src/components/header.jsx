@@ -115,6 +115,12 @@ export default function Header({
   return (
     <div className="topbar">
       <div className="topbar-copy">
+
+        <div className="greet-eyebrow">{today}</div>
+        <div className="greet-title">
+          {greeting}, {firstName} <span className="accent">👋</span>
+        </div>
+
         {breadcrumb.length > 0 && (
           <nav className="breadcrumb" aria-label="Breadcrumb">
             {breadcrumb.map((item) => (
@@ -131,11 +137,6 @@ export default function Header({
             ))}
           </nav>
         )}
-
-        <div className="greet-eyebrow">{today}</div>
-        <div className="greet-title">
-          {greeting}, {firstName} <span className="accent">👋</span>
-        </div>
       </div>
 
       <div className="topbar-actions">
