@@ -33,18 +33,6 @@ function TSATeam() {
   return (
     <Layout>
       <div className="tsa-page">
-        <section className="tsa-hero">
-          <div>
-            <p className="tsa-eyebrow">TSA Team</p>
-            <h1>Tim Keamanan dan Penilaian</h1>
-            <p>
-              Kenali anggota inti TSA yang mendukung penilaian, mitigasi, dan tata kelola aplikasi.
-              Tim ini mengelola keamanan secara berkelanjutan dan kolaboratif.
-            </p>
-          </div>
-          <div className="tsa-hero-badge tsa-team-badge">Team</div>
-        </section>
-
         <div className="tsa-grid">
           <section className="tsa-card tsa-team-card">
             <div className="tsa-card-header">

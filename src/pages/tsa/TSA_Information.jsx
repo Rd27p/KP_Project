@@ -67,18 +67,6 @@ function TSAInformation() {
   return (
     <Layout>
       <div className="tsa-page">
-        <section className="tsa-hero">
-          <div>
-            <p className="tsa-eyebrow">TSA Information</p>
-            <h1>Trusted Security Assessment Overview</h1>
-            <p>
-              Pantau status pemantauan, temuan keamanan, dan kesiapan operasional tim TSA.
-              Halaman ini dirancang untuk menjelaskan prioritas dan cakupan assessment.
-            </p>
-          </div>
-          <div className="tsa-hero-badge">Program TSA</div>
-        </section>
-
         <div className="tsa-summary-grid">
           {summaryCards.map((card) => {
             const Icon = card.icon;

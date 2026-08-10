@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Search, Check, Trash2,} from 'lucide-react';
+import { ArrowLeft, Search, Check, Trash2, Columns3, Grid2x2, X } from 'lucide-react';
 import Layout from '../../components/Layout';
 import { applications } from './Application_Data';
 import '../../style/app_portofolio_style/Main_Style.css';
@@ -21,6 +21,12 @@ const compareFields = [
   { key: 'supportContact', label: 'Support' },
 ];
 
+const PIVOT_FIELDS = [
+  { key: 'category', label: 'Kategori' },
+  { key: 'status', label: 'Status' },
+  { key: 'owner', label: 'Owner' },
+];
+
 const statusColor = {
   Active: 'badge-active',
   Maintenance: 'badge-maintenance',
@@ -31,6 +37,10 @@ function Compare() {
   const navigate = useNavigate();
   const [selectedIds, setSelectedIds] = useState([]);
   const [filter, setFilter] = useState('');
+  const [viewMode, setViewMode] = useState('sidebyside'); // 'sidebyside' | 'pivot'
+  const [pivotRowField, setPivotRowField] = useState('category');
+  const [pivotColField, setPivotColField] = useState('status');
+  const [drilldown, setDrilldown] = useState(null); // { rowValue, colValue, apps }
 
   const filteredApps = useMemo(() => {
     const q = filter.toLowerCase();
@@ -59,6 +69,38 @@ function Compare() {
 
   const clearSelection = () => setSelectedIds([]);
 
+  // ---------- Pivot table ----------
+  const pivotRowLabel = PIVOT_FIELDS.find((f) => f.key === pivotRowField)?.label;
+  const pivotColLabel = PIVOT_FIELDS.find((f) => f.key === pivotColField)?.label;
+
+  const pivotRows = useMemo(
+    () => [...new Set(applications.map((a) => a[pivotRowField]))].filter(Boolean).sort(),
+    [pivotRowField]
+  );
+  const pivotCols = useMemo(
+    () => [...new Set(applications.map((a) => a[pivotColField]))].filter(Boolean).sort(),
+    [pivotColField]
+  );
+
+  function appsInCell(rowValue, colValue) {
+    return applications.filter((a) => a[pivotRowField] === rowValue && a[pivotColField] === colValue);
+  }
+
+  function handlePivotRowChange(value) {
+    setPivotRowField(value);
+    setDrilldown(null);
+    // Baris & kolom tidak boleh sama field-nya (matriks jadi tidak berguna kalau sama).
+    if (value === pivotColField) {
+      const fallback = PIVOT_FIELDS.find((f) => f.key !== value);
+      setPivotColField(fallback.key);
+    }
+  }
+
+  function handlePivotColChange(value) {
+    setPivotColField(value);
+    setDrilldown(null);
+  }
+
   return (
     <Layout>
       <div className="portofolio-content">
@@ -67,10 +109,6 @@ function Compare() {
             <ArrowLeft size={16} />
             Back to Portfolio
           </button>
-          <div>
-            <h1>Compare Applications</h1>
-            <p>Bandingkan hingga 4 aplikasi secara berdampingan untuk melihat perbedaan teknis dan operasional.</p>
-          </div>
         </div>
 
         <div className="compare-meta-row">
@@ -78,89 +116,213 @@ function Compare() {
             <span>{selectedApps.length} aplikasi dipilih</span>
             <span>Minimal 2 aplikasi diperlukan untuk membandingkan.</span>
           </div>
-          <button type="button" className="compare-clear-btn" onClick={clearSelection}>
-            <Trash2 size={14} />
-            Clear selection
-          </button>
+
+          <div className="compare-meta-actions">
+            <div className="view-toggle" role="tablist" aria-label="Mode perbandingan">
+              <button
+                type="button"
+                className={`view-toggle-btn ${viewMode === 'sidebyside' ? 'active' : ''}`}
+                onClick={() => setViewMode('sidebyside')}
+              >
+                <Columns3 size={14} strokeWidth={2} />
+                Side-by-side
+              </button>
+              <button
+                type="button"
+                className={`view-toggle-btn ${viewMode === 'pivot' ? 'active' : ''}`}
+                onClick={() => setViewMode('pivot')}
+              >
+                <Grid2x2 size={14} strokeWidth={2} />
+                Pivot
+              </button>
+            </div>
+
+            <button type="button" className="compare-clear-btn" onClick={clearSelection}>
+              <Trash2 size={14} />
+              Clear selection
+            </button>
+          </div>
         </div>
 
-        <div className="compare-panel">
-          <div className="compare-panel-column">
-            <div className="compare-filter">
-              <Search size={18} strokeWidth={2} />
-              <input
-                type="text"
-                placeholder="Cari aplikasi untuk dibandingkan..."
-                value={filter}
-                onChange={(e) => setFilter(e.target.value)}
-              />
-            </div>
-
-            <div className="compare-app-list">
-              <div className="compare-app-list-header">
-                <span>Daftar aplikasi</span>
-                <span>Centang aplikasi untuk dibandingkan</span>
+        {viewMode === 'sidebyside' ? (
+          <div className="compare-panel">
+            <div className="compare-panel-column">
+              <div className="compare-filter">
+                <Search size={18} strokeWidth={2} />
+                <input
+                  type="text"
+                  placeholder="Cari aplikasi untuk dibandingkan..."
+                  value={filter}
+                  onChange={(e) => setFilter(e.target.value)}
+                />
               </div>
 
-              <div className="compare-app-list-body">
-                {filteredApps.map((app) => (
-                  <button
-                    key={app.id}
-                    type="button"
-                    className={`compare-app-row ${selectedIds.includes(app.id) ? 'active' : ''}`}
-                    onClick={() => toggleSelect(app.id)}
-                  >
-                    <div>
-                      <strong>{app.name}</strong>
-                      <span>{app.category} · {app.owner}</span>
-                    </div>
-                    <div className="compare-app-row-action">
-                      {selectedIds.includes(app.id) ? <Check size={16} /> : <span>{selectedIds.length < 4 ? 'Select' : 'Max 4'}</span>}
-                    </div>
-                  </button>
-                ))}
+              <div className="compare-app-list">
+                <div className="compare-app-list-header">
+                  <span>Daftar aplikasi</span>
+                  <span>Centang aplikasi untuk dibandingkan</span>
+                </div>
+
+                <div className="compare-app-list-body">
+                  {filteredApps.map((app) => (
+                    <button
+                      key={app.id}
+                      type="button"
+                      className={`compare-app-row ${selectedIds.includes(app.id) ? 'active' : ''}`}
+                      onClick={() => toggleSelect(app.id)}
+                    >
+                      <div>
+                        <strong>{app.name}</strong>
+                        <span>{app.category} · {app.owner}</span>
+                      </div>
+                      <div className="compare-app-row-action">
+                        {selectedIds.includes(app.id) ? <Check size={16} /> : <span>{selectedIds.length < 4 ? 'Select' : 'Max 4'}</span>}
+                      </div>
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
-          </div>
 
-          <div className="compare-panel-column">
-            {selectedApps.length >= 2 ? (
-              <div className="compare-table-wrap">
-                <table className="compare-table">
-                  <thead>
-                    <tr>
-                      <th>Field</th>
-                      {selectedApps.map((app) => (
-                        <th key={app.id}>{app.name}</th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {compareFields.map((field) => (
-                      <tr key={field.key}>
-                        <td>{field.label}</td>
+            <div className="compare-panel-column">
+              {selectedApps.length >= 2 ? (
+                <div className="compare-table-wrap">
+                  <table className="compare-table">
+                    <thead>
+                      <tr>
+                        <th>Field</th>
                         {selectedApps.map((app) => (
-                          <td key={app.id}>
-                            {field.key === 'status' ? (
-                              <span className={`status-badge ${statusColor[app.status]}`}>{app.status}</span>
-                            ) : (
-                              app[field.key] || '-'
-                            )}
-                          </td>
+                          <th key={app.id}>{app.name}</th>
                         ))}
                       </tr>
+                    </thead>
+                    <tbody>
+                      {compareFields.map((field) => (
+                        <tr key={field.key}>
+                          <td>{field.label}</td>
+                          {selectedApps.map((app) => (
+                            <td key={app.id}>
+                              {field.key === 'status' ? (
+                                <span className={`status-badge ${statusColor[app.status]}`}>{app.status}</span>
+                              ) : (
+                                app[field.key] || '-'
+                              )}
+                            </td>
+                          ))}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              ) : (
+                <div className="compare-empty-state">
+                  <p>Pilih setidaknya 2 aplikasi untuk melihat perbandingan.</p>
+                  <p>Kamu bisa memilih sampai 4 aplikasi sekaligus, dari sini atau dari tab Pivot.</p>
+                </div>
+              )}
+            </div>
+          </div>
+        ) : (
+          <div className="pivot-panel">
+            <div className="pivot-controls">
+              <label className="pivot-control">
+                Baris
+                <select value={pivotRowField} onChange={(e) => handlePivotRowChange(e.target.value)}>
+                  {PIVOT_FIELDS.map((f) => (
+                    <option key={f.key} value={f.key}>{f.label}</option>
+                  ))}
+                </select>
+              </label>
+              <label className="pivot-control">
+                Kolom
+                <select value={pivotColField} onChange={(e) => handlePivotColChange(e.target.value)}>
+                  {PIVOT_FIELDS.filter((f) => f.key !== pivotRowField).map((f) => (
+                    <option key={f.key} value={f.key}>{f.label}</option>
+                  ))}
+                </select>
+              </label>
+              <p className="pivot-hint">Klik angka di sel untuk melihat & memilih aplikasi di perpotongan itu.</p>
+            </div>
+
+            <div className="pivot-table-wrap">
+              <table className="pivot-table">
+                <thead>
+                  <tr>
+                    <th className="pivot-corner">{pivotRowLabel} \ {pivotColLabel}</th>
+                    {pivotCols.map((col) => (
+                      <th key={col}>{col}</th>
                     ))}
-                  </tbody>
-                </table>
-              </div>
-            ) : (
-              <div className="compare-empty-state">
-                <p>Pilih setidaknya 2 aplikasi untuk melihat perbandingan.</p>
-                <p>Kamu bisa memilih sampai 4 aplikasi sekaligus.</p>
+                  </tr>
+                </thead>
+                <tbody>
+                  {pivotRows.map((row) => (
+                    <tr key={row}>
+                      <td className="pivot-row-label">{row}</td>
+                      {pivotCols.map((col) => {
+                        const apps = appsInCell(row, col);
+                        const isActiveCell = drilldown?.rowValue === row && drilldown?.colValue === col;
+                        return (
+                          <td key={col}>
+                            {apps.length > 0 ? (
+                              <button
+                                type="button"
+                                className={`pivot-cell-btn ${isActiveCell ? 'active' : ''}`}
+                                onClick={() => setDrilldown({ rowValue: row, colValue: col, apps })}
+                              >
+                                {apps.length}
+                              </button>
+                            ) : (
+                              <span className="pivot-cell-empty">–</span>
+                            )}
+                          </td>
+                        );
+                      })}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {drilldown && (
+              <div className="pivot-drilldown">
+                <div className="pivot-drilldown-head">
+                  <div>
+                    <strong>{drilldown.rowValue} × {drilldown.colValue}</strong>
+                    <span>{drilldown.apps.length} aplikasi — centang untuk ditambahkan ke perbandingan</span>
+                  </div>
+                  <button type="button" className="pivot-drilldown-close" onClick={() => setDrilldown(null)} aria-label="Tutup">
+                    <X size={16} />
+                  </button>
+                </div>
+
+                <div className="compare-app-list-body">
+                  {drilldown.apps.map((app) => (
+                    <button
+                      key={app.id}
+                      type="button"
+                      className={`compare-app-row ${selectedIds.includes(app.id) ? 'active' : ''}`}
+                      onClick={() => toggleSelect(app.id)}
+                    >
+                      <div>
+                        <strong>{app.name}</strong>
+                        <span>{app.category} · {app.owner}</span>
+                      </div>
+                      <div className="compare-app-row-action">
+                        {selectedIds.includes(app.id) ? <Check size={16} /> : <span>{selectedIds.length < 4 ? 'Select' : 'Max 4'}</span>}
+                      </div>
+                    </button>
+                  ))}
+                </div>
+
+                {selectedApps.length >= 2 && (
+                  <button type="button" className="pivot-drilldown-compare-btn" onClick={() => setViewMode('sidebyside')}>
+                    Lihat perbandingan ({selectedApps.length}) →
+                  </button>
+                )}
               </div>
             )}
           </div>
-        </div>
+        )}
       </div>
     </Layout>
   );

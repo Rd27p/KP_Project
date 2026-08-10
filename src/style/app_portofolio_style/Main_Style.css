@@ -155,24 +155,27 @@
 
 .compare-header {
     display: flex;
+    flex-direction: column;
     align-items: flex-start;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 18px;
+    justify-content: flex-start;
+    gap: 12px;
 }
 
 .compare-header h1 {
-    margin: 0;
-    font-size: 28px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 26px;
     font-weight: 700;
-    color: var(--ink);
+    color: var(--navy);
+    margin: 0 0 6px 0;
+    letter-spacing: -0.3px;
 }
 
 .compare-header p {
-    margin: 8px 0 0;
+    font-size: 13.5px;
     color: var(--ink-soft);
-    max-width: 680px;
     line-height: 1.6;
+    margin: 0;
+    max-width: 640px;
 }
 
 .compare-back-btn,
@@ -1028,6 +1031,220 @@
 .galaxy-tooltip-updated {
     font-size: 11px;
     color: var(--ink-soft);
+}
+
+/* ---------- Compare: meta row with view toggle ---------- */
+.compare-meta-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+/* ---------- Pivot table ---------- */
+.pivot-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.pivot-controls {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    background: var(--card);
+    border-radius: 16px;
+    padding: 14px 18px;
+    box-shadow: var(--shadow-1);
+}
+
+.pivot-control {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12.5px;
+    font-weight: 700;
+    color: var(--ink-soft);
+}
+
+.pivot-control select {
+    padding: 7px 10px;
+    border-radius: 8px;
+    border: 1px solid var(--line);
+    background: var(--surface);
+    font-family: 'Inter', sans-serif;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--ink);
+    cursor: pointer;
+}
+
+.pivot-hint {
+    margin: 0 0 0 auto;
+    font-size: 11.5px;
+    color: var(--ink-soft);
+    font-style: italic;
+}
+
+.pivot-table-wrap {
+    background: var(--card);
+    border-radius: 18px;
+    border: 1px solid var(--line);
+    box-shadow: var(--shadow-1);
+    overflow: auto;
+}
+
+.pivot-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.pivot-table th,
+.pivot-table td {
+    padding: 12px 16px;
+    text-align: center;
+    border-bottom: 1px solid var(--line);
+    border-right: 1px solid var(--line);
+    white-space: nowrap;
+}
+
+.pivot-table th:last-child,
+.pivot-table td:last-child {
+    border-right: none;
+}
+
+.pivot-table thead th {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    color: var(--ink-soft);
+    background: var(--surface);
+}
+
+.pivot-corner {
+    text-align: left !important;
+    font-size: 10.5px !important;
+    text-transform: none !important;
+}
+
+.pivot-row-label {
+    text-align: left !important;
+    font-weight: 700;
+    color: var(--navy);
+    background: var(--surface);
+}
+
+.pivot-cell-btn {
+    min-width: 36px;
+    height: 32px;
+    padding: 0 10px;
+    border: none;
+    border-radius: 9px;
+    background: var(--red-soft);
+    color: var(--red-deep);
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.pivot-cell-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 14px rgba(213, 50, 74, 0.24);
+}
+
+.pivot-cell-btn.active {
+    background: var(--red);
+    color: #fff;
+}
+
+.pivot-cell-empty {
+    color: var(--ink-soft);
+    opacity: 0.4;
+}
+
+.pivot-drilldown {
+    background: var(--card);
+    border-radius: 18px;
+    border: 1px solid var(--line);
+    box-shadow: var(--shadow-1);
+    padding: 16px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    animation: pivotDrilldownIn 0.18s ease-out;
+}
+
+@keyframes pivotDrilldownIn {
+    from { opacity: 0; transform: translateY(-6px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.pivot-drilldown-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.pivot-drilldown-head strong {
+    display: block;
+    font-size: 14px;
+    color: var(--navy);
+    margin-bottom: 2px;
+}
+
+.pivot-drilldown-head span {
+    font-size: 12px;
+    color: var(--ink-soft);
+}
+
+.pivot-drilldown-close {
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    border: none;
+    background: var(--surface);
+    color: var(--ink-soft);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.pivot-drilldown-close:hover {
+    background: var(--red-soft);
+    color: var(--red);
+}
+
+.pivot-drilldown-compare-btn {
+    align-self: flex-end;
+    padding: 10px 18px;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--red) 0%, var(--red-deep) 100%);
+    color: #fff;
+    font-family: 'Inter', sans-serif;
+    font-size: 12.5px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 8px 18px rgba(213, 50, 74, 0.28);
+    transition: transform 0.15s ease;
+}
+
+.pivot-drilldown-compare-btn:hover {
+    transform: translateY(-1px);
+}
+
+@media (max-width: 700px) {
+    .pivot-hint {
+        margin-left: 0;
+        width: 100%;
+    }
 }
 
 @media (max-width: 700px) {
