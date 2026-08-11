@@ -25,6 +25,8 @@ const PIVOT_FIELDS = [
   { key: 'category', label: 'Kategori' },
   { key: 'status', label: 'Status' },
   { key: 'owner', label: 'Owner' },
+  { key: 'uptime', label: 'Uptime' },
+  { key: 'sla', label: 'SLA' },
 ];
 
 const statusColor = {
@@ -42,17 +44,53 @@ function Compare() {
   const [pivotColField, setPivotColField] = useState('status');
   const [drilldown, setDrilldown] = useState(null); // { rowValue, colValue, apps }
   const [highlightDiff, setHighlightDiff] = useState(false);
+  const [showOnlySelected, setShowOnlySelected] = useState(false);
+  const [collapsedCategories, setCollapsedCategories] = useState({});
   const filterInputRef = useRef(null);
 
   const filteredApps = useMemo(() => {
     const q = filter.toLowerCase();
-    return applications.filter(
+    let list = applications;
+    if (showOnlySelected) {
+      list = list.filter((app) => selectedIds.includes(app.id));
+    }
+    return list.filter(
       (app) =>
         app.name.toLowerCase().includes(q) ||
         app.category.toLowerCase().includes(q) ||
         app.owner.toLowerCase().includes(q)
     );
-  }, [filter]);
+  }, [filter, showOnlySelected, selectedIds]);
+
+  const appsByCategory = useMemo(() => {
+    const groups = {};
+    filteredApps.forEach((app) => {
+      const cat = app.category || 'Others';
+      if (!groups[cat]) groups[cat] = [];
+      groups[cat].push(app);
+    });
+    return groups;
+  }, [filteredApps]);
+
+  const toggleCategoryCollapse = (category) => {
+    setCollapsedCategories((prev) => ({
+      ...prev,
+      [category]: !prev[category],
+    }));
+  };
+
+  const collapseAllCategories = () => {
+    const cats = Object.keys(appsByCategory);
+    const newCollapsed = {};
+    cats.forEach((cat) => {
+      newCollapsed[cat] = true;
+    });
+    setCollapsedCategories(newCollapsed);
+  };
+
+  const expandAllCategories = () => {
+    setCollapsedCategories({});
+  };
 
   const selectedApps = useMemo(
     () => applications.filter((app) => selectedIds.includes(app.id)),
@@ -169,6 +207,85 @@ function Compare() {
 
         {viewMode === 'sidebyside' ? (
           <div className="compare-panel">
+            <style>{`
+              .compare-category-group {
+                margin-bottom: 8px;
+                border: 1px solid var(--line, #e2e8f0);
+                border-radius: 10px;
+                overflow: hidden;
+                background: var(--card, #fff);
+              }
+              .compare-category-header {
+                width: 100%;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 10px 14px;
+                background: var(--panel-bg, #f8fafc);
+                border: none;
+                cursor: pointer;
+                font-weight: 600;
+                font-size: 0.85rem;
+                color: var(--ink-main, #1e293b);
+                text-align: left;
+                transition: background 0.2s ease;
+                border-bottom: 1px solid var(--line, #e2e8f0);
+              }
+              .compare-category-header:hover {
+                background: var(--line, #e2e8f0);
+              }
+              .compare-category-selected-badge {
+                background: var(--red, #d32f2f);
+                color: white;
+                font-size: 0.75rem;
+                padding: 2px 8px;
+                border-radius: 12px;
+                font-weight: 600;
+              }
+              .compare-category-content {
+                padding: 6px;
+                display: flex;
+                flex-direction: column;
+                gap: 4px;
+                max-height: 400px;
+                overflow-y: auto;
+              }
+              .compare-toolbar-filters {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 8px 4px;
+                font-size: 0.8rem;
+                flex-wrap: wrap;
+                gap: 8px;
+              }
+              .compare-toolbar-btn {
+                background: none;
+                border: none;
+                color: var(--red, #d32f2f);
+                cursor: pointer;
+                font-weight: 600;
+                padding: 4px 8px;
+                border-radius: 6px;
+                transition: background 0.2s;
+              }
+              .compare-toolbar-btn:hover {
+                background: rgba(211, 50, 74, 0.08);
+              }
+              .compare-checkbox-label {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                cursor: pointer;
+                user-select: none;
+                color: var(--ink-soft, #64748b);
+                font-weight: 500;
+              }
+              .compare-checkbox-label input {
+                cursor: pointer;
+              }
+            `}</style>
+
             <div className="compare-panel-column">
               <div className="compare-filter">
                 <Search size={18} strokeWidth={2} />
@@ -181,29 +298,84 @@ function Compare() {
                 />
               </div>
 
+              <div className="compare-toolbar-filters">
+                <label className="compare-checkbox-label">
+                  <input
+                    type="checkbox"
+                    checked={showOnlySelected}
+                    onChange={(e) => setShowOnlySelected(e.target.checked)}
+                  />
+                  Hanya tampilkan terpilih ({selectedIds.length})
+                </label>
+                <div style={{ display: 'flex', gap: '4px' }}>
+                  <button type="button" className="compare-toolbar-btn" onClick={expandAllCategories}>
+                    Expand All
+                  </button>
+                  <span style={{ color: 'var(--line)' }}>|</span>
+                  <button type="button" className="compare-toolbar-btn" onClick={collapseAllCategories}>
+                    Collapse All
+                  </button>
+                </div>
+              </div>
+
               <div className="compare-app-list">
                 <div className="compare-app-list-header">
-                  <span>Daftar aplikasi</span>
+                  <span>Daftar aplikasi ({filteredApps.length})</span>
                   <span>Centang aplikasi untuk dibandingkan</span>
                 </div>
 
-                <div className="compare-app-list-body">
-                  {filteredApps.map((app) => (
-                    <button
-                      key={app.id}
-                      type="button"
-                      className={`compare-app-row ${selectedIds.includes(app.id) ? 'active' : ''}`}
-                      onClick={() => toggleSelect(app.id)}
-                    >
-                      <div>
-                        <strong>{app.name}</strong>
-                        <span>{app.category} · {app.owner}</span>
-                      </div>
-                      <div className="compare-app-row-action">
-                        {selectedIds.includes(app.id) ? <Check size={16} /> : <span>{selectedIds.length < 4 ? 'Select' : 'Max 4'}</span>}
-                      </div>
-                    </button>
-                  ))}
+                <div className="compare-app-list-body" style={{ display: 'block' }}>
+                  {Object.keys(appsByCategory).length === 0 ? (
+                    <div style={{ padding: '20px', textAlign: 'center', color: 'var(--ink-soft)' }}>
+                      Tidak ada aplikasi yang cocok
+                    </div>
+                  ) : (
+                    Object.entries(appsByCategory).map(([category, apps]) => {
+                      const isCollapsed = collapsedCategories[category];
+                      const selectedInCat = apps.filter((app) => selectedIds.includes(app.id)).length;
+                      return (
+                        <div key={category} className="compare-category-group">
+                          <button
+                            type="button"
+                            className="compare-category-header"
+                            onClick={() => toggleCategoryCollapse(category)}
+                          >
+                            <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                              <span>{isCollapsed ? '▶' : '▼'}</span>
+                              <strong>{category}</strong>
+                              <span style={{ color: 'var(--ink-soft)', fontWeight: 'normal' }}>({apps.length})</span>
+                            </span>
+                            {selectedInCat > 0 && (
+                              <span className="compare-category-selected-badge">
+                                {selectedInCat} terpilih
+                              </span>
+                            )}
+                          </button>
+                          
+                          {!isCollapsed && (
+                            <div className="compare-category-content">
+                              {apps.map((app) => (
+                                <button
+                                  key={app.id}
+                                  type="button"
+                                  className={`compare-app-row ${selectedIds.includes(app.id) ? 'active' : ''}`}
+                                  onClick={() => toggleSelect(app.id)}
+                                >
+                                  <div>
+                                    <strong>{app.name}</strong>
+                                    <span>{app.owner} · {app.status}</span>
+                                  </div>
+                                  <div className="compare-app-row-action">
+                                    {selectedIds.includes(app.id) ? <Check size={16} /> : <span>{selectedIds.length < 4 ? 'Select' : 'Max 4'}</span>}
+                                  </div>
+                                </button>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })
+                  )}
                 </div>
               </div>
             </div>
@@ -378,6 +550,8 @@ function Compare() {
                       type="button"
                       className={`compare-app-row ${selectedIds.includes(app.id) ? 'active' : ''}`}
                       onClick={() => toggleSelect(app.id)}
+                      onDoubleClick={() => navigate(`/applications/${app.id}`)}
+                      title="Klik 2 kali untuk melihat detail aplikasi"
                     >
                       <div>
                         <strong>{app.name}</strong>
