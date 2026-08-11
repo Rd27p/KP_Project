@@ -517,14 +517,85 @@
     text-align: right;
 }
 
+/* ---------- Step 5: Review ---------- */
+
+.request-review-registrant {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 18px;
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-2) 100%);
+    border-radius: 14px;
+    color: #fff;
+}
+
+.request-review-registrant-avatar {
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.16);
+    color: #fff;
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.request-review-registrant-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    color: #b7c0da;
+    margin: 0 0 2px;
+}
+
+.request-review-registrant-name {
+    font-size: 15px;
+    font-weight: 700;
+    color: #fff;
+    margin: 0;
+}
+
+.request-review-registrant-email {
+    font-size: 12px;
+    color: #b7c0da;
+    margin: 2px 0 0;
+}
+
+.request-review-section {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.request-review-section-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--red-deep);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin: 0;
+}
+
+.request-summary-empty {
+    color: #a0a0a0 !important;
+    font-weight: 500 !important;
+    font-style: italic;
+}
+
 /* Responsive */
 @media (max-width: 900px) {
     .request-option-grid {
         grid-template-columns: 1fr;
     }
+
     .request-stepper {
         overflow-x: auto;
     }
+
     .request-form-grid {
         grid-template-columns: 1fr;
     }
@@ -534,9 +605,11 @@
     .request-form-card {
         padding: 22px 20px;
     }
+
     .request-stepper-label {
         display: none;
     }
+
     .request-page-header {
         align-items: flex-start;
     }

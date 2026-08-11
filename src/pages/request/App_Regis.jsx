@@ -5,34 +5,29 @@ import Layout from '../../components/Layout';
 import '../../style/request_style/Main_Style.css';
 
 const steps = [
-    { id: 1, label: 'Information' },
-    { id: 2, label: 'Application Summary' },
-    { id: 3, label: 'Data Management' },
-    { id: 4, label: 'Application Detail' },
-    { id: 5, label: 'Asset Owner' },
+    { id: 1, label: 'Application Summary' },
+    { id: 2, label: 'Data Management' },
+    { id: 3, label: 'Application Detail' },
+    { id: 4, label: 'Asset Owner' },
+    { id: 5, label: 'Review' },
 ];
 
 const initialFormData = {
-    // Step 1: Information
-    fullName: '',
-    nik: '',
-    department: '',
-    phoneNumber: '',
-    // Step 2: Application Summary
+    // Step 1: Application Summary
     appName: '',
     appCategory: '',
     appDescription: '',
     appUrl: '',
-    // Step 3: Data Management
+    // Step 2: Data Management
     dataClassification: '',
     dataSource: '',
     dataRetention: '',
-    // Step 4: Application Detail
+    // Step 3: Application Detail
     version: '',
     server: '',
     database: '',
     techStack: '',
-    // Step 5: Asset Owner
+    // Step 4: Asset Owner
     ownerName: '',
     ownerEmail: '',
     backupOwner: '',
@@ -43,6 +38,14 @@ function AppRegis() {
     const [currentStep, setCurrentStep] = useState(1);
     const [formData, setFormData] = useState(initialFormData);
     const [submitted, setSubmitted] = useState(false);
+    const [user] = useState(() => {
+        try {
+            const stored = localStorage.getItem('user');
+            return stored ? JSON.parse(stored) : null;
+        } catch {
+            return null;
+        }
+    });
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -62,10 +65,54 @@ function AppRegis() {
     };
 
     const handleSubmit = () => {
-        // TODO: Kirim formData ke API backend untuk diproses.
-        console.log('Application registration submitted:', formData);
+        const payload = {
+            ...formData,
+            registrant: user?.username || null,
+            registrantEmail: user?.email || null,
+        };
+        // TODO: Kirim payload ke API backend untuk diproses.
+        console.log('Application registration submitted:', payload);
         setSubmitted(true);
     };
+
+    // Data untuk step Review — dikelompokkan persis sama seperti struktur step 1-4,
+    // supaya user gampang lihat "ini bagian mana yang saya isi".
+    const reviewSections = [
+        {
+            title: 'Application Summary',
+            rows: [
+                { label: 'App Name', value: formData.appName },
+                { label: 'Category', value: formData.appCategory },
+                { label: 'Description', value: formData.appDescription },
+                { label: 'Application URL', value: formData.appUrl },
+            ],
+        },
+        {
+            title: 'Data Management',
+            rows: [
+                { label: 'Data Classification', value: formData.dataClassification },
+                { label: 'Data Source', value: formData.dataSource },
+                { label: 'Data Retention Policy', value: formData.dataRetention },
+            ],
+        },
+        {
+            title: 'Application Detail',
+            rows: [
+                { label: 'Version', value: formData.version },
+                { label: 'Server', value: formData.server },
+                { label: 'Database', value: formData.database },
+                { label: 'Technology Stack', value: formData.techStack },
+            ],
+        },
+        {
+            title: 'Asset Owner',
+            rows: [
+                { label: 'Owner Name', value: formData.ownerName },
+                { label: 'Owner Email', value: formData.ownerEmail },
+                { label: 'Backup Owner', value: formData.backupOwner },
+            ],
+        },
+    ];
 
     if (submitted) {
         return (
@@ -77,8 +124,8 @@ function AppRegis() {
                         </div>
                         <h2>Pendaftaran Aplikasi Berhasil</h2>
                         <p>
-                            Aplikasi <strong>{formData.appName || 'baru'}</strong> telah didaftarkan
-                            dan menunggu proses verifikasi.
+                            Aplikasi <strong>{formData.appName || 'baru'}</strong> telah didaftarkan oleh{' '}
+                            <strong>{user?.username || 'Anda'}</strong> dan menunggu proses verifikasi.
                         </p>
                         <button className="request-btn-primary" onClick={() => navigate('/request')}>
                             Kembali ke Request
@@ -112,20 +159,18 @@ function AppRegis() {
                         <div className="request-stepper-item" key={step.id}>
                             <div className="request-stepper-node">
                                 <div
-                                    className={`request-stepper-circle ${
-                                        currentStep === step.id
-                                            ? 'active'
-                                            : currentStep > step.id
+                                    className={`request-stepper-circle ${currentStep === step.id
+                                        ? 'active'
+                                        : currentStep > step.id
                                             ? 'completed'
                                             : ''
-                                    }`}
+                                        }`}
                                 >
                                     {currentStep > step.id ? <Check size={14} strokeWidth={3} /> : step.id}
                                 </div>
                                 <span
-                                    className={`request-stepper-label ${
-                                        currentStep === step.id ? 'active' : ''
-                                    }`}
+                                    className={`request-stepper-label ${currentStep === step.id ? 'active' : ''
+                                        }`}
                                 >
                                     {step.label}
                                 </span>
@@ -136,61 +181,9 @@ function AppRegis() {
                 </div>
 
                 <div className="request-form-card">
-                    {/* Step 1: Information */}
-                    {currentStep === 1 && (
-                        <>
-                            <span className="request-form-badge">Please Inform Who You Are</span>
-                            <div className="request-form-grid">
-                                <div className="form-group">
-                                    <label htmlFor="fullName">Full Name *</label>
-                                    <input
-                                        id="fullName"
-                                        name="fullName"
-                                        type="text"
-                                        placeholder="Type here..."
-                                        value={formData.fullName}
-                                        onChange={handleChange}
-                                    />
-                                </div>
-                                <div className="form-group">
-                                    <label htmlFor="nik">NIK *</label>
-                                    <input
-                                        id="nik"
-                                        name="nik"
-                                        type="text"
-                                        placeholder="Type here..."
-                                        value={formData.nik}
-                                        onChange={handleChange}
-                                    />
-                                </div>
-                                <div className="form-group">
-                                    <label htmlFor="department">Departement *</label>
-                                    <input
-                                        id="department"
-                                        name="department"
-                                        type="text"
-                                        placeholder="Type here..."
-                                        value={formData.department}
-                                        onChange={handleChange}
-                                    />
-                                </div>
-                                <div className="form-group">
-                                    <label htmlFor="phoneNumber">Phone Number *</label>
-                                    <input
-                                        id="phoneNumber"
-                                        name="phoneNumber"
-                                        type="tel"
-                                        placeholder="Type here..."
-                                        value={formData.phoneNumber}
-                                        onChange={handleChange}
-                                    />
-                                </div>
-                            </div>
-                        </>
-                    )}
 
-                    {/* Step 2: Application Summary */}
-                    {currentStep === 2 && (
+                    {/* Step 1: Application Summary */}
+                    {currentStep === 1 && (
                         <>
                             <span className="request-form-badge">Application Summary</span>
                             <div className="request-form-grid">
@@ -242,8 +235,8 @@ function AppRegis() {
                         </>
                     )}
 
-                    {/* Step 3: Data Management */}
-                    {currentStep === 3 && (
+                    {/* Step 2: Data Management */}
+                    {currentStep === 2 && (
                         <>
                             <span className="request-form-badge">Data Management</span>
                             <div className="request-form-grid">
@@ -284,8 +277,8 @@ function AppRegis() {
                         </>
                     )}
 
-                    {/* Step 4: Application Detail */}
-                    {currentStep === 4 && (
+                    {/* Step 3: Application Detail */}
+                    {currentStep === 3 && (
                         <>
                             <span className="request-form-badge">Application Detail</span>
                             <div className="request-form-grid">
@@ -337,8 +330,8 @@ function AppRegis() {
                         </>
                     )}
 
-                    {/* Step 5: Asset Owner */}
-                    {currentStep === 5 && (
+                    {/* Step 4: Asset Owner */}
+                    {currentStep === 4 && (
                         <>
                             <span className="request-form-badge">Asset Owner</span>
                             <div className="request-form-grid">
@@ -376,6 +369,44 @@ function AppRegis() {
                                     />
                                 </div>
                             </div>
+                        </>
+                    )}
+
+                    {/* Step 5: Review */}
+                    {currentStep === 5 && (
+                        <>
+                            <span className="request-form-badge">Review</span>
+
+                            <div className="request-review-registrant">
+                                <span className="request-review-registrant-avatar">
+                                    {(user?.username || 'GU').slice(0, 2).toUpperCase()}
+                                </span>
+                                <div>
+                                    <p className="request-review-registrant-label">Didaftarkan oleh</p>
+                                    <p className="request-review-registrant-name">
+                                        {user?.username || 'Pengguna tidak dikenal'}
+                                    </p>
+                                    {user?.email && (
+                                        <p className="request-review-registrant-email">{user.email}</p>
+                                    )}
+                                </div>
+                            </div>
+
+                            {reviewSections.map((section) => (
+                                <div className="request-review-section" key={section.title}>
+                                    <p className="request-review-section-title">{section.title}</p>
+                                    <div className="request-summary-list">
+                                        {section.rows.map((row) => (
+                                            <div className="request-summary-row" key={row.label}>
+                                                <span>{row.label}</span>
+                                                <span className={!row.value ? 'request-summary-empty' : ''}>
+                                                    {row.value || 'Belum diisi'}
+                                                </span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            ))}
                         </>
                     )}
 

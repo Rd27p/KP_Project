@@ -8,6 +8,7 @@ import {
     TrendingUp,
 } from 'lucide-react';
 import Layout from '../../components/Layout';
+import Table from '../../components/table';
 import '../../style/infrastructure_style/Main_Style.css';
 
 const summaryCards = [
@@ -181,36 +182,28 @@ function Infra() {
                             </div>
                         </div>
 
-                        <div className="infra-table-wrapper">
-                            <table className="infra-table">
-                                <thead>
-                                    <tr>
-                                        <th>Server Name</th>
-                                        <th>IP Address</th>
-                                        <th>CPU</th>
-                                        <th>Memory</th>
-                                        <th>Disk</th>
-                                        <th>Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {criticalServers.map((server) => (
-                                        <tr key={server.name}>
-                                            <td>{server.name}</td>
-                                            <td>{server.ip}</td>
-                                            <td>{server.cpu}</td>
-                                            <td>{server.memory}</td>
-                                            <td>{server.disk}</td>
-                                            <td>
-                                                <span className={`infra-pill ${server.status.toLowerCase()}`}>
-                                                    {server.status}
-                                                </span>
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
+                        <Table
+                            className="infra-table"
+                            wrapperClassName=""
+                            columns={[
+                                { key: 'name', label: 'Server Name' },
+                                { key: 'ip', label: 'IP Address' },
+                                { key: 'cpu', label: 'CPU' },
+                                { key: 'memory', label: 'Memory' },
+                                { key: 'disk', label: 'Disk' },
+                                {
+                                    key: 'status',
+                                    label: 'Status',
+                                    render: (row) => (
+                                        <span className={`infra-pill ${row.status.toLowerCase()}`}>
+                                            {row.status}
+                                        </span>
+                                    )
+                                }
+                            ]}
+                            data={criticalServers}
+                            rowKey="name"
+                        />
                     </section>
                 </div>
 

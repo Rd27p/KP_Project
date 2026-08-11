@@ -5,8 +5,7 @@ import Profile from '../pages/Profile';
 import { applications } from '../pages/app_portofolio/Application_Data';
 import '../style/Header_Style.css';
 
-// Label tampilan untuk tiap segmen route statis. Segmen yang tidak terdaftar
-// di sini otomatis di-format dari path-nya (mis. "app-view" -> "App View").
+// [GAR] Routing label digunakan pada header untuk navigasi ke halaman tertentu
 const ROUTE_LABELS = {
   dashboard: 'Executive Summary',
   settings: 'Settings',
@@ -35,6 +34,7 @@ function formatFallbackLabel(segment) {
   return segment.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
 }
 
+// [GAR] Digunakan saat routing dipanggil akan masuk ke breadcrumb dan membuat fungsi seperti navigasi
 function useBreadcrumb() {
   const { pathname } = useLocation();
   const segments = pathname.split('/').filter(Boolean);
@@ -74,7 +74,6 @@ export default function Header({
   const greeting = hour < 12 ? 'Selamat pagi' : hour < 18 ? 'Selamat siang' : 'Selamat sore';
   const firstName = user?.username || 'Pengguna';
 
-  // Shortcut "/" untuk langsung fokus ke search, kecuali user sedang mengetik di input/textarea lain.
   useEffect(() => {
     if (!showSearch) return;
 
@@ -112,9 +111,11 @@ export default function Header({
 
   const showNotifCount = typeof notifCount === 'number' && notifCount > 0;
 
+  // [GAR] Header
   return (
     <div className="topbar">
       <div className="topbar-copy">
+
         {breadcrumb.length > 0 && (
           <nav className="breadcrumb" aria-label="Breadcrumb">
             {breadcrumb.map((item) => (

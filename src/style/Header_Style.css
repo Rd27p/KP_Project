@@ -25,7 +25,7 @@
 }
 
 .breadcrumb-link {
-  font-size: 11.5px;
+  font-size: 15px;
   font-weight: 600;
   color: var(--ink-soft);
   text-decoration: none;
@@ -38,7 +38,7 @@
 }
 
 .breadcrumb-current {
-  font-size: 11.5px;
+  font-size: 15px;
   font-weight: 700;
   color: var(--ink);
 }

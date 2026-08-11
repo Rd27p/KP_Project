@@ -18,6 +18,7 @@ import {
 import { Link, useSearchParams } from 'react-router-dom';
 import Layout from '../components/Layout';
 import ProgressBar from '../components/ProgressBar';
+import Table from '../components/table';
 import '../style/Dashboard_Style.css';
 import '../style/Table_Style.css';
 
@@ -510,56 +511,50 @@ export default function Dashboard() {
                 <Link to="/applications" className="link-btn">Lihat semua 128 aplikasi →</Link>
               </div>
 
-              <table className="server-table">
-                <thead>
-                  <tr>
-                    {sortableColumns.map((col) => (
-                      <th
-                        key={col.key}
-                        className="sortable-th"
-                        onClick={() => toggleSort(col.key)}
-                        aria-sort={
-                          sortConfig.key === col.key
-                            ? sortConfig.dir === 'asc'
-                              ? 'ascending'
-                              : 'descending'
-                            : 'none'
-                        }
-                      >
-                        <span>
-                          {col.label}
-                          <ArrowUpDown size={12} className={sortConfig.key === col.key ? 'sort-icon active' : 'sort-icon'} />
-                        </span>
-                      </th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {sortedServers.map((row) => (
-                    <tr key={row.app}>
-                      <td>
+              <Table
+                className="server-table"
+                columns={sortableColumns.map((col) => ({
+                  key: col.key,
+                  label: col.label,
+                  headerClassName: "sortable-th",
+                  onClick: () => toggleSort(col.key),
+                  ariaSort: sortConfig.key === col.key ? (sortConfig.dir === 'asc' ? 'ascending' : 'descending') : 'none',
+                  headerRender: () => (
+                    <span>
+                      {col.label}
+                      <ArrowUpDown size={12} className={sortConfig.key === col.key ? 'sort-icon active' : 'sort-icon'} />
+                    </span>
+                  ),
+                  render: (row) => {
+                    if (col.key === 'app') {
+                      return (
                         <div className="app-name-cell">
                           <span className="app-dot" style={{ background: toneVar[row.tone] }} />
                           {row.app}
                         </div>
-                      </td>
-                      <td>{row.category}</td>
-                      <td>{row.total}</td>
-                      <td>
+                      );
+                    }
+                    if (col.key === 'util') {
+                      return (
                         <div className="util-cell">
                           <ProgressBar value={row.util} color={toneVar[row.tone]} height={7} />
                           <span>{row.util}%</span>
                         </div>
-                      </td>
-                      <td>
+                      );
+                    }
+                    if (col.key === 'status') {
+                      return (
                         <span className={`status-pill ${row.status === 'Live' ? 'pill-live' : 'pill-review'}`}>
                           {row.status}
                         </span>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+                      );
+                    }
+                    return row[col.key];
+                  }
+                }))}
+                data={sortedServers}
+                rowKey="app"
+              />
             </div>
           </>
         )}

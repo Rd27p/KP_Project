@@ -20,6 +20,7 @@ import Settings from './pages/Settings';
 import Security from './pages/security/Security';
 import TSAInformation from './pages/tsa/TSA_Information';
 import OSSData from './pages/oss/OSS_Data';
+import Add_OSS from './pages/oss/Add_OSS';
 import Layout from './components/Layout';
 import './App.css';
 
@@ -53,6 +54,7 @@ function App() {
         <Route path="/security-assessment" element={<Security />} />
         <Route path="/tsa-information" element={<TSAInformation />} />
         <Route path="/oss-data" element={<OSSData />} />
+        <Route path="/oss-data/add" element={<Layout><Add_OSS /></Layout>} />
 
         <Route path="/profile" element={<Layout><Profile /></Layout>} />
       </Routes>
