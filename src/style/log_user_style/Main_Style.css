@@ -1,0 +1,280 @@
+/* ---------- Add OSS: form card ---------- */
+
+.oss-form-back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    align-self: flex-start;
+    padding: 10px 16px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--ink);
+    cursor: pointer;
+    box-shadow: var(--shadow-1);
+    transition: all 0.2s ease;
+    width: fit-content;
+}
+
+.oss-form-back-btn:hover {
+    color: var(--red);
+    transform: translateY(-1px);
+}
+
+.oss-form-card {
+    display: flex;
+    flex-direction: column;
+    gap: 26px;
+    padding: 28px 32px;
+    border-radius: 24px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    box-shadow: var(--shadow-1);
+}
+
+.oss-form-title-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.oss-form-header-icon {
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--navy) 0%, #24365c 100%);
+}
+
+.oss-form-title {
+    margin: 0;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink);
+}
+
+.oss-form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px 28px;
+}
+
+.oss-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.oss-form-group label {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--ink);
+}
+
+.oss-form-group input,
+.oss-form-group select {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    color: var(--ink);
+    background: var(--card);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    appearance: none;
+    -webkit-appearance: none;
+}
+
+.oss-form-group select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236B7488' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 38px;
+    cursor: pointer;
+}
+
+.oss-form-group input::placeholder {
+    color: #a0a0a0;
+}
+
+.oss-form-group input:focus,
+.oss-form-group select:focus {
+    outline: none;
+    border-color: var(--red);
+    box-shadow: 0 0 0 3px var(--red-soft);
+}
+
+.oss-form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    padding-top: 10px;
+    border-top: 1px solid var(--line);
+}
+
+.oss-btn-primary {
+    padding: 12px 26px;
+    background: linear-gradient(135deg, var(--red) 0%, var(--red-deep) 100%);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 700;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: var(--shadow-1);
+    transition: transform 0.2s ease;
+}
+
+.oss-btn-primary:hover {
+    transform: translateY(-2px);
+}
+
+.oss-btn-secondary {
+    padding: 12px 26px;
+    background: var(--surface);
+    color: var(--ink);
+    font-size: 13px;
+    font-weight: 700;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+/* ---------- Add OSS: success state ---------- */
+.oss-form-success {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 10px;
+    padding: 56px 30px;
+    background: var(--card);
+    border-radius: 24px;
+    box-shadow: var(--shadow-1);
+    border: 1px solid var(--line);
+}
+
+.oss-form-success-icon {
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 16px;
+    background: var(--green);
+    margin-bottom: 6px;
+}
+
+.oss-form-success h2 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--ink);
+    margin: 0;
+}
+
+.oss-form-success p {
+    font-size: 13px;
+    color: var(--ink-soft);
+    max-width: 420px;
+    line-height: 1.6;
+    margin: 0;
+}
+
+.oss-form-success strong {
+    color: var(--ink);
+}
+/* ---------- Fix: .oss-button / .oss-button-secondary tidak pernah punya base style ---------- */
+/* Sebelumnya cuma ada ".oss-button:hover { opacity: 0.95 }" tanpa style dasar sama sekali,
+   jadi tombol "Lihat Semua OSS" dan "Add OSS" render sebagai tombol browser polos. */
+
+.oss-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 22px;
+    background: linear-gradient(135deg, var(--red) 0%, var(--red-deep) 100%);
+    color: #fff;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    box-shadow: var(--shadow-1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    white-space: nowrap;
+}
+
+.oss-button:hover {
+    opacity: 1;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 22px rgba(211, 50, 74, 0.24);
+}
+
+.oss-button-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 22px;
+    background: var(--card);
+    color: var(--ink);
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.oss-button-secondary:hover {
+    background: var(--navy);
+    border-color: var(--navy);
+    color: #fff;
+    transform: translateY(-2px);
+}
+
+.oss-link-button {
+    width: 100%;
+    margin-top: auto;
+    padding: 10px 14px;
+    border-radius: 12px;
+    border: 1px solid var(--line);
+    background: transparent;
+    color: var(--ink);
+    font-family: 'Inter', sans-serif;
+    font-size: 12.5px;
+    font-weight: 700;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.oss-link-button:hover {
+    background: var(--navy);
+    border-color: var(--navy);
+    color: #fff;
+    opacity: 1;
+}
+
+@media (max-width: 900px) {
+    .oss-form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .oss-form-card {
+        padding: 24px 22px;
+    }
+}
