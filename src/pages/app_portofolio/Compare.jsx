@@ -2,6 +2,7 @@ import { useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Search, Check, Trash2, Columns3, Grid2x2, X, Highlighter } from 'lucide-react';
 import Layout from '../../components/Layout';
+import Table from '../../components/table';
 import { applications } from './Application_Data';
 import '../../style/app_portofolio_style/Main_Style.css';
 
@@ -39,10 +40,10 @@ function Compare() {
   const navigate = useNavigate();
   const [selectedIds, setSelectedIds] = useState([]);
   const [filter, setFilter] = useState('');
-  const [viewMode, setViewMode] = useState('sidebyside'); // 'sidebyside' | 'pivot'
+  const [viewMode, setViewMode] = useState('sidebyside');
   const [pivotRowField, setPivotRowField] = useState('category');
   const [pivotColField, setPivotColField] = useState('status');
-  const [drilldown, setDrilldown] = useState(null); // { rowValue, colValue, apps }
+  const [drilldown, setDrilldown] = useState(null);
   const [highlightDiff, setHighlightDiff] = useState(false);
   const [showOnlySelected, setShowOnlySelected] = useState(false);
   const [collapsedCategories, setCollapsedCategories] = useState({});
@@ -351,7 +352,7 @@ function Compare() {
                               </span>
                             )}
                           </button>
-                          
+
                           {!isCollapsed && (
                             <div className="compare-category-content">
                               {apps.map((app) => (
@@ -398,48 +399,54 @@ function Compare() {
                   </div>
 
                   <div className="compare-table-wrap">
-                    <table className="compare-table">
-                      <thead>
-                        <tr>
-                          <th>Field</th>
-                          {selectedApps.map((app) => (
-                            <th key={app.id}>
-                              <div className="compare-th-app">
-                                <span>{app.name}</span>
-                                <button
-                                  type="button"
-                                  className="compare-th-remove"
-                                  onClick={() => removeFromCompare(app.id)}
-                                  aria-label={`Hapus ${app.name} dari perbandingan`}
-                                  title="Hapus dari perbandingan"
-                                >
-                                  <X size={13} strokeWidth={2.4} />
-                                </button>
-                              </div>
-                            </th>
-                          ))}
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {compareFields.map((field) => {
-                          const rowDiffers = highlightDiff && diffByKey[field.key];
-                          return (
-                            <tr key={field.key} className={rowDiffers ? 'diff-row' : ''}>
-                              <td>{field.label}</td>
-                              {selectedApps.map((app) => (
-                                <td key={app.id} className={rowDiffers ? 'diff-cell' : ''}>
-                                  {field.key === 'status' ? (
-                                    <span className={`status-badge ${statusColor[app.status]}`}>{app.status}</span>
-                                  ) : (
-                                    app[field.key] || '-'
-                                  )}
-                                </td>
-                              ))}
-                            </tr>
-                          );
-                        })}
-                      </tbody>
-                    </table>
+                    <Table
+                      className="compare-table"
+                      wrapperClassName=""
+                      customHeader={
+                        <thead>
+                          <tr>
+                            <th>Field</th>
+                            {selectedApps.map((app) => (
+                              <th key={app.id}>
+                                <div className="compare-th-app">
+                                  <span>{app.name}</span>
+                                  <button
+                                    type="button"
+                                    className="compare-th-remove"
+                                    onClick={() => removeFromCompare(app.id)}
+                                    aria-label={`Hapus ${app.name} dari perbandingan`}
+                                    title="Hapus dari perbandingan"
+                                  >
+                                    <X size={13} strokeWidth={2.4} />
+                                  </button>
+                                </div>
+                              </th>
+                            ))}
+                          </tr>
+                        </thead>
+                      }
+                      customBody={
+                        <tbody>
+                          {compareFields.map((field) => {
+                            const rowDiffers = highlightDiff && diffByKey[field.key];
+                            return (
+                              <tr key={field.key} className={rowDiffers ? 'diff-row' : ''}>
+                                <td>{field.label}</td>
+                                {selectedApps.map((app) => (
+                                  <td key={app.id} className={rowDiffers ? 'diff-cell' : ''}>
+                                    {field.key === 'status' ? (
+                                      <span className={`status-badge ${statusColor[app.status]}`}>{app.status}</span>
+                                    ) : (
+                                      app[field.key] || '-'
+                                    )}
+                                  </td>
+                                ))}
+                              </tr>
+                            );
+                          })}
+                        </tbody>
+                      }
+                    />
                   </div>
                 </>
               ) : (
@@ -477,58 +484,64 @@ function Compare() {
             </div>
 
             <div className="pivot-table-wrap">
-              <table className="pivot-table">
-                <thead>
-                  <tr>
-                    <th className="pivot-corner">{pivotRowLabel} \ {pivotColLabel}</th>
-                    {pivotCols.map((col) => (
-                      <th key={col}>{col}</th>
-                    ))}
-                    <th className="pivot-total-col">Total</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {pivotRows.map((row) => {
-                    const rowApps = pivotCols.map((col) => appsInCell(row, col));
-                    const rowTotal = rowApps.reduce((sum, apps) => sum + apps.length, 0);
-                    return (
-                      <tr key={row}>
-                        <td className="pivot-row-label">{row}</td>
-                        {pivotCols.map((col, i) => {
-                          const apps = rowApps[i];
-                          const isActiveCell = drilldown?.rowValue === row && drilldown?.colValue === col;
-                          return (
-                            <td key={col}>
-                              {apps.length > 0 ? (
-                                <button
-                                  type="button"
-                                  className={`pivot-cell-btn ${isActiveCell ? 'active' : ''}`}
-                                  onClick={() => setDrilldown({ rowValue: row, colValue: col, apps })}
-                                >
-                                  {apps.length}
-                                </button>
-                              ) : (
-                                <span className="pivot-cell-empty">–</span>
-                              )}
-                            </td>
-                          );
-                        })}
-                        <td className="pivot-total-cell">{rowTotal}</td>
-                      </tr>
-                    );
-                  })}
-                  <tr className="pivot-total-row">
-                    <td className="pivot-row-label">Total</td>
-                    {pivotCols.map((col) => {
-                      const colTotal = pivotRows.reduce((sum, row) => sum + appsInCell(row, col).length, 0);
+              <Table
+                className="pivot-table"
+                wrapperClassName=""
+                customHeader={
+                  <thead>
+                    <tr>
+                      <th className="pivot-corner">{pivotRowLabel} \ {pivotColLabel}</th>
+                      {pivotCols.map((col) => (
+                        <th key={col}>{col}</th>
+                      ))}
+                      <th className="pivot-total-col">Total</th>
+                    </tr>
+                  </thead>
+                }
+                customBody={
+                  <tbody>
+                    {pivotRows.map((row) => {
+                      const rowApps = pivotCols.map((col) => appsInCell(row, col));
+                      const rowTotal = rowApps.reduce((sum, apps) => sum + apps.length, 0);
                       return (
-                        <td key={col} className="pivot-total-cell">{colTotal}</td>
+                        <tr key={row}>
+                          <td className="pivot-row-label">{row}</td>
+                          {pivotCols.map((col, i) => {
+                            const apps = rowApps[i];
+                            const isActiveCell = drilldown?.rowValue === row && drilldown?.colValue === col;
+                            return (
+                              <td key={col}>
+                                {apps.length > 0 ? (
+                                  <button
+                                    type="button"
+                                    className={`pivot-cell-btn ${isActiveCell ? 'active' : ''}`}
+                                    onClick={() => setDrilldown({ rowValue: row, colValue: col, apps })}
+                                  >
+                                    {apps.length}
+                                  </button>
+                                ) : (
+                                  <span className="pivot-cell-empty">–</span>
+                                )}
+                              </td>
+                            );
+                          })}
+                          <td className="pivot-total-cell">{rowTotal}</td>
+                        </tr>
                       );
                     })}
-                    <td className="pivot-total-cell grand">{applications.length}</td>
-                  </tr>
-                </tbody>
-              </table>
+                    <tr className="pivot-total-row">
+                      <td className="pivot-row-label">Total</td>
+                      {pivotCols.map((col) => {
+                        const colTotal = pivotRows.reduce((sum, row) => sum + appsInCell(row, col).length, 0);
+                        return (
+                          <td key={col} className="pivot-total-cell">{colTotal}</td>
+                        );
+                      })}
+                      <td className="pivot-total-cell grand">{applications.length}</td>
+                    </tr>
+                  </tbody>
+                }
+              />
             </div>
 
             {drilldown && (

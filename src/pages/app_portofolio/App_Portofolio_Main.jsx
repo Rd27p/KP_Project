@@ -14,6 +14,7 @@ import {
     Sparkles,
 } from 'lucide-react';
 import Layout from '../../components/Layout';
+import Table from '../../components/table';
 import { applications } from './Application_Data';
 import '../../style/app_portofolio_style/Main_Style.css';
 
@@ -427,57 +428,45 @@ function AppPortofolioMain() {
                         Tidak ada aplikasi yang cocok dengan pencarian atau filter.
                     </div>
                 ) : viewMode === 'list' ? (
-                    <div className="app-table-wrap">
-                        <table className="app-table">
-                            <thead>
-                                <tr>
-                                    {sortableColumns.map((col) => (
-                                        <th
-                                            key={col.key}
-                                            onClick={() => toggleSort(col.key)}
-                                            aria-sort={
-                                                sortConfig.key === col.key
-                                                    ? sortConfig.dir === 'asc'
-                                                        ? 'ascending'
-                                                        : 'descending'
-                                                    : 'none'
-                                            }
-                                        >
-                                            <span>
-                                                {col.label}
-                                                <ArrowUpDown
-                                                    size={12}
-                                                    className={sortConfig.key === col.key ? 'sort-icon active' : 'sort-icon'}
-                                                />
+                    <Table
+                        columns={sortableColumns.map((col) => ({
+                            key: col.key,
+                            label: col.label,
+                            ariaSort: sortConfig.key === col.key ? (sortConfig.dir === 'asc' ? 'ascending' : 'descending') : 'none',
+                            onClick: () => toggleSort(col.key),
+                            headerRender: () => (
+                                <span>
+                                    {col.label}
+                                    <ArrowUpDown
+                                        size={12}
+                                        className={sortConfig.key === col.key ? 'sort-icon active' : 'sort-icon'}
+                                    />
+                                </span>
+                            ),
+                            render: (app) => {
+                                if (col.key === 'name') {
+                                    return (
+                                        <div className="app-table-name-cell">
+                                            <span className="app-table-icon">
+                                                <Boxes size={14} strokeWidth={2} color="#FFFFFF" />
                                             </span>
-                                        </th>
-                                    ))}
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {pagedApps.map((app) => (
-                                    <tr key={app.id} onClick={() => navigate(`/applications/${app.id}`)}>
-                                        <td>
-                                            <div className="app-table-name-cell">
-                                                <span className="app-table-icon">
-                                                    <Boxes size={14} strokeWidth={2} color="#FFFFFF" />
-                                                </span>
-                                                {app.name}
-                                            </div>
-                                        </td>
-                                        <td>{app.category}</td>
-                                        <td>{app.owner}</td>
-                                        <td>
-                                            <span className={`status-badge ${statusColor[app.status]}`}>
-                                                {app.status}
-                                            </span>
-                                        </td>
-                                        <td>{app.updated}</td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
+                                            {app.name}
+                                        </div>
+                                    );
+                                }
+                                if (col.key === 'status') {
+                                    return (
+                                        <span className={`status-badge ${statusColor[app.status]}`}>
+                                            {app.status}
+                                        </span>
+                                    );
+                                }
+                                return app[col.key];
+                            }
+                        }))}
+                        data={pagedApps}
+                        onRowClick={(app) => navigate(`/applications/${app.id}`)}
+                    />
                 ) : (
                     <div className="app-card-grid">
                         {pagedApps.map((app) => (
