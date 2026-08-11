@@ -38,9 +38,6 @@ function AppRegis() {
     const [currentStep, setCurrentStep] = useState(1);
     const [formData, setFormData] = useState(initialFormData);
     const [submitted, setSubmitted] = useState(false);
-
-    // Pengguna yang sedang login, dipakai untuk "nama pendaftar" di step Review.
-    // Pola sama persis dengan Layout.jsx / Profile.jsx supaya konsisten.
     const [user] = useState(() => {
         try {
             const stored = localStorage.getItem('user');
