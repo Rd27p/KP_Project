@@ -54,7 +54,7 @@ function App() {
         <Route path="/security-assessment" element={<Security />} />
         <Route path="/tsa-information" element={<TSAInformation />} />
         <Route path="/oss-data" element={<OSSData />} />
-        <Route path="/oss-data/add" element={<Layout><Add_OSS /></Layout>} />
+        <Route path="/oss-data/add" element={<Add_OSS />} />
 
         <Route path="/profile" element={<Layout><Profile /></Layout>} />
       </Routes>

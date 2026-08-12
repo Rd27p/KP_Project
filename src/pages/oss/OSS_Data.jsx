@@ -290,7 +290,7 @@ function OSSData() {
                   <Search size={16} strokeWidth={2} />
                   <input type="text" placeholder="Search vendor / application..." />
                 </div>
-                <button className="oss-button oss-button-secondary">Add OSS</button>
+                <button onClick={() => (window.location.href = '/oss-data/add')} className="oss-button oss-button-secondary">Add OSS</button>
               </div>
             </div>
             <div className="oss-inventory-grid">

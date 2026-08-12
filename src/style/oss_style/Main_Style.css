@@ -563,6 +563,276 @@
   opacity: 0.95;
 }
 
+/* ---------- Fix darurat: pastikan .oss-button MENANG apa pun rule lain yang bentrok ---------- */
+/* Kalau setelah ini masih polos, berarti ada rule ".oss-button" lain di Main_Style.css
+   yang perlu dihapus manual (cek dengan Ctrl+F, harusnya cuma ada 1 definisi). */
+
+button.oss-button {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 12px 22px !important;
+    background: linear-gradient(135deg, var(--red) 0%, var(--red-deep) 100%) !important;
+    color: #fff !important;
+    font-family: 'Inter', sans-serif !important;
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    border: none !important;
+    border-radius: 12px !important;
+    cursor: pointer !important;
+    box-shadow: var(--shadow-1) !important;
+    transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+    white-space: nowrap !important;
+}
+
+button.oss-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 22px rgba(211, 50, 74, 0.24) !important;
+}
+
+button.oss-button.oss-button-secondary {
+    background: var(--card) !important;
+    color: var(--ink) !important;
+    border: 1px solid var(--line) !important;
+    box-shadow: none !important;
+}
+
+button.oss-button.oss-button-secondary:hover {
+    background: var(--navy) !important;
+    border-color: var(--navy) !important;
+    color: #fff !important;
+}
+
+button.oss-link-button {
+    display: block !important;
+    width: 100% !important;
+    margin-top: auto !important;
+    padding: 10px 14px !important;
+    border-radius: 12px !important;
+    border: 1px solid var(--line) !important;
+    background: transparent !important;
+    color: var(--ink) !important;
+    font-family: 'Inter', sans-serif !important;
+    font-size: 12.5px !important;
+    font-weight: 700 !important;
+    text-align: center !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+}
+
+button.oss-link-button:hover {
+    background: var(--navy) !important;
+    border-color: var(--navy) !important;
+    color: #fff !important;
+}
+
+/* ---------- Add OSS: form card ---------- */
+
+.oss-form-back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    align-self: flex-start;
+    padding: 10px 16px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--ink);
+    cursor: pointer;
+    box-shadow: var(--shadow-1);
+    transition: all 0.2s ease;
+    width: fit-content;
+}
+
+.oss-form-back-btn:hover {
+    color: var(--red);
+    transform: translateY(-1px);
+}
+
+.oss-form-card {
+    display: flex;
+    flex-direction: column;
+    gap: 26px;
+    padding: 28px 32px;
+    border-radius: 24px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    box-shadow: var(--shadow-1);
+}
+
+.oss-form-title-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.oss-form-header-icon {
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--navy) 0%, #24365c 100%);
+}
+
+.oss-form-title {
+    margin: 0;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink);
+}
+
+.oss-form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px 28px;
+}
+
+.oss-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.oss-form-group label {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--ink);
+}
+
+.oss-form-group input,
+.oss-form-group select {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    color: var(--ink);
+    background: var(--card);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    appearance: none;
+    -webkit-appearance: none;
+}
+
+.oss-form-group select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236B7488' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 38px;
+    cursor: pointer;
+}
+
+.oss-form-group input::placeholder {
+    color: #a0a0a0;
+}
+
+.oss-form-group input:focus,
+.oss-form-group select:focus {
+    outline: none;
+    border-color: var(--red);
+    box-shadow: 0 0 0 3px var(--red-soft);
+}
+
+.oss-form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    padding-top: 10px;
+    border-top: 1px solid var(--line);
+}
+
+.oss-btn-primary {
+    padding: 12px 26px;
+    background: linear-gradient(135deg, var(--red) 0%, var(--red-deep) 100%);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 700;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: var(--shadow-1);
+    transition: transform 0.2s ease;
+}
+
+.oss-btn-primary:hover {
+    transform: translateY(-2px);
+}
+
+.oss-btn-secondary {
+    padding: 12px 26px;
+    background: var(--surface);
+    color: var(--ink);
+    font-size: 13px;
+    font-weight: 700;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+/* ---------- Add OSS: success state ---------- */
+.oss-form-success {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 10px;
+    padding: 56px 30px;
+    background: var(--card);
+    border-radius: 24px;
+    box-shadow: var(--shadow-1);
+    border: 1px solid var(--line);
+}
+
+.oss-form-success-icon {
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 16px;
+    background: var(--green);
+    margin-bottom: 6px;
+}
+
+.oss-form-success h2 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--ink);
+    margin: 0;
+}
+
+.oss-form-success p {
+    font-size: 13px;
+    color: var(--ink-soft);
+    max-width: 420px;
+    line-height: 1.6;
+    margin: 0;
+}
+
+.oss-form-success strong {
+    color: var(--ink);
+}
+
+@media (max-width: 900px) {
+    .oss-form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .oss-form-card {
+        padding: 24px 22px;
+    }
+}
+
 @media (max-width: 900px) {
   .oss-grid,
   .oss-detail-row,
@@ -751,6 +1021,215 @@
   .oss-search-input {
     width: 100%;
   }
+}
+
+/* ---------- Add OSS: stepper ---------- */
+.oss-form-stepper {
+    display: flex;
+    align-items: flex-start;
+    background: var(--card);
+    padding: 20px 24px;
+    border-radius: 18px;
+    box-shadow: var(--shadow-1);
+    overflow-x: auto;
+}
+
+.oss-stepper-item {
+    display: flex;
+    align-items: center;
+    flex: 1;
+}
+
+.oss-stepper-item:last-child {
+    flex: 0;
+}
+
+.oss-stepper-node {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.oss-stepper-circle {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: var(--surface);
+    color: var(--ink-soft);
+    font-size: 13px;
+    font-weight: 700;
+    transition: all 0.25s ease;
+}
+
+.oss-stepper-circle.active {
+    background: linear-gradient(135deg, var(--red) 0%, var(--red-deep) 100%);
+    color: #fff;
+}
+
+.oss-stepper-circle.completed {
+    background: var(--green);
+    color: #fff;
+}
+
+.oss-stepper-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--ink-soft);
+    white-space: nowrap;
+    text-align: center;
+}
+
+.oss-stepper-label.active {
+    color: var(--ink);
+}
+
+.oss-stepper-line {
+    flex: 1;
+    height: 2px;
+    background: var(--line);
+    margin: 0 8px;
+    margin-top: -20px;
+}
+
+.oss-form-badge {
+    align-self: center;
+    padding: 7px 14px;
+    background: var(--red-soft);
+    border-radius: 999px;
+    font-size: 12.5px;
+    font-weight: 700;
+    color: var(--red-deep);
+}
+
+.oss-form-full {
+    grid-column: 1 / -1;
+}
+
+.oss-form-actions-right {
+    display: flex;
+    gap: 12px;
+    margin-left: auto;
+}
+
+/* ---------- Add OSS: Review step ---------- */
+.oss-review-registrant {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 18px;
+    background: linear-gradient(135deg, var(--navy) 0%, #24365c 100%);
+    border-radius: 14px;
+    color: #fff;
+}
+
+.oss-review-registrant-avatar {
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.16);
+    color: #fff;
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.oss-review-registrant-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    color: #b7c0da;
+    margin: 0 0 2px;
+}
+
+.oss-review-registrant-name {
+    font-size: 15px;
+    font-weight: 700;
+    color: #fff;
+    margin: 0;
+}
+
+.oss-review-registrant-email {
+    font-size: 12px;
+    color: #b7c0da;
+    margin: 2px 0 0;
+}
+
+.oss-review-section {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.oss-review-section-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--red-deep);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin: 0;
+}
+
+.oss-review-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    border-radius: 14px;
+    overflow: hidden;
+    background: var(--surface);
+}
+
+.oss-review-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 13px 16px;
+    border-bottom: 1px solid var(--line);
+}
+
+.oss-review-row:last-child {
+    border-bottom: none;
+}
+
+.oss-review-row span:first-child {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ink-soft);
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+}
+
+.oss-review-row span:last-child {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink);
+    text-align: right;
+}
+
+.oss-review-empty {
+    color: #a0a0a0 !important;
+    font-weight: 500 !important;
+    font-style: italic;
+}
+
+@media (max-width: 900px) {
+    .oss-form-stepper {
+        overflow-x: auto;
+    }
+}
+
+@media (max-width: 600px) {
+    .oss-stepper-label {
+        display: none;
+    }
 }
 
 @media (max-width: 900px) {
