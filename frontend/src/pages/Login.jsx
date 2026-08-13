@@ -1,14 +1,16 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { login } from '../services/api';
 import '../style/Login_Style.css';
 
 function Login() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
 
@@ -17,9 +19,22 @@ function Login() {
             return;
         }
 
-        console.log('Login attempt:', { username, password });
-        localStorage.setItem('user', JSON.stringify({ username }));
-        navigate('/dashboard');
+        setIsLoading(true);
+        try {
+            const data = await login(username, password);
+
+            // Simpan token terpisah (dipakai authFetch untuk request lain nanti),
+            // dan simpan seluruh object user dari backend (bukan cuma username)
+            // supaya Header/Profile bisa pakai nama, email, dst.
+            localStorage.setItem('token', data.token);
+            localStorage.setItem('user', JSON.stringify(data.user));
+
+            navigate('/dashboard');
+        } catch (err) {
+            setError(err.message || 'Login gagal. Periksa kembali username dan password.');
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     return (
@@ -38,6 +53,7 @@ function Login() {
                             placeholder="Enter your username"
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
+                            disabled={isLoading}
                         />
                     </div>
                     <div className="form-group">
@@ -48,10 +64,11 @@ function Login() {
                             placeholder="Enter your password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
+                            disabled={isLoading}
                         />
                     </div>
-                    <button type="submit" className="login-btn">
-                        Log In
+                    <button type="submit" className="login-btn" disabled={isLoading}>
+                        {isLoading ? 'Logging in...' : 'Log In'}
                     </button>
                 </form>
 
