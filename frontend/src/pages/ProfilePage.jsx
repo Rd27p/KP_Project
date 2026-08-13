@@ -27,7 +27,7 @@ function ProfilePage() {
 
     if (!user) {
         return (
-            <Layout title="Profile">
+            <Layout>
                 <div className="profile-page-empty">
                     <p>Kamu belum login.</p>
                     <button className="profile-page-btn" onClick={() => navigate('/login')}>
@@ -49,7 +49,7 @@ function ProfilePage() {
     ].filter((item) => item.value);
 
     return (
-        <Layout title="Profile">
+        <Layout>
             <div className="profile-page-content">
                 <div className="profile-page-header-card">
                     <span className="profile-avatar profile-avatar-xl">{initials}</span>

@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import { Search, X, Bell, Bot, ChevronRight } from 'lucide-react';
-import Profile from '../pages/Profile';
 import { applications } from '../pages/app_portofolio/Application_Data';
 import '../style/Header_Style.css';
 
@@ -191,8 +190,6 @@ export default function Header({
             hasAlert && <span className="dot-badge" />
           )}
         </button>
-
-        <Profile user={user} />
       </div>
     </div>
   );
