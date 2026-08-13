@@ -89,7 +89,7 @@ namespace AppHub2.Migrations
 
                     b.HasIndex("IdStatus");
 
-                    b.ToTable("Applications");
+                    b.ToTable("Applications", (string)null);
                 });
 
             modelBuilder.Entity("AppDbContext+CategoryApplication", b =>
@@ -104,7 +104,7 @@ namespace AppHub2.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("CategoriesApp");
+                    b.ToTable("CategoriesApp", (string)null);
                 });
 
             modelBuilder.Entity("AppDbContext+StatusApplication", b =>
@@ -119,7 +119,7 @@ namespace AppHub2.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("StatusApp");
+                    b.ToTable("StatusApp", (string)null);
                 });
 
             modelBuilder.Entity("AppDbContext+User", b =>
@@ -161,7 +161,7 @@ namespace AppHub2.Migrations
                     b.HasIndex("Email")
                         .IsUnique();
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("AppDbContext+Application", b =>
