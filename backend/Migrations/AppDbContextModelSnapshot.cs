@@ -16,12 +16,12 @@ namespace AppHub2.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "10.0.10")
+                .HasAnnotation("ProductVersion", "10.0.11")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("AppDbContext+Application", b =>
+            modelBuilder.Entity("backend.Models.Application", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -30,6 +30,9 @@ namespace AppHub2.Migrations
                     b.Property<string>("ApplicationUrl")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("DataClassification")
                         .IsRequired()
@@ -65,6 +68,9 @@ namespace AppHub2.Migrations
                     b.Property<Guid>("IdStatus")
                         .HasColumnType("uuid");
 
+                    b.Property<DateTime?>("LastUpdated")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("NamaAplikasi")
                         .IsRequired()
                         .HasColumnType("text");
@@ -74,6 +80,10 @@ namespace AppHub2.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("Version")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("server")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -92,7 +102,7 @@ namespace AppHub2.Migrations
                     b.ToTable("Applications");
                 });
 
-            modelBuilder.Entity("AppDbContext+CategoryApplication", b =>
+            modelBuilder.Entity("backend.Models.CategoryApplication", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -107,7 +117,7 @@ namespace AppHub2.Migrations
                     b.ToTable("CategoriesApp");
                 });
 
-            modelBuilder.Entity("AppDbContext+StatusApplication", b =>
+            modelBuilder.Entity("backend.Models.StatusApplication", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -122,7 +132,7 @@ namespace AppHub2.Migrations
                     b.ToTable("StatusApp");
                 });
 
-            modelBuilder.Entity("AppDbContext+User", b =>
+            modelBuilder.Entity("backend.Models.User", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -164,33 +174,33 @@ namespace AppHub2.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("AppDbContext+Application", b =>
+            modelBuilder.Entity("backend.Models.Application", b =>
                 {
-                    b.HasOne("AppDbContext+User", "BackupPemilik")
+                    b.HasOne("backend.Models.User", "BackupPemilik")
                         .WithMany()
                         .HasForeignKey("IdBackupPemilik")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("AppDbContext+CategoryApplication", "Category")
+                    b.HasOne("backend.Models.CategoryApplication", "Category")
                         .WithMany("Applications")
                         .HasForeignKey("IdCategory")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("AppDbContext+User", "Pembuat")
+                    b.HasOne("backend.Models.User", "Pembuat")
                         .WithMany()
                         .HasForeignKey("IdPembuat")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("AppDbContext+User", "Pemilik")
+                    b.HasOne("backend.Models.User", "Pemilik")
                         .WithMany()
                         .HasForeignKey("IdPemilik")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("AppDbContext+StatusApplication", "Status")
+                    b.HasOne("backend.Models.StatusApplication", "Status")
                         .WithMany("Applications")
                         .HasForeignKey("IdStatus")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -207,12 +217,12 @@ namespace AppHub2.Migrations
                     b.Navigation("Status");
                 });
 
-            modelBuilder.Entity("AppDbContext+CategoryApplication", b =>
+            modelBuilder.Entity("backend.Models.CategoryApplication", b =>
                 {
                     b.Navigation("Applications");
                 });
 
-            modelBuilder.Entity("AppDbContext+StatusApplication", b =>
+            modelBuilder.Entity("backend.Models.StatusApplication", b =>
                 {
                     b.Navigation("Applications");
                 });
