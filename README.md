@@ -21,7 +21,7 @@ A modern React application for managing and browsing application catalogs, built
 | Vitest 4.1 | Unit testing framework |
 | ESLint 10.6 | Code linting |
 | JSDOM 29.1 | DOM testing environment |
-| .NET9 (ASP.NET Core Web API) | RESTful APIs and business logic |
+| .NET10 (ASP.NET Core Web API) | RESTful APIs and business logic |
 | PostgreSQL 18 | Relational database management system (RDBMS) for data storage |
 | Entity Framework Core | Object-Relational Mapping (ORM) for database access and migrations |
 | Npgsql | PostgreSQL provider for .NET / Entity Framework Core |
