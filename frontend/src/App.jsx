@@ -15,13 +15,12 @@ import AppRegis from './pages/request/App_Regis';
 import UseCaseRegis from './pages/request/Use_Case_Regis';
 import BotRegis from './pages/feedback/Bot_Regis';
 import Result from './pages/feedback/Result';
-import Profile from './pages/Profile';
+import ProfilePage from './pages/ProfilePage';
 import Settings from './pages/Settings';
 import Security from './pages/security/Security';
 import TSAInformation from './pages/tsa/TSA_Information';
 import OSSData from './pages/oss/OSS_Data';
 import Add_OSS from './pages/oss/Add_OSS';
-import Layout from './components/Layout';
 import './App.css';
 
 function App() {
@@ -56,7 +55,7 @@ function App() {
         <Route path="/oss-data" element={<OSSData />} />
         <Route path="/oss-data/add" element={<Add_OSS />} />
 
-        <Route path="/profile" element={<Layout><Profile /></Layout>} />
+        <Route path="/profile" element={<ProfilePage />} />
       </Routes>
     </BrowserRouter>
   );

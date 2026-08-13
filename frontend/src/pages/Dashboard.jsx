@@ -14,6 +14,7 @@ import {
   CheckCircle2,
   ArrowUpDown,
   Clock,
+  Download,
 } from 'lucide-react';
 import { Link, useSearchParams } from 'react-router-dom';
 import Layout from '../components/Layout';
@@ -126,8 +127,6 @@ const toneVar = {
   neutral: '#C7CCDA',
 };
 
-const lastUpdated = '03 Agu 2026, 15:38 WIB';
-
 function HealthPulseRing({ percent = 0, label = 'Sehat' }) {
   const radius = 70;
   const circumference = 2 * Math.PI * radius;
@@ -200,6 +199,10 @@ export default function Dashboard() {
     }));
   }
 
+  function handleDownloadPdf() {
+    window.print();
+  }
+
   const sortableColumns = [
     { key: 'app', label: 'Aplikasi' },
     { key: 'category', label: 'Kategori' },
@@ -213,25 +216,34 @@ export default function Dashboard() {
       <div className="dashboard">
 
         {/* ---------- VIEW TABS ---------- */}
-        <div className="view-tabs" role="tablist" aria-label="Mode tampilan dashboard">
-          <button
-            type="button"
-            role="tab"
-            aria-selected={view === VIEWS.EXECUTIVE}
-            className={`view-tab ${view === VIEWS.EXECUTIVE ? 'active' : ''}`}
-            onClick={() => switchView(VIEWS.EXECUTIVE)}
-          >
-            Executive Summary
-          </button>
-          <button
-            type="button"
-            role="tab"
-            aria-selected={view === VIEWS.OPERATIONAL}
-            className={`view-tab ${view === VIEWS.OPERATIONAL ? 'active' : ''}`}
-            onClick={() => switchView(VIEWS.OPERATIONAL)}
-          >
-            Operational Detail
-          </button>
+        <div className="dashboard-toolbar">
+          <div className="view-tabs" role="tablist" aria-label="Mode tampilan dashboard">
+            <button
+              type="button"
+              role="tab"
+              aria-selected={view === VIEWS.EXECUTIVE}
+              className={`view-tab ${view === VIEWS.EXECUTIVE ? 'active' : ''}`}
+              onClick={() => switchView(VIEWS.EXECUTIVE)}
+            >
+              Executive Summary
+            </button>
+            <button
+              type="button"
+              role="tab"
+              aria-selected={view === VIEWS.OPERATIONAL}
+              className={`view-tab ${view === VIEWS.OPERATIONAL ? 'active' : ''}`}
+              onClick={() => switchView(VIEWS.OPERATIONAL)}
+            >
+              Operational Detail
+            </button>
+          </div>
+
+          {view === VIEWS.EXECUTIVE && (
+            <button type="button" className="pdf-download-btn" onClick={handleDownloadPdf}>
+              <Download size={16} />
+              Download PDF
+            </button>
+          )}
         </div>
 
         {/* ---------- KPI (1 kartu navy, 4 segmen internal — selalu tampil di kedua view) ---------- */}
