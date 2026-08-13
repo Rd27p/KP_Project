@@ -19,7 +19,9 @@ export default function Layout({ children, title, subtitle, showSearch = false }
       const next = !prev;
       try {
         localStorage.setItem('sidebar_collapsed', String(next));
-      } catch {}
+      } catch {
+        console.warn('Gagal menyimpan status sidebar_collapsed ke localStorage');
+      }
       return next;
     });
   };
