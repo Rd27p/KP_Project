@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { User, Mail, IdCard, Phone, Building2, LogOut } from 'lucide-react';
-import Layout from '../components/Layout';
-import '../style/Profile_Style.css';
+import Layout from '../../components/Layout';
+import '../../style/Profile_Style.css';
 
 function ProfilePage() {
     const navigate = useNavigate();

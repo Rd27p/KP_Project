@@ -22,16 +22,6 @@ function UserAccessMain() {
     return (
         <Layout>
             <div className="user-access-content">
-                <div className="user-access-hero">
-                    <button
-                        className="user-access-add-btn"
-                        onClick={() => navigate('/user-access/register')}
-                    >
-                        <Plus size={18} strokeWidth={2.2} />
-                        Ajukan Permintaan Akses
-                    </button>
-                </div>
-
                 {accessRequests.length === 0 ? (
                     <div className="user-access-empty">
                         <div className="user-access-empty-icon">

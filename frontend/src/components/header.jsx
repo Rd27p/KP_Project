@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import { Search, X, Bell, Bot, ChevronRight } from 'lucide-react';
 import { applications } from '../pages/app_portofolio/Application_Data';
-import Profile from '../pages/Profile';
+import Profile from '../pages/profile/Profile';
 import '../style/Header_Style.css';
 
 // [GAR] Routing label digunakan pada header untuk navigasi ke halaman tertentu

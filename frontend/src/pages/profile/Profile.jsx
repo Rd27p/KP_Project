@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { User, Settings, LogOut, ChevronDown } from 'lucide-react';
-import '../style/Profile_Style.css';
+import '../../style/Profile_Style.css';
 
 function Profile({ user }) {
     const [open, setOpen] = useState(false);

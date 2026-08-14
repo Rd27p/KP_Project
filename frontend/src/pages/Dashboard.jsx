@@ -3,7 +3,6 @@ import {
   LayoutGrid,
   AlertTriangle,
   HeartPulse,
-  FileCheck2,
   Inbox,
   ClipboardList,
   ShieldCheck,
@@ -13,7 +12,6 @@ import {
   Lock,
   CheckCircle2,
   ArrowUpDown,
-  Clock,
   Download,
 } from 'lucide-react';
 import { Link, useSearchParams } from 'react-router-dom';
@@ -52,14 +50,6 @@ const kpis = [
     value: '92.6%',
     label: 'Kesehatan Rata-rata',
     sub: '15 dari 128 butuh perhatian',
-  },
-  {
-    key: 'completeness',
-    icon: FileCheck2,
-    tone: 'amber',
-    value: '86%',
-    label: 'Kelengkapan Data',
-    sub: '18 aplikasi belum lengkap',
   },
 ];
 
@@ -102,13 +92,6 @@ const tickets = [
   { label: 'Use Case', value: 9, icon: ClipboardList, trend: '+2', trendType: 'up', link: '/request/use-case' },
   { label: 'Security Assessment', value: 5, icon: ShieldCheck, trend: '0', trendType: 'neutral', link: '/feedback/result' },
   { label: 'Complaint', value: 7, icon: MessageSquareWarning, trend: '+3', trendType: 'up', link: '/feedback/result' },
-];
-
-const healthPulseLegend = [
-  { label: 'Security 100%', tone: 'green' },
-  { label: 'Compliance 96%', tone: 'green' },
-  { label: 'Performance 78%', tone: 'amber' },
-  { label: 'Operation 7%', tone: 'red' },
 ];
 
 const servers = [
@@ -246,7 +229,7 @@ export default function Dashboard() {
           )}
         </div>
 
-        {/* ---------- KPI (1 kartu navy, 4 segmen internal — selalu tampil di kedua view) ---------- */}
+        {/* ---------- KPI (1 kartu navy, 3 segmen internal — selalu tampil di kedua view) ---------- */}
         <div className="kpi-unified">
           {kpis.map((kpi) => {
             const Icon = kpi.icon;

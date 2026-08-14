@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { User, Bell, Lock, Palette, Save, Check } from 'lucide-react';
-import Layout from '../components/Layout';
-import '../style/Settings_Style.css';
+import Layout from '../../components/Layout';
+import '../../style/Settings_Style.css';
 
 function getStoredUser() {
   try {
