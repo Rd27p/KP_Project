@@ -11,8 +11,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace AppHub2.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260813073729_UpdateApplicationTable")]
-    partial class UpdateApplicationTable
+    [Migration("20260814095838_initialMigration")]
+    partial class initialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -23,6 +23,21 @@ namespace AppHub2.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("backend.Models.AccessLevel", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("LevelAcces");
+                });
 
             modelBuilder.Entity("backend.Models.Application", b =>
                 {
@@ -120,6 +135,108 @@ namespace AppHub2.Migrations
                     b.ToTable("CategoriesApp");
                 });
 
+            modelBuilder.Entity("backend.Models.Complaint", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("ApplicationId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("CategoryMasalah")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("IssueType")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Regional")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("UsernameLDAP")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicationId");
+
+                    b.ToTable("Complaints");
+                });
+
+            modelBuilder.Entity("backend.Models.Server", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("AlertLevel")
+                        .HasColumnType("text");
+
+                    b.Property<Guid?>("ApplicationId")
+                        .HasColumnType("uuid");
+
+                    b.Property<double>("Availability")
+                        .HasColumnType("double precision");
+
+                    b.Property<double>("CpuUsage")
+                        .HasColumnType("double precision");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<double>("DiskUsage")
+                        .HasColumnType("double precision");
+
+                    b.Property<string>("IpAddress")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("IsCritical")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime>("LastChecked")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<double>("MemoryUsage")
+                        .HasColumnType("double precision");
+
+                    b.Property<string>("Region")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("ResponseTimeMs")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("ServerName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicationId");
+
+                    b.ToTable("Servers");
+                });
+
             modelBuilder.Entity("backend.Models.StatusApplication", b =>
                 {
                     b.Property<Guid>("Id")
@@ -141,6 +258,12 @@ namespace AppHub2.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<Guid?>("AccessLevelId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("ApplicationId")
+                        .HasColumnType("uuid");
+
                     b.Property<string>("Department")
                         .IsRequired()
                         .HasColumnType("text");
@@ -148,6 +271,9 @@ namespace AppHub2.Migrations
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<Guid?>("IdAccessLevel")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("NIK")
                         .IsRequired()
@@ -169,7 +295,15 @@ namespace AppHub2.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("alasanPengajuan")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("AccessLevelId");
+
+                    b.HasIndex("ApplicationId");
 
                     b.HasIndex("Email")
                         .IsUnique();
@@ -204,7 +338,7 @@ namespace AppHub2.Migrations
                         .IsRequired();
 
                     b.HasOne("backend.Models.StatusApplication", "Status")
-                        .WithMany("Applications")
+                        .WithMany()
                         .HasForeignKey("IdStatus")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -220,12 +354,42 @@ namespace AppHub2.Migrations
                     b.Navigation("Status");
                 });
 
-            modelBuilder.Entity("backend.Models.CategoryApplication", b =>
+            modelBuilder.Entity("backend.Models.Complaint", b =>
                 {
-                    b.Navigation("Applications");
+                    b.HasOne("backend.Models.Application", "Application")
+                        .WithMany()
+                        .HasForeignKey("ApplicationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Application");
                 });
 
-            modelBuilder.Entity("backend.Models.StatusApplication", b =>
+            modelBuilder.Entity("backend.Models.Server", b =>
+                {
+                    b.HasOne("backend.Models.Application", "Application")
+                        .WithMany()
+                        .HasForeignKey("ApplicationId");
+
+                    b.Navigation("Application");
+                });
+
+            modelBuilder.Entity("backend.Models.User", b =>
+                {
+                    b.HasOne("backend.Models.AccessLevel", "AccessLevel")
+                        .WithMany()
+                        .HasForeignKey("AccessLevelId");
+
+                    b.HasOne("backend.Models.Application", "Application")
+                        .WithMany()
+                        .HasForeignKey("ApplicationId");
+
+                    b.Navigation("AccessLevel");
+
+                    b.Navigation("Application");
+                });
+
+            modelBuilder.Entity("backend.Models.CategoryApplication", b =>
                 {
                     b.Navigation("Applications");
                 });

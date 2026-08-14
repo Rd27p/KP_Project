@@ -27,12 +27,16 @@ namespace backend.Models
         public User Pembuat { get; set; }
         public User Pemilik { get; set; }
         public User BackupPemilik { get; set; }
+        
 
         // Relasi ke Category
         public CategoryApplication Category { get; set; }
 
         // Relasi ke Status
         public StatusApplication Status { get; set; }
+
+
+       
     }
 
 }

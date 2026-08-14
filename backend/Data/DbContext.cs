@@ -8,11 +8,10 @@ public class AppDbContext : DbContext
     public DbSet<Application> Applications { get; set; }
     public DbSet<User> Users { get; set; }
     public DbSet<CategoryApplication> CategoriesApp{ get; set; }
-
     public DbSet<StatusApplication> StatusApp { get; set; }
-
-
-
+    public DbSet<Server> Servers { get; set; }
+    public DbSet<Complaint> Complaints { get; set; }
+    public DbSet<AccessLevel> LevelAcces { get; set; }
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -43,7 +42,7 @@ public class AppDbContext : DbContext
 
         modelBuilder.Entity<Application>()
             .HasOne(a => a.Status)
-            .WithMany(s => s.Applications)
+            .WithMany()
             .HasForeignKey(a => a.IdStatus);
 
         modelBuilder.Entity<User>()
