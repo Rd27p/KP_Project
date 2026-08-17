@@ -16,6 +16,7 @@ import ProgressBar from '../../components/ProgressBar';
 import Table from '../../components/Table';
 import CheckTicket from './CheckTicket';
 import '../../style/feedback_style/Main_Style.css';
+import '../../style/Dashboard_Style.css';
 
 /* ------------------------------------------------------------------ */
 /* DATA — derived from Live Report, Classification Case, Problem      */
@@ -606,66 +607,68 @@ function Result() {
     return (
         <Layout>
             <div className="feedback-content">
-                {/* Hero card: title/subtitle/button + live KPI row */}
-                <div className="feedback-hero-card">
-                    <div className="feedback-hero-top">
-                        <div>
-                            <p className="feedback-eyebrow">Customer Feedback Overview</p>
-                            <h1 className="feedback-hero-title">Ringkasan Tiket &amp; Keluhan</h1>
-                            <p className="feedback-hero-subtitle">
-                                Data bulan November 2025. Dari {ticketStats.total} tiket, {resolutionRate}%
-                                sudah closed dan hanya {ticketStats.open} yang masih open.
-                            </p>
-                        </div>
-                        <div className="feedback-hero-actions">
-                            <button className="feedback-hero-secondary-btn" onClick={() => setView('checkTicket')}>
-                                <SearchCheck size={18} strokeWidth={2.2} />
-                                Cek Status Tiket
-                            </button>
-                            <button className="feedback-complain-btn" onClick={() => setView('complain')}>
-                                <MessageSquareWarning size={18} strokeWidth={2.2} />
-                                I Want to Complain
-                            </button>
-                        </div>
-                    </div>
+                {/* Action buttons toolbar */}
+                <div className="feedback-hero-actions" style={{ alignSelf: 'flex-end' }}>
+                    <button className="feedback-hero-secondary-btn" onClick={() => setView('checkTicket')}>
+                        <SearchCheck size={18} strokeWidth={2.2} />
+                        Cek Status Tiket
+                    </button>
+                    <button className="feedback-complain-btn" onClick={() => setView('complain')}>
+                        <MessageSquareWarning size={18} strokeWidth={2.2} />
+                        I Want to Complain
+                    </button>
+                </div>
 
-                    <div className="feedback-hero-stats-row">
-                        <div className="feedback-hero-stat">
-                            <div className="feedback-hero-icon">
-                                <Ticket size={20} strokeWidth={2} color="#fff" />
-                            </div>
-                            <div>
-                                <span className="feedback-hero-value">{ticketStats.total}</span>
-                                <span className="feedback-hero-label">Total Ticket</span>
+                {/* KPI stats row — kpi-unified style (same as Dashboard) */}
+                <div className="kpi-unified">
+                    <div className="kpi-segment">
+                        <div className="kpi-segment-top">
+                            <div className="kpi-segment-icon">
+                                <Ticket size={19} color="#fff" />
                             </div>
                         </div>
-                        <div className="feedback-hero-stat">
-                            <div className="feedback-hero-icon">
-                                <FolderOpen size={20} strokeWidth={2} color="#fff" />
-                            </div>
-                            <div>
-                                <span className="feedback-hero-value">{ticketStats.open}</span>
-                                <span className="feedback-hero-label">Open Ticket</span>
+                        <div>
+                            <div className="kpi-segment-num">{ticketStats.total}</div>
+                            <div className="kpi-segment-label">Total Ticket</div>
+                        </div>
+                        <div className="kpi-segment-sub">November 2025</div>
+                    </div>
+                    <div className="kpi-segment">
+                        <div className="kpi-segment-top">
+                            <div className="kpi-segment-icon">
+                                <FolderOpen size={19} color="#FF8FA3" />
                             </div>
                         </div>
-                        <div className="feedback-hero-stat">
-                            <div className="feedback-hero-icon">
-                                <FolderCheck size={20} strokeWidth={2} color="#fff" />
-                            </div>
-                            <div>
-                                <span className="feedback-hero-value">{ticketStats.closed}</span>
-                                <span className="feedback-hero-label">Closed Ticket</span>
+                        <div>
+                            <div className="kpi-segment-num" style={{ color: '#FF8FA3' }}>{ticketStats.open}</div>
+                            <div className="kpi-segment-label">Open Ticket</div>
+                        </div>
+                        <div className="kpi-segment-sub">Perlu ditindaklanjuti</div>
+                    </div>
+                    <div className="kpi-segment">
+                        <div className="kpi-segment-top">
+                            <div className="kpi-segment-icon">
+                                <FolderCheck size={19} color="#7ce0b4" />
                             </div>
                         </div>
-                        <div className="feedback-hero-stat">
-                            <div className="feedback-hero-icon">
-                                <TrendingUp size={20} strokeWidth={2} color="#fff" />
-                            </div>
-                            <div>
-                                <span className="feedback-hero-value">{resolutionRate}%</span>
-                                <span className="feedback-hero-label">Resolution Rate</span>
-                            </div>
+                        <div>
+                            <div className="kpi-segment-num">{ticketStats.closed}</div>
+                            <div className="kpi-segment-label">Closed Ticket</div>
                         </div>
+                        <div className="kpi-segment-sub">Sudah terselesaikan</div>
+                    </div>
+                    <div className="kpi-segment">
+                        <div className="kpi-segment-top">
+                            <div className="kpi-segment-icon">
+                                <TrendingUp size={19} color="#7ce0b4" />
+                            </div>
+                            <div className="kpi-segment-trend">▲ {resolutionRate}%</div>
+                        </div>
+                        <div>
+                            <div className="kpi-segment-num">{resolutionRate}%</div>
+                            <div className="kpi-segment-label">Resolution Rate</div>
+                        </div>
+                        <div className="kpi-segment-sub">Dari total tiket masuk</div>
                     </div>
                 </div>
 

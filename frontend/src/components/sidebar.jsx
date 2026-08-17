@@ -26,7 +26,7 @@ const navItems = [
   { label: 'TSA Information Management', path: '/tsa-information', icon: FileText },
   { label: 'OSS Data Integration', path: '/oss-data', icon: Database },
   { label: 'Security Assessment', path: '/security-assessment', icon: ShieldCheck },
-  { label: 'Log User', path: 'log-user', icon: UserCheck },
+  { label: 'Log User', path: '/log-user', icon: UserCheck },
   { label: 'User Access', path: '/user-access', icon: KeyRound, hasDivider: true },
   {
     label: 'Request',

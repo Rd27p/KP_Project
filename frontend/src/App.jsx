@@ -22,6 +22,7 @@ import Add_Security from './pages/security/Add_Security';
 import TSAInformation from './pages/tsa/TSA_Information';
 import OSSData from './pages/oss/OSS_Data';
 import Add_OSS from './pages/oss/Add_OSS';
+import LogUser from './pages/log_user/Log_User_Main';
 import './App.css';
 
 function App() {
@@ -58,6 +59,7 @@ function App() {
         <Route path="/oss-data/add" element={<Add_OSS />} />
 
         <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/log-user" element={<LogUser />} />
       </Routes>
     </BrowserRouter>
   );
