@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("AppHub2")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+3be9c9d0508047e98e73112439e1ae99c5b773fd")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+627d6eb44dba0be8b024ce2e7d42a12562e8c011")]
 [assembly: System.Reflection.AssemblyProductAttribute("AppHub2")]
 [assembly: System.Reflection.AssemblyTitleAttribute("AppHub2")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

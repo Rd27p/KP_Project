@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
     Search,
     Download,
@@ -38,6 +39,7 @@ const PAGE_SIZES = [5, 10, 20, 50];
 
 // ─── Component ───────────────────────────────────────────────────────────────
 function Security() {
+    const navigate = useNavigate();
     const [search, setSearch] = useState('');
     const [phaseOpen, setPhaseOpen] = useState(false);
     const [selectedPhase, setSelectedPhase] = useState(0);
@@ -188,7 +190,7 @@ function Security() {
                         </div>
 
                         {/* Add button */}
-                        <button className="sa-add-btn">
+                        <button className="sa-add-btn" onClick={() => navigate('/security-assessment/add')}>
                             <Plus size={14} strokeWidth={2.5} />
                             Add Security Assessment
                         </button>

@@ -18,6 +18,7 @@ import Result from './pages/feedback/Result';
 import ProfilePage from './pages/profile/ProfilePage';
 import Settings from './pages/profile/Settings';
 import Security from './pages/security/Security';
+import Add_Security from './pages/security/Add_Security';
 import TSAInformation from './pages/tsa/TSA_Information';
 import OSSData from './pages/oss/OSS_Data';
 import Add_OSS from './pages/oss/Add_OSS';
@@ -51,6 +52,7 @@ function App() {
         <Route path="/feedback/result" element={<Result />} />
         <Route path="/feedback/bot-registration" element={<BotRegis />} />
         <Route path="/security-assessment" element={<Security />} />
+        <Route path="/security-assessment/add" element={<Add_Security />} />
         <Route path="/tsa-information" element={<TSAInformation />} />
         <Route path="/oss-data" element={<OSSData />} />
         <Route path="/oss-data/add" element={<Add_OSS />} />

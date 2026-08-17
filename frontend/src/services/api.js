@@ -37,3 +37,10 @@ export async function authFetch(path, options = {}) {
 
     return response.json();
 }
+
+export async function appRegistration(payload) {
+    return authFetch('/api/Applications', {
+        method: 'POST',
+        body: JSON.stringify(payload),
+    });
+}

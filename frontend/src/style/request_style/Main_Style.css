@@ -49,6 +49,16 @@
     line-height: 1.5;
 }
 
+.input-error {
+    border-color: #e53935 !important;
+}
+
+.request-field-error {
+    display: block;
+    color: #e53935;
+    font-size: 0.8rem;
+    margin-top: 4px;
+}
 /* Hero option menu (Request_Main landing) */
 .request-hero {
     display: flex;
