@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace backend.Models
 {
@@ -6,28 +8,45 @@ namespace backend.Models
     {
         public Guid Id { get; set; }
 
-        // Identitas server
+        [Required(ErrorMessage = "Nama server wajib diisi")]
+        [StringLength(100)]
         public string ServerName { get; set; } = string.Empty;
-        public string IpAddress { get; set; } = string.Empty;
-        public string Region { get; set; } = string.Empty; // contoh: Sumagabut, Sumagsel, dll
 
-        // Status dan performa
-        public string Status { get; set; } = "Online"; // Online, Warning, Critical, Offline
-        public double CpuUsage { get; set; } // dalam persen
-        public double MemoryUsage { get; set; } // dalam persen
-        public double DiskUsage { get; set; } // dalam persen
-        public double Availability { get; set; } // rata-rata uptime (misal 99.98)
-        public int ResponseTimeMs { get; set; } // waktu respon API (ms)
+        [Required(ErrorMessage = "IP Address wajib diisi")]
+        [RegularExpression(@"^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$", ErrorMessage = "Format IP tidak valid")]
+        public string IpAddress { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Region wajib diisi")]
+        public string Region { get; set; } = string.Empty;
+
+        [Required]
+        [RegularExpression("Online|Warning|Critical|Offline", ErrorMessage = "Status harus Online, Warning, Critical, atau Offline")]
+        public string Status { get; set; } = "Online";
+
+        public Guid? ApplicationId { get; set; } 
+        
+        [Range(0, 100)]
+        public double CpuUsage { get; set; }
+
+        [Range(0, 100)]
+        public double MemoryUsage { get; set; }
+
+        [Range(0, 100)]
+        public double DiskUsage { get; set; }
+
+        [Range(0, 100)]
+        public double Availability { get; set; }
+
+        public int ResponseTimeMs { get; set; }
 
         // Monitoring tambahan
-        public bool IsCritical { get; set; } // true kalau status Critical
-        public DateTime LastChecked { get; set; } // waktu terakhir monitoring
-        public string? AlertLevel { get; set; } // Critical, Warning, Info
-        public string? Description { get; set; } // opsional: deskripsi server
+        public bool IsCritical { get; set; }
+        public DateTime LastChecked { get; set; } = DateTime.UtcNow;
 
-        // Relasi ke aplikasi (opsional)
-        public Guid? ApplicationId { get; set; }
-        public Application? Application { get; set; }
+        public string? AlertLevel { get; set; }
+        public string? Description { get; set; }
+
+        // ✅ Relasi ke banyak aplikasi (1:N)
+        public ICollection<Application> Applications { get; set; } = new List<Application>();
     }
 }
-    

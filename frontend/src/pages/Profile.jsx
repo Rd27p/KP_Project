@@ -33,7 +33,7 @@ function Profile({ user }) {
         <div className="profile-wrapper" ref={menuRef}>
             <button className="profile-trigger" onClick={() => setOpen((prev) => !prev)}>
                 <span className="profile-avatar">{initials}</span>
-                <span className="profile-name">{user ? user.username : 'Guest'}</span>
+                <span className="profile-name">{user ? user.nama : 'Guest'}</span>
                 <ChevronDown
                     size={16}
                     strokeWidth={2}
@@ -47,7 +47,7 @@ function Profile({ user }) {
                         <span className="profile-avatar profile-avatar-lg">{initials}</span>
                         <div className="profile-dropdown-info">
                             <span className="profile-dropdown-name">
-                                {user ? user.username : 'Guest'}
+                                {user ? user.nama : 'Guest'}
                             </span>
                             <span className="profile-dropdown-email">
                                 {user?.email || 'guest@appcatalog.com'}

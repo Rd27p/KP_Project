@@ -42,6 +42,9 @@ public class ComplaintsController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> CreateComplaint([FromBody] Complaint complaint)
     {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
         complaint.Id = Guid.NewGuid();
         complaint.CreatedAt = DateTime.UtcNow;
 
@@ -55,7 +58,10 @@ public class ComplaintsController : ControllerBase
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateComplaint(Guid id, [FromBody] Complaint complaint)
     {
-        if (id != complaint.Id) return BadRequest();
+        if (id != complaint.Id) return BadRequest("Id tidak cocok");
+
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
 
         _context.Entry(complaint).State = EntityState.Modified;
 
@@ -72,6 +78,7 @@ public class ComplaintsController : ControllerBase
 
         return NoContent();
     }
+
 
     // DELETE: api/complaints/{id}
     [HttpDelete("{id}")]

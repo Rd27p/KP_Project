@@ -367,3 +367,5 @@ C:\Users\ASUS\Downloads\Magang\Telkomsel\KP_Project\backend\obj\Debug\net10.0\re
 C:\Users\ASUS\Downloads\Magang\Telkomsel\KP_Project\backend\obj\Debug\net10.0\AppHub2.pdb
 C:\Users\ASUS\Downloads\Magang\Telkomsel\KP_Project\backend\obj\Debug\net10.0\AppHub2.genruntimeconfig.cache
 C:\Users\ASUS\Downloads\Magang\Telkomsel\KP_Project\backend\obj\Debug\net10.0\ref\AppHub2.dll
+C:\Users\ASUS\Downloads\Magang\Telkomsel\KP_Project\backend\bin\Debug\net10.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\ASUS\Downloads\Magang\Telkomsel\KP_Project\backend\bin\Debug\net10.0\Microsoft.Bcl.Cryptography.dll

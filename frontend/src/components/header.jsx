@@ -72,7 +72,7 @@ export default function Header({
 
   const hour = new Date().getHours();
   const greeting = hour < 12 ? 'Selamat pagi' : hour < 18 ? 'Selamat siang' : 'Selamat sore';
-  const firstName = user?.username || 'Pengguna';
+  const firstName = user?.nama || 'Pengguna';
 
   useEffect(() => {
     if (!showSearch) return;

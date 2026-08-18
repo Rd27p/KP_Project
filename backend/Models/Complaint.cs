@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace backend.Models
 {
@@ -6,27 +7,34 @@ namespace backend.Models
     {
         public Guid Id { get; set; }
 
-        // Lokasi/regional
+        [Required(ErrorMessage = "Regional wajib diisi")]
+        [StringLength(50, ErrorMessage = "Regional maksimal 50 karakter")]
         public string Regional { get; set; } = string.Empty;
 
-        // Jenis masalah (lebih baik pakai IssueType biar konsisten)
+        [Required(ErrorMessage = "Jenis masalah wajib diisi")]
+        [StringLength(50)]
         public string IssueType { get; set; } = string.Empty;
 
-        // Relasi ke aplikasi bermasalah
+        [Required(ErrorMessage = "ApplicationId wajib diisi")]
         public Guid ApplicationId { get; set; }
+
+        [Required(ErrorMessage = "Aplikasi bermasalah wajib diisi")]
         public Application Application { get; set; }
 
-        // Kategori masalah (misalnya: Infrastruktur, Database, UI, dll)
+        [Required(ErrorMessage = "Kategori masalah wajib diisi")]
+        [StringLength(100)]
         public string CategoryMasalah { get; set; } = string.Empty;
 
-        // Identitas user
+        [Required(ErrorMessage = "UsernameLDAP wajib diisi")]
         public string UsernameLDAP { get; set; } = string.Empty;
-        public string Role { get; set; } = string.Empty; // jabatan/posisi
 
-        // Deskripsi masalah
+        [Required(ErrorMessage = "Role/jabatan wajib diisi")]
+        public string Role { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Deskripsi masalah wajib diisi")]
+        [StringLength(1000, ErrorMessage = "Deskripsi maksimal 1000 karakter")]
         public string Description { get; set; } = string.Empty;
 
-        // Waktu dibuat
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     }
 }

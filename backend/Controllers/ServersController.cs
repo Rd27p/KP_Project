@@ -21,7 +21,7 @@ public class ServersController : ControllerBase
     public async Task<IActionResult> GetServers()
     {
         var servers = await _context.Servers
-            .Include(s => s.Application)
+            .Include(s => s.Applications)
             .ToListAsync();
         return Ok(servers);
     }
@@ -31,30 +31,35 @@ public class ServersController : ControllerBase
     public async Task<IActionResult> GetServer(Guid id)
     {
         var server = await _context.Servers
-            .Include(s => s.Application)
+            .Include(s => s.Applications)
             .FirstOrDefaultAsync(s => s.Id == id);
 
         if (server == null) return NotFound();
         return Ok(server);
     }
 
-    // POST: api/servers
     [HttpPost]
     public async Task<IActionResult> CreateServer([FromBody] Server server)
     {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
         server.Id = Guid.NewGuid();
         server.LastChecked = DateTime.UtcNow;
+
         _context.Servers.Add(server);
         await _context.SaveChangesAsync();
 
         return CreatedAtAction(nameof(GetServer), new { id = server.Id }, server);
     }
 
-    // PUT: api/servers/{id}
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateServer(Guid id, [FromBody] Server server)
     {
-        if (id != server.Id) return BadRequest();
+        if (id != server.Id) return BadRequest("Id tidak cocok");
+
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
 
         server.LastChecked = DateTime.UtcNow;
         _context.Entry(server).State = EntityState.Modified;
@@ -72,6 +77,7 @@ public class ServersController : ControllerBase
 
         return NoContent();
     }
+
 
     // DELETE: api/servers/{id}
     [HttpDelete("{id}")]
