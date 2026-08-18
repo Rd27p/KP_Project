@@ -21,6 +21,21 @@ namespace AppHub2.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("backend.Models.AccessLevel", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("NamaLevel")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("LevelAcces");
+                });
+
             modelBuilder.Entity("backend.Models.Application", b =>
                 {
                     b.Property<Guid>("Id")
@@ -28,6 +43,10 @@ namespace AppHub2.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<string>("ApplicationUrl")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Category")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -51,12 +70,10 @@ namespace AppHub2.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("Description")
-                        .HasColumnType("text");
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
 
                     b.Property<Guid>("IdBackupPemilik")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("IdCategory")
                         .HasColumnType("uuid");
 
                     b.Property<Guid>("IdPembuat")
@@ -65,13 +82,21 @@ namespace AppHub2.Migrations
                     b.Property<Guid>("IdPemilik")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("IdStatus")
-                        .HasColumnType("uuid");
-
                     b.Property<DateTime?>("LastUpdated")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("NamaAplikasi")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<Guid>("ServerId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("ServerId1")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -83,38 +108,124 @@ namespace AppHub2.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("server")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.HasKey("Id");
 
                     b.HasIndex("IdBackupPemilik");
-
-                    b.HasIndex("IdCategory");
 
                     b.HasIndex("IdPembuat");
 
                     b.HasIndex("IdPemilik");
 
-                    b.HasIndex("IdStatus");
+                    b.HasIndex("ServerId");
+
+                    b.HasIndex("ServerId1");
 
                     b.ToTable("Applications");
                 });
 
-            modelBuilder.Entity("backend.Models.CategoryApplication", b =>
+            modelBuilder.Entity("backend.Models.Complaint", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<string>("NamaCategory")
+                    b.Property<Guid>("ApplicationId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("CategoryMasalah")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)");
+
+                    b.Property<string>("IssueType")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<string>("Regional")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("UsernameLDAP")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
 
-                    b.ToTable("CategoriesApp");
+                    b.HasIndex("ApplicationId");
+
+                    b.ToTable("Complaints");
+                });
+
+            modelBuilder.Entity("backend.Models.Server", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("AlertLevel")
+                        .HasColumnType("text");
+
+                    b.Property<Guid?>("ApplicationId")
+                        .HasColumnType("uuid");
+
+                    b.Property<double>("Availability")
+                        .HasColumnType("double precision");
+
+                    b.Property<double>("CpuUsage")
+                        .HasColumnType("double precision");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<double>("DiskUsage")
+                        .HasColumnType("double precision");
+
+                    b.Property<string>("IpAddress")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("IsCritical")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime>("LastChecked")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<double>("MemoryUsage")
+                        .HasColumnType("double precision");
+
+                    b.Property<string>("Region")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("ResponseTimeMs")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("ServerName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Servers");
                 });
 
             modelBuilder.Entity("backend.Models.StatusApplication", b =>
@@ -138,6 +249,16 @@ namespace AppHub2.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<Guid?>("AccessLevelId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("AlasanPengajuan")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid?>("ApplicationId")
+                        .HasColumnType("uuid");
+
                     b.Property<string>("Department")
                         .IsRequired()
                         .HasColumnType("text");
@@ -148,15 +269,18 @@ namespace AppHub2.Migrations
 
                     b.Property<string>("NIK")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
 
                     b.Property<string>("Nama")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<string>("Password")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<string>("Telp")
                         .IsRequired()
@@ -164,9 +288,17 @@ namespace AppHub2.Migrations
 
                     b.Property<string>("Username")
                         .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<string>("levelAccess")
                         .HasColumnType("text");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AccessLevelId");
+
+                    b.HasIndex("ApplicationId");
 
                     b.HasIndex("Email")
                         .IsUnique();
@@ -182,12 +314,6 @@ namespace AppHub2.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("backend.Models.CategoryApplication", "Category")
-                        .WithMany("Applications")
-                        .HasForeignKey("IdCategory")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("backend.Models.User", "Pembuat")
                         .WithMany()
                         .HasForeignKey("IdPembuat")
@@ -200,29 +326,53 @@ namespace AppHub2.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("backend.Models.StatusApplication", "Status")
-                        .WithMany("Applications")
-                        .HasForeignKey("IdStatus")
-                        .OnDelete(DeleteBehavior.Cascade)
+                    b.HasOne("backend.Models.Server", "Server")
+                        .WithMany()
+                        .HasForeignKey("ServerId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("BackupPemilik");
+                    b.HasOne("backend.Models.Server", null)
+                        .WithMany("Applications")
+                        .HasForeignKey("ServerId1");
 
-                    b.Navigation("Category");
+                    b.Navigation("BackupPemilik");
 
                     b.Navigation("Pembuat");
 
                     b.Navigation("Pemilik");
 
-                    b.Navigation("Status");
+                    b.Navigation("Server");
                 });
 
-            modelBuilder.Entity("backend.Models.CategoryApplication", b =>
+            modelBuilder.Entity("backend.Models.Complaint", b =>
                 {
-                    b.Navigation("Applications");
+                    b.HasOne("backend.Models.Application", "Application")
+                        .WithMany()
+                        .HasForeignKey("ApplicationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Application");
                 });
 
-            modelBuilder.Entity("backend.Models.StatusApplication", b =>
+            modelBuilder.Entity("backend.Models.User", b =>
+                {
+                    b.HasOne("backend.Models.AccessLevel", "AccessLevel")
+                        .WithMany()
+                        .HasForeignKey("AccessLevelId");
+
+                    b.HasOne("backend.Models.Application", "Application")
+                        .WithMany()
+                        .HasForeignKey("ApplicationId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("AccessLevel");
+
+                    b.Navigation("Application");
+                });
+
+            modelBuilder.Entity("backend.Models.Server", b =>
                 {
                     b.Navigation("Applications");
                 });
