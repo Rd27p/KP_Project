@@ -21,21 +21,6 @@ namespace AppHub2.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("backend.Models.AccessLevel", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("NamaLevel")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("LevelAcces");
-                });
-
             modelBuilder.Entity("backend.Models.Application", b =>
                 {
                     b.Property<Guid>("Id")
@@ -70,16 +55,15 @@ namespace AppHub2.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("Description")
-                        .HasMaxLength(500)
-                        .HasColumnType("character varying(500)");
+                        .HasColumnType("text");
 
-                    b.Property<Guid>("IdBackupPemilik")
+                    b.Property<Guid?>("IdBackupPemilik")
                         .HasColumnType("uuid");
 
                     b.Property<Guid>("IdPembuat")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("IdPemilik")
+                    b.Property<Guid?>("IdPemilik")
                         .HasColumnType("uuid");
 
                     b.Property<DateTime?>("LastUpdated")
@@ -87,13 +71,9 @@ namespace AppHub2.Migrations
 
                     b.Property<string>("NamaAplikasi")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasColumnType("text");
 
                     b.Property<Guid>("ServerId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("ServerId1")
                         .HasColumnType("uuid");
 
                     b.Property<string>("Status")
@@ -118,9 +98,217 @@ namespace AppHub2.Migrations
 
                     b.HasIndex("ServerId");
 
-                    b.HasIndex("ServerId1");
-
                     b.ToTable("Applications");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("20000000-0000-0000-0000-000000000001"),
+                            ApplicationUrl = "https://appcatalog.internal",
+                            Category = "Operations",
+                            CreatedAt = new DateTime(2026, 1, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            DataClassification = "Internal",
+                            DataRetentionPolicy = "5 Years",
+                            DataSource = "Internal Application Database",
+                            Database = "PostgreSQL",
+                            Description = "Portal katalog dan akses aplikasi internal perusahaan.",
+                            IdBackupPemilik = new Guid("10000000-0000-0000-0000-000000000001"),
+                            IdPembuat = new Guid("10000000-0000-0000-0000-000000000001"),
+                            IdPemilik = new Guid("10000000-0000-0000-0000-000000000001"),
+                            LastUpdated = new DateTime(2026, 8, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            NamaAplikasi = "App Catalog SSO",
+                            ServerId = new Guid("30000000-0000-0000-0000-000000000001"),
+                            Status = "Active",
+                            TechnologyStack = ".NET, React, PostgreSQL",
+                            Version = "2.5.0"
+                        },
+                        new
+                        {
+                            Id = new Guid("20000000-0000-0000-0000-000000000002"),
+                            ApplicationUrl = "https://finance.internal",
+                            Category = "Budgeting & Finance",
+                            CreatedAt = new DateTime(2026, 1, 15, 0, 0, 0, 0, DateTimeKind.Utc),
+                            DataClassification = "Confidential",
+                            DataRetentionPolicy = "7 Years",
+                            DataSource = "Finance Database",
+                            Database = "PostgreSQL",
+                            Description = "Aplikasi internal untuk pengelolaan keuangan dan budgeting.",
+                            IdBackupPemilik = new Guid("10000000-0000-0000-0000-000000000001"),
+                            IdPembuat = new Guid("10000000-0000-0000-0000-000000000001"),
+                            IdPemilik = new Guid("10000000-0000-0000-0000-000000000001"),
+                            LastUpdated = new DateTime(2026, 7, 28, 0, 0, 0, 0, DateTimeKind.Utc),
+                            NamaAplikasi = "Finance Management System",
+                            ServerId = new Guid("30000000-0000-0000-0000-000000000002"),
+                            Status = "Active",
+                            TechnologyStack = ".NET, Angular, PostgreSQL",
+                            Version = "3.2.1"
+                        },
+                        new
+                        {
+                            Id = new Guid("20000000-0000-0000-0000-000000000003"),
+                            ApplicationUrl = "https://network-monitor.internal",
+                            Category = "Operations",
+                            CreatedAt = new DateTime(2026, 2, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            DataClassification = "Internal",
+                            DataRetentionPolicy = "1 Year",
+                            DataSource = "Network Monitoring API",
+                            Database = "PostgreSQL",
+                            Description = "Monitoring kondisi jaringan dan layanan internal.",
+                            IdBackupPemilik = new Guid("10000000-0000-0000-0000-000000000001"),
+                            IdPembuat = new Guid("10000000-0000-0000-0000-000000000001"),
+                            IdPemilik = new Guid("10000000-0000-0000-0000-000000000001"),
+                            LastUpdated = new DateTime(2026, 8, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            NamaAplikasi = "Network Monitoring",
+                            ServerId = new Guid("30000000-0000-0000-0000-000000000003"),
+                            Status = "Active",
+                            TechnologyStack = ".NET, React, Prometheus",
+                            Version = "4.1.0"
+                        },
+                        new
+                        {
+                            Id = new Guid("20000000-0000-0000-0000-000000000004"),
+                            ApplicationUrl = "https://security.internal",
+                            Category = "Security",
+                            CreatedAt = new DateTime(2026, 2, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            DataClassification = "Restricted",
+                            DataRetentionPolicy = "3 Years",
+                            DataSource = "Security Event Logs",
+                            Database = "PostgreSQL",
+                            Description = "Dashboard monitoring event dan security internal.",
+                            IdBackupPemilik = new Guid("10000000-0000-0000-0000-000000000001"),
+                            IdPembuat = new Guid("10000000-0000-0000-0000-000000000001"),
+                            IdPemilik = new Guid("10000000-0000-0000-0000-000000000001"),
+                            LastUpdated = new DateTime(2026, 8, 15, 0, 0, 0, 0, DateTimeKind.Utc),
+                            NamaAplikasi = "Security Dashboard",
+                            ServerId = new Guid("30000000-0000-0000-0000-000000000003"),
+                            Status = "Active",
+                            TechnologyStack = ".NET, React, Elasticsearch",
+                            Version = "2.8.0"
+                        },
+                        new
+                        {
+                            Id = new Guid("20000000-0000-0000-0000-000000000005"),
+                            ApplicationUrl = "https://deployment.internal",
+                            Category = "Engineering & Deployment",
+                            CreatedAt = new DateTime(2026, 3, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            DataClassification = "Internal",
+                            DataRetentionPolicy = "1 Year",
+                            DataSource = "CI/CD Platform",
+                            Database = "PostgreSQL",
+                            Description = "Aplikasi internal untuk pengelolaan deployment.",
+                            IdBackupPemilik = new Guid("10000000-0000-0000-0000-000000000001"),
+                            IdPembuat = new Guid("10000000-0000-0000-0000-000000000001"),
+                            IdPemilik = new Guid("10000000-0000-0000-0000-000000000001"),
+                            LastUpdated = new DateTime(2026, 7, 21, 0, 0, 0, 0, DateTimeKind.Utc),
+                            NamaAplikasi = "Deployment Manager",
+                            ServerId = new Guid("30000000-0000-0000-0000-000000000001"),
+                            Status = "Active",
+                            TechnologyStack = ".NET, Vue, PostgreSQL",
+                            Version = "1.9.4"
+                        },
+                        new
+                        {
+                            Id = new Guid("20000000-0000-0000-0000-000000000006"),
+                            ApplicationUrl = "https://inventory.internal",
+                            Category = "Operations",
+                            CreatedAt = new DateTime(2026, 3, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            DataClassification = "Internal",
+                            DataRetentionPolicy = "3 Years",
+                            DataSource = "Inventory Database",
+                            Database = "MySQL",
+                            Description = "Aplikasi pengelolaan inventory internal.",
+                            IdBackupPemilik = new Guid("10000000-0000-0000-0000-000000000001"),
+                            IdPembuat = new Guid("10000000-0000-0000-0000-000000000001"),
+                            IdPemilik = new Guid("10000000-0000-0000-0000-000000000001"),
+                            LastUpdated = new DateTime(2026, 6, 20, 0, 0, 0, 0, DateTimeKind.Utc),
+                            NamaAplikasi = "Inventory System",
+                            ServerId = new Guid("30000000-0000-0000-0000-000000000002"),
+                            Status = "Inactive",
+                            TechnologyStack = "Laravel, MySQL, Bootstrap",
+                            Version = "1.4.2"
+                        },
+                        new
+                        {
+                            Id = new Guid("20000000-0000-0000-0000-000000000007"),
+                            ApplicationUrl = "https://budget.internal",
+                            Category = "Budgeting & Finance",
+                            CreatedAt = new DateTime(2026, 4, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            DataClassification = "Confidential",
+                            DataRetentionPolicy = "7 Years",
+                            DataSource = "Finance Database",
+                            Database = "PostgreSQL",
+                            Description = "Perencanaan dan monitoring budget internal.",
+                            IdBackupPemilik = new Guid("10000000-0000-0000-0000-000000000001"),
+                            IdPembuat = new Guid("10000000-0000-0000-0000-000000000001"),
+                            IdPemilik = new Guid("10000000-0000-0000-0000-000000000001"),
+                            NamaAplikasi = "Budget Planning",
+                            ServerId = new Guid("30000000-0000-0000-0000-000000000002"),
+                            Status = "Pending",
+                            TechnologyStack = ".NET, React, PostgreSQL",
+                            Version = "1.0.0"
+                        },
+                        new
+                        {
+                            Id = new Guid("20000000-0000-0000-0000-000000000008"),
+                            ApplicationUrl = "https://employee.internal",
+                            Category = "Others",
+                            CreatedAt = new DateTime(2026, 4, 12, 0, 0, 0, 0, DateTimeKind.Utc),
+                            DataClassification = "Internal",
+                            DataRetentionPolicy = "5 Years",
+                            DataSource = "Employee Database",
+                            Database = "PostgreSQL",
+                            Description = "Portal layanan internal untuk employee.",
+                            IdBackupPemilik = new Guid("10000000-0000-0000-0000-000000000001"),
+                            IdPembuat = new Guid("10000000-0000-0000-0000-000000000001"),
+                            IdPemilik = new Guid("10000000-0000-0000-0000-000000000001"),
+                            LastUpdated = new DateTime(2026, 8, 5, 0, 0, 0, 0, DateTimeKind.Utc),
+                            NamaAplikasi = "Employee Portal",
+                            ServerId = new Guid("30000000-0000-0000-0000-000000000001"),
+                            Status = "Active",
+                            TechnologyStack = ".NET, React, PostgreSQL",
+                            Version = "3.0.5"
+                        },
+                        new
+                        {
+                            Id = new Guid("20000000-0000-0000-0000-000000000009"),
+                            ApplicationUrl = "https://gateway.internal",
+                            Category = "Engineering & Deployment",
+                            CreatedAt = new DateTime(2026, 5, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            DataClassification = "Internal",
+                            DataRetentionPolicy = "1 Year",
+                            DataSource = "Internal APIs",
+                            Database = "PostgreSQL",
+                            Description = "Gateway untuk integrasi berbagai API internal.",
+                            IdBackupPemilik = new Guid("10000000-0000-0000-0000-000000000001"),
+                            IdPembuat = new Guid("10000000-0000-0000-0000-000000000001"),
+                            IdPemilik = new Guid("10000000-0000-0000-0000-000000000001"),
+                            LastUpdated = new DateTime(2026, 8, 12, 0, 0, 0, 0, DateTimeKind.Utc),
+                            NamaAplikasi = "API Gateway",
+                            ServerId = new Guid("30000000-0000-0000-0000-000000000001"),
+                            Status = "Active",
+                            TechnologyStack = ".NET, Redis, PostgreSQL",
+                            Version = "5.3.0"
+                        },
+                        new
+                        {
+                            Id = new Guid("20000000-0000-0000-0000-000000000010"),
+                            ApplicationUrl = "https://logs.internal",
+                            Category = "Security",
+                            CreatedAt = new DateTime(2026, 5, 20, 0, 0, 0, 0, DateTimeKind.Utc),
+                            DataClassification = "Restricted",
+                            DataRetentionPolicy = "2 Years",
+                            DataSource = "Application Logs",
+                            Database = "Elasticsearch",
+                            Description = "Centralized log management untuk aplikasi internal.",
+                            IdBackupPemilik = new Guid("10000000-0000-0000-0000-000000000001"),
+                            IdPembuat = new Guid("10000000-0000-0000-0000-000000000001"),
+                            IdPemilik = new Guid("10000000-0000-0000-0000-000000000001"),
+                            NamaAplikasi = "Log Management",
+                            ServerId = new Guid("30000000-0000-0000-0000-000000000003"),
+                            Status = "Pending",
+                            TechnologyStack = ".NET, Elasticsearch, Kibana",
+                            Version = "1.1.0"
+                        });
                 });
 
             modelBuilder.Entity("backend.Models.Complaint", b =>
@@ -179,9 +367,6 @@ namespace AppHub2.Migrations
                     b.Property<string>("AlertLevel")
                         .HasColumnType("text");
 
-                    b.Property<Guid?>("ApplicationId")
-                        .HasColumnType("uuid");
-
                     b.Property<double>("Availability")
                         .HasColumnType("double precision");
 
@@ -216,8 +401,7 @@ namespace AppHub2.Migrations
 
                     b.Property<string>("ServerName")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasColumnType("text");
 
                     b.Property<string>("Status")
                         .IsRequired()
@@ -226,30 +410,65 @@ namespace AppHub2.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Servers");
-                });
 
-            modelBuilder.Entity("backend.Models.StatusApplication", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("NamaStatus")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("StatusApp");
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("30000000-0000-0000-0000-000000000001"),
+                            AlertLevel = "Info",
+                            Availability = 99.900000000000006,
+                            CpuUsage = 32.0,
+                            Description = "Main production server untuk aplikasi internal",
+                            DiskUsage = 55.0,
+                            IpAddress = "192.168.1.10",
+                            IsCritical = false,
+                            LastChecked = new DateTime(2026, 8, 20, 8, 0, 0, 0, DateTimeKind.Utc),
+                            MemoryUsage = 48.0,
+                            Region = "Jakarta",
+                            ResponseTimeMs = 85,
+                            ServerName = "Production Server Jakarta",
+                            Status = "Online"
+                        },
+                        new
+                        {
+                            Id = new Guid("30000000-0000-0000-0000-000000000002"),
+                            AlertLevel = "Warning",
+                            Availability = 98.700000000000003,
+                            CpuUsage = 72.0,
+                            Description = "Server untuk aplikasi finance dan operation",
+                            DiskUsage = 68.0,
+                            IpAddress = "192.168.1.20",
+                            IsCritical = false,
+                            LastChecked = new DateTime(2026, 8, 20, 8, 0, 0, 0, DateTimeKind.Utc),
+                            MemoryUsage = 78.0,
+                            Region = "Jakarta",
+                            ResponseTimeMs = 230,
+                            ServerName = "Finance & Operation Server",
+                            Status = "Warning"
+                        },
+                        new
+                        {
+                            Id = new Guid("30000000-0000-0000-0000-000000000003"),
+                            AlertLevel = "Critical",
+                            Availability = 94.5,
+                            CpuUsage = 94.0,
+                            Description = "Server network dan security dengan resource tinggi",
+                            DiskUsage = 84.0,
+                            IpAddress = "192.168.1.30",
+                            IsCritical = true,
+                            LastChecked = new DateTime(2026, 8, 20, 8, 0, 0, 0, DateTimeKind.Utc),
+                            MemoryUsage = 91.0,
+                            Region = "Surabaya",
+                            ResponseTimeMs = 760,
+                            ServerName = "Security & Network Server",
+                            Status = "Critical"
+                        });
                 });
 
             modelBuilder.Entity("backend.Models.User", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("AccessLevelId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("AlasanPengajuan")
@@ -264,6 +483,10 @@ namespace AppHub2.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("LevelAccess")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -283,7 +506,6 @@ namespace AppHub2.Migrations
                         .HasColumnType("character varying(100)");
 
                     b.Property<string>("Telp")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Username")
@@ -291,12 +513,7 @@ namespace AppHub2.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
-                    b.Property<string>("levelAccess")
-                        .HasColumnType("text");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("AccessLevelId");
 
                     b.HasIndex("ApplicationId");
 
@@ -304,6 +521,77 @@ namespace AppHub2.Migrations
                         .IsUnique();
 
                     b.ToTable("Users");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("10000000-0000-0000-0000-000000000001"),
+                            AlasanPengajuan = "Administrator aplikasi monitoring internal",
+                            Department = "IT",
+                            Email = "admin@example.com",
+                            LevelAccess = "Admin",
+                            NIK = "1234567890",
+                            Nama = "Administrator",
+                            Password = "admin123",
+                            Telp = "081234567890",
+                            Username = "admin"
+                        },
+                        new
+                        {
+                            Id = new Guid("10000000-0000-0000-0000-000000000002"),
+                            AlasanPengajuan = "Akses monitoring Finance Management System",
+                            ApplicationId = new Guid("20000000-0000-0000-0000-000000000002"),
+                            Department = "Finance",
+                            Email = "budi@example.com",
+                            LevelAccess = "Read Only",
+                            NIK = "1234567891",
+                            Nama = "Budi Santoso",
+                            Password = "user123",
+                            Telp = "081234567891",
+                            Username = "budi"
+                        },
+                        new
+                        {
+                            Id = new Guid("10000000-0000-0000-0000-000000000003"),
+                            AlasanPengajuan = "Akses pengelolaan App Catalog SSO",
+                            ApplicationId = new Guid("20000000-0000-0000-0000-000000000001"),
+                            Department = "Human Resource",
+                            Email = "siti@example.com",
+                            LevelAccess = "Read And Write",
+                            NIK = "1234567892",
+                            Nama = "Siti Rahma",
+                            Password = "user123",
+                            Telp = "081234567892",
+                            Username = "siti"
+                        },
+                        new
+                        {
+                            Id = new Guid("10000000-0000-0000-0000-000000000004"),
+                            AlasanPengajuan = "Akses monitoring Network Monitoring",
+                            ApplicationId = new Guid("20000000-0000-0000-0000-000000000003"),
+                            Department = "Network",
+                            Email = "andika@example.com",
+                            LevelAccess = "Read And Write",
+                            NIK = "1234567893",
+                            Nama = "Andika Putra",
+                            Password = "user123",
+                            Telp = "081234567893",
+                            Username = "andika"
+                        },
+                        new
+                        {
+                            Id = new Guid("10000000-0000-0000-0000-000000000005"),
+                            AlasanPengajuan = "Akses monitoring Security Dashboard",
+                            ApplicationId = new Guid("20000000-0000-0000-0000-000000000004"),
+                            Department = "Security",
+                            Email = "rina@example.com",
+                            LevelAccess = "Read Only",
+                            NIK = "1234567894",
+                            Nama = "Rina Wijaya",
+                            Password = "user123",
+                            Telp = "081234567894",
+                            Username = "rina"
+                        });
                 });
 
             modelBuilder.Entity("backend.Models.Application", b =>
@@ -311,8 +599,7 @@ namespace AppHub2.Migrations
                     b.HasOne("backend.Models.User", "BackupPemilik")
                         .WithMany()
                         .HasForeignKey("IdBackupPemilik")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("backend.Models.User", "Pembuat")
                         .WithMany()
@@ -323,18 +610,13 @@ namespace AppHub2.Migrations
                     b.HasOne("backend.Models.User", "Pemilik")
                         .WithMany()
                         .HasForeignKey("IdPemilik")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("backend.Models.Server", "Server")
-                        .WithMany()
+                        .WithMany("Applications")
                         .HasForeignKey("ServerId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.HasOne("backend.Models.Server", null)
-                        .WithMany("Applications")
-                        .HasForeignKey("ServerId1");
 
                     b.Navigation("BackupPemilik");
 
@@ -358,18 +640,17 @@ namespace AppHub2.Migrations
 
             modelBuilder.Entity("backend.Models.User", b =>
                 {
-                    b.HasOne("backend.Models.AccessLevel", "AccessLevel")
-                        .WithMany()
-                        .HasForeignKey("AccessLevelId");
-
                     b.HasOne("backend.Models.Application", "Application")
-                        .WithMany()
+                        .WithMany("Users")
                         .HasForeignKey("ApplicationId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.Navigation("AccessLevel");
-
                     b.Navigation("Application");
+                });
+
+            modelBuilder.Entity("backend.Models.Application", b =>
+                {
+                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("backend.Models.Server", b =>

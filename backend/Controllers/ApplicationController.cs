@@ -25,8 +25,7 @@ namespace backend.Controllers
         public async Task<ActionResult<IEnumerable<Application>>> GetApplications()
         {
             return await _context.Applications
-                .Include(a => a.Category)
-                .Include(a => a.Status)
+                .Include(a => a.Server)
                 .Include(a => a.Pemilik)
                 .Include(a => a.Pembuat)
                 .Include(a => a.BackupPemilik)
@@ -37,8 +36,7 @@ namespace backend.Controllers
         public async Task<ActionResult<Application>> GetApplication(Guid id)
         {
             var app = await _context.Applications
-                .Include(a => a.Category)
-                .Include(a => a.Status)
+                .Include(a => a.Server)
                 .Include(a => a.Pemilik)
                 .Include(a => a.Pembuat)
                 .Include(a => a.BackupPemilik)
