@@ -10,9 +10,36 @@ public class AppDbContext : DbContext
     public DbSet<User> Users { get; set; }
     public DbSet<Server> Servers { get; set; }
     public DbSet<Complaint> Complaints { get; set; }
+    
+    public DbSet<UserApplicationAccess> UserApplicationAccesses { get; set; }
 
 protected override void OnModelCreating(ModelBuilder modelBuilder)
 {
+        base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<UserApplicationAccess>(entity =>
+        {
+            // Satu user tidak boleh mendapat akses ke aplikasi yang sama dua kali
+            entity.HasKey(access => new
+            {
+                access.UserId,
+                access.ApplicationId
+            });
+
+            entity.HasOne(access => access.User)
+                .WithMany(user => user.ApplicationAccesses)
+                .HasForeignKey(access => access.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(access => access.Application)
+                .WithMany(application => application.UserAccesses)
+                .HasForeignKey(access => access.ApplicationId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.Property(access => access.AccessLevel)
+                .IsRequired()
+                .HasMaxLength(50);
+        });
         // Relasi Application ↔ User (Pembuat, Pemilik, Backup)
         modelBuilder.Entity<Application>()
             .HasOne(a => a.Pembuat)
@@ -182,7 +209,7 @@ protected override void OnModelCreating(ModelBuilder modelBuilder)
             LevelAccess = "Admin",
 
             Telp = "081234567890",
-            Department = "IT",
+            Department = "Others",
 
             AlasanPengajuan =
                 "Administrator aplikasi monitoring internal"
@@ -933,7 +960,7 @@ protected override void OnModelCreating(ModelBuilder modelBuilder)
             LevelAccess = "Read Only",
 
             Telp = "081234567891",
-            Department = "Finance",
+            Department = "Budgeting & Finance",
 
             AlasanPengajuan =
                 "Akses monitoring Finance Management System"
@@ -960,7 +987,7 @@ protected override void OnModelCreating(ModelBuilder modelBuilder)
             LevelAccess = "Read And Write",
 
             Telp = "081234567892",
-            Department = "Human Resource",
+            Department = "Operations",
 
             AlasanPengajuan =
                 "Akses pengelolaan App Catalog SSO"
@@ -987,7 +1014,7 @@ protected override void OnModelCreating(ModelBuilder modelBuilder)
             LevelAccess = "Read And Write",
 
             Telp = "081234567893",
-            Department = "Network",
+            Department = "Operations",
 
             AlasanPengajuan =
                 "Akses monitoring Network Monitoring"

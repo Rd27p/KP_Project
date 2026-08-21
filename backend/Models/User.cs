@@ -51,6 +51,9 @@ namespace backend.Models
         [Required(ErrorMessage = "Alasan pengajuan wajib diisi")]
         public string AlasanPengajuan { get; set; } = string.Empty;
 
+        public ICollection<UserApplicationAccess> ApplicationAccesses
+            { get; set; } = new List<UserApplicationAccess>();
+
         // Relasi
         public Application? Application { get; set; }
     }

@@ -527,7 +527,7 @@ namespace AppHub2.Migrations
                         {
                             Id = new Guid("10000000-0000-0000-0000-000000000001"),
                             AlasanPengajuan = "Administrator aplikasi monitoring internal",
-                            Department = "IT",
+                            Department = "Others",
                             Email = "admin@example.com",
                             LevelAccess = "Admin",
                             NIK = "1234567890",
@@ -541,7 +541,7 @@ namespace AppHub2.Migrations
                             Id = new Guid("10000000-0000-0000-0000-000000000002"),
                             AlasanPengajuan = "Akses monitoring Finance Management System",
                             ApplicationId = new Guid("20000000-0000-0000-0000-000000000002"),
-                            Department = "Finance",
+                            Department = "Budgeting & Finance",
                             Email = "budi@example.com",
                             LevelAccess = "Read Only",
                             NIK = "1234567891",
@@ -555,7 +555,7 @@ namespace AppHub2.Migrations
                             Id = new Guid("10000000-0000-0000-0000-000000000003"),
                             AlasanPengajuan = "Akses pengelolaan App Catalog SSO",
                             ApplicationId = new Guid("20000000-0000-0000-0000-000000000001"),
-                            Department = "Human Resource",
+                            Department = "Operations",
                             Email = "siti@example.com",
                             LevelAccess = "Read And Write",
                             NIK = "1234567892",
@@ -569,7 +569,7 @@ namespace AppHub2.Migrations
                             Id = new Guid("10000000-0000-0000-0000-000000000004"),
                             AlasanPengajuan = "Akses monitoring Network Monitoring",
                             ApplicationId = new Guid("20000000-0000-0000-0000-000000000003"),
-                            Department = "Network",
+                            Department = "Operations",
                             Email = "andika@example.com",
                             LevelAccess = "Read And Write",
                             NIK = "1234567893",
@@ -592,6 +592,35 @@ namespace AppHub2.Migrations
                             Telp = "081234567894",
                             Username = "rina"
                         });
+                });
+
+            modelBuilder.Entity("backend.Models.UserApplicationAccess", b =>
+                {
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("ApplicationId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("AccessLevel")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<DateTime>("GrantedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid?>("GrantedBy")
+                        .HasColumnType("uuid");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.HasKey("UserId", "ApplicationId");
+
+                    b.HasIndex("ApplicationId");
+
+                    b.ToTable("UserApplicationAccesses");
                 });
 
             modelBuilder.Entity("backend.Models.Application", b =>
@@ -648,14 +677,40 @@ namespace AppHub2.Migrations
                     b.Navigation("Application");
                 });
 
+            modelBuilder.Entity("backend.Models.UserApplicationAccess", b =>
+                {
+                    b.HasOne("backend.Models.Application", "Application")
+                        .WithMany("UserAccesses")
+                        .HasForeignKey("ApplicationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("backend.Models.User", "User")
+                        .WithMany("ApplicationAccesses")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Application");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("backend.Models.Application", b =>
                 {
+                    b.Navigation("UserAccesses");
+
                     b.Navigation("Users");
                 });
 
             modelBuilder.Entity("backend.Models.Server", b =>
                 {
                     b.Navigation("Applications");
+                });
+
+            modelBuilder.Entity("backend.Models.User", b =>
+                {
+                    b.Navigation("ApplicationAccesses");
                 });
 #pragma warning restore 612, 618
         }

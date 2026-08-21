@@ -82,6 +82,9 @@ namespace backend.Models
 
         public User? BackupPemilik { get; set; }
 
+        
+        public ICollection<UserApplicationAccess> UserAccesses
+            { get; set; } = new List<UserApplicationAccess>();
         // Semua akun yang diberi akses ke Application ini
         public ICollection<User> Users { get; set; }
             = new List<User>();

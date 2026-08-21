@@ -34,7 +34,9 @@ public class AuthController : ControllerBase
             new Claim(ClaimTypes.Email, user.Email),
             new Claim("Nama", user.Nama),
             new Claim("NIK", user.NIK),
-            new Claim("Telp", user.Telp)
+            new Claim("Telp", user.Telp),
+            new Claim("LevelAccess", user.LevelAccess),
+            new Claim("Department", user.Department),
             
         };
 

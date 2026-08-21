@@ -1,9 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using backend.Models;
 using Microsoft.AspNetCore.Authorization;
+using backend.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace backend.Controllers
@@ -20,61 +22,175 @@ namespace backend.Controllers
             _context = context;
         }
 
-        // ✅ GET semua aplikasi
+        // Mengambil data user yang sedang login dari JWT
+        private async Task<User?> GetCurrentUserAsync()
+        {
+            var userIdClaim = User
+                .FindFirst(ClaimTypes.NameIdentifier)?
+                .Value;
+
+            if (!Guid.TryParse(userIdClaim, out var userId))
+            {
+                return null;
+            }
+
+            return await _context.Users
+                .AsNoTracking()
+                .FirstOrDefaultAsync(user => user.Id == userId);
+        }
+
+        // GET: api/Applications
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Application>>> GetApplications()
+        public async Task<ActionResult<IEnumerable<Application>>>
+            GetApplications()
         {
-            return await _context.Applications
-                .Include(a => a.Server)
-                .Include(a => a.Pemilik)
-                .Include(a => a.Pembuat)
-                .Include(a => a.BackupPemilik)
-                .ToListAsync();
+            var currentUser = await GetCurrentUserAsync();
+
+            if (currentUser == null)
+            {
+                return Unauthorized(new
+                {
+                    message = "Data user pada token tidak ditemukan"
+                });
+            }
+
+            IQueryable<Application> query = _context.Applications
+                .Include(application => application.Server)
+                .Include(application => application.Pemilik)
+                .Include(application => application.Pembuat)
+                .Include(application => application.BackupPemilik);
+
+            // Admin dapat melihat seluruh aplikasi
+            if (!string.Equals(
+                    currentUser.LevelAccess,
+                    "Admin",
+                    StringComparison.OrdinalIgnoreCase))
+            {
+                // User biasa hanya melihat aplikasi
+                // dengan kategori sesuai department-nya
+                query = query.Where(application =>
+                    application.Category == currentUser.Department
+                    ||
+                    _context.UserApplicationAccesses.Any(access =>
+                        access.UserId == currentUser.Id &&
+                        access.ApplicationId == application.Id &&
+                        access.IsActive
+                    )
+                );
+            }
+
+            var applications = await query.ToListAsync();
+
+            return Ok(applications);
         }
 
+        // GET: api/Applications/{id}
         [HttpGet("{id}")]
-        public async Task<ActionResult<Application>> GetApplication(Guid id)
+        public async Task<ActionResult<Application>>
+            GetApplication(Guid id)
         {
-            var app = await _context.Applications
-                .Include(a => a.Server)
-                .Include(a => a.Pemilik)
-                .Include(a => a.Pembuat)
-                .Include(a => a.BackupPemilik)
-                .FirstOrDefaultAsync(a => a.Id == id);
+            var currentUser = await GetCurrentUserAsync();
 
-            if (app == null)
-                return NotFound();
+            if (currentUser == null)
+            {
+                return Unauthorized(new
+                {
+                    message = "Data user pada token tidak ditemukan"
+                });
+            }
 
-            return app;
+            IQueryable<Application> query = _context.Applications
+                .Include(application => application.Server)
+                .Include(application => application.Pemilik)
+                .Include(application => application.Pembuat)
+                .Include(application => application.BackupPemilik);
+
+            // Detail aplikasi juga harus dibatasi
+            if (!string.Equals(
+                    currentUser.LevelAccess,
+                    "Admin",
+                    StringComparison.OrdinalIgnoreCase))
+            {
+                query = query.Where(application =>
+                    application.Category == currentUser.Department
+                    ||
+                    _context.UserApplicationAccesses.Any(access =>
+                        access.UserId == currentUser.Id &&
+                        access.ApplicationId == application.Id &&
+                        access.IsActive
+                    )
+                );
+            }
+
+            var application = await query
+                .FirstOrDefaultAsync(application =>
+                    application.Id == id);
+
+            if (application == null)
+            {
+                return NotFound(new
+                {
+                    message = "Aplikasi tidak ditemukan atau tidak dapat diakses"
+                });
+            }
+
+            return Ok(application);
         }
 
+        // POST: api/Applications
         [HttpPost]
-        public async Task<ActionResult<Application>> PostApplication(Application application)
+        public async Task<ActionResult<Application>>
+            PostApplication(Application application)
         {
             if (!ModelState.IsValid)
+            {
                 return BadRequest(ModelState);
+            }
+
+            var currentUser = await GetCurrentUserAsync();
+
+            if (currentUser == null)
+            {
+                return Unauthorized(new
+                {
+                    message = "Data user pada token tidak ditemukan"
+                });
+            }
 
             application.Id = Guid.NewGuid();
             application.CreatedAt = DateTime.UtcNow;
-            application.IdPembuat = Guid.Parse(User.FindFirst("Id")?.Value ?? throw new InvalidOperationException("User ID not found in claims")    );
+            application.IdPembuat = currentUser.Id;
+
             _context.Applications.Add(application);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetApplication), new { id = application.Id }, application);
+            return CreatedAtAction(
+                nameof(GetApplication),
+                new { id = application.Id },
+                application
+            );
         }
 
+        // PUT: api/Applications/{id}
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutApplication(Guid id, Application application)
+        public async Task<IActionResult> PutApplication(
+            Guid id,
+            Application application)
         {
             if (id != application.Id)
+            {
                 return BadRequest("Id tidak cocok");
+            }
 
             if (!ModelState.IsValid)
+            {
                 return BadRequest(ModelState);
-            
+            }
+
             application.LastUpdated = DateTime.UtcNow;
 
-            _context.Entry(application).State = EntityState.Modified;
+            _context.Entry(application).State =
+                EntityState.Modified;
 
             try
             {
@@ -82,23 +198,34 @@ namespace backend.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!_context.Applications.Any(a => a.Id == id))
+                var applicationExists =
+                    await _context.Applications.AnyAsync(
+                        item => item.Id == id);
+
+                if (!applicationExists)
+                {
                     return NotFound();
-                else
-                    throw;
+                }
+
+                throw;
             }
 
             return NoContent();
         }
 
+        // DELETE: api/Applications/{id}
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteApplication(Guid id)
         {
-            var app = await _context.Applications.FindAsync(id);
-            if (app == null)
-                return NotFound();
+            var application =
+                await _context.Applications.FindAsync(id);
 
-            _context.Applications.Remove(app);
+            if (application == null)
+            {
+                return NotFound();
+            }
+
+            _context.Applications.Remove(application);
             await _context.SaveChangesAsync();
 
             return NoContent();
