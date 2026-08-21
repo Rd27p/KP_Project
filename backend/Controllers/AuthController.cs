@@ -40,7 +40,7 @@ public class AuthController : ControllerBase
             
         };
 
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("supersecretkey123")); // ganti dengan key di appsettings
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("AppHub_JWT_Secret_Key_2026_Minimum_32_Characters")); // ganti dengan key di appsettings
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
         var token = new JwtSecurityToken(
