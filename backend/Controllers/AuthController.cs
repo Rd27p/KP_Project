@@ -34,11 +34,13 @@ public class AuthController : ControllerBase
             new Claim(ClaimTypes.Email, user.Email),
             new Claim("Nama", user.Nama),
             new Claim("NIK", user.NIK),
-            new Claim("Telp", user.Telp)
+            new Claim("Telp", user.Telp),
+            new Claim("LevelAccess", user.LevelAccess),
+            new Claim("Department", user.Department),
             
         };
 
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("supersecretkey123")); // ganti dengan key di appsettings
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("AppHub_JWT_Secret_Key_2026_Minimum_32_Characters")); // ganti dengan key di appsettings
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
         var token = new JwtSecurityToken(

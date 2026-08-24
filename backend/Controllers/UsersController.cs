@@ -24,7 +24,6 @@ namespace backend.Controllers
         public async Task<ActionResult<IEnumerable<User>>> GetUsers()
         {
             return await _context.Users
-                .Include(u => u.AccessLevel)
                 .Include(u => u.Application)
                 .ToListAsync();
         }
@@ -34,7 +33,6 @@ namespace backend.Controllers
         public async Task<ActionResult<User>> GetUser(Guid id)
         {
             var user = await _context.Users
-                .Include(u => u.AccessLevel)
                 .Include(u => u.Application)
                 .FirstOrDefaultAsync(u => u.Id == id);
 

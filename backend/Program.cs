@@ -21,7 +21,7 @@ builder.Services.AddCors(options =>
 builder.Services.AddControllers();
 
 
-var key = Encoding.UTF8.GetBytes("supersecretkey123"); // sama seperti di AuthController
+var key = Encoding.UTF8.GetBytes("AppHub_JWT_Secret_Key_2026_Minimum_32_Characters"); // sama seperti di AuthController
 
 builder.Services.AddAuthentication(options =>
 {
@@ -61,6 +61,7 @@ app.UseCors("AllowReact");
 app.UseHttpsRedirection();
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapStaticAssets();
