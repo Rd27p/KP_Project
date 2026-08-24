@@ -7,6 +7,9 @@
     font-family: 'Inter', 'Segoe UI', sans-serif;
 }
 
+.spin { animation: spin 1s linear infinite; }
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
 .profile-back-btn {
     display: flex;
     align-items: center;

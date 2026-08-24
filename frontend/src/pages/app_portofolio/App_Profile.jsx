@@ -55,7 +55,7 @@ function AppProfile() {
     const navigate = useNavigate();
     const [showDetails, setShowDetails] = useState(false);
 
-    
+
     const app = applications.find((item) => item.id === id);
 
     if (!app) {
