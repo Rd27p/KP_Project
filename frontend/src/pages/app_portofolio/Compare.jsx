@@ -1,9 +1,9 @@
-import { useMemo, useRef, useState } from 'react';
+import { useMemo, useRef, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Search, Check, Trash2, Columns3, Grid2x2, X, Highlighter } from 'lucide-react';
+import { ArrowLeft, Search, Check, Trash2, Columns3, Grid2x2, X, Highlighter, Loader2, AlertTriangle } from 'lucide-react';
 import Layout from '../../components/Layout';
 import Table from '../../components/table';
-import { applications } from './Application_Data';
+import { fetchApplications } from '../../services/applications';
 import '../../style/app_portofolio_style/Main_Style.css';
 
 const compareFields = [
@@ -38,6 +38,9 @@ const statusColor = {
 
 function Compare() {
   const navigate = useNavigate();
+  const [applications, setApplications] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState(null);
   const [selectedIds, setSelectedIds] = useState([]);
   const [filter, setFilter] = useState('');
   const [viewMode, setViewMode] = useState('sidebyside');
@@ -48,6 +51,24 @@ function Compare() {
   const [showOnlySelected, setShowOnlySelected] = useState(false);
   const [collapsedCategories, setCollapsedCategories] = useState({});
   const filterInputRef = useRef(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    async function load() {
+      setIsLoading(true);
+      setLoadError(null);
+      try {
+        const data = await fetchApplications();
+        if (!cancelled) setApplications(data);
+      } catch (err) {
+        if (!cancelled) setLoadError(err.message || 'Gagal memuat data aplikasi.');
+      } finally {
+        if (!cancelled) setIsLoading(false);
+      }
+    }
+    load();
+    return () => { cancelled = true; };
+  }, []);
 
   const filteredApps = useMemo(() => {
     const q = filter.toLowerCase();
@@ -161,6 +182,32 @@ function Compare() {
   function handlePivotColChange(value) {
     setPivotColField(value);
     setDrilldown(null);
+  }
+
+  if (isLoading) {
+    return (
+      <Layout>
+        <div className="portofolio-content">
+          <div className="portofolio-empty">
+            <Loader2 size={20} className="spin" strokeWidth={2} />
+            <span style={{ marginLeft: 8 }}>Memuat data aplikasi...</span>
+          </div>
+        </div>
+      </Layout>
+    );
+  }
+
+  if (loadError) {
+    return (
+      <Layout>
+        <div className="portofolio-content">
+          <div className="portofolio-empty">
+            <AlertTriangle size={20} strokeWidth={2} />
+            <span style={{ marginLeft: 8 }}>{loadError}</span>
+          </div>
+        </div>
+      </Layout>
+    );
   }
 
   return (

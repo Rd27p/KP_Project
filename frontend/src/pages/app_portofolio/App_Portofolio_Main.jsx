@@ -17,7 +17,7 @@ import {
 } from 'lucide-react';
 import Layout from '../../components/Layout';
 import Table from '../../components/table';
-import { authFetch } from '../../services/api';
+import { fetchApplications } from '../../services/applications';
 import '../../style/app_portofolio_style/Main_Style.css';
 
 const statusColor = {
@@ -37,32 +37,6 @@ const statusDotColor = {
 const GALAXY_PALETTE = ['#D3324A', '#1F2A44', '#1E8E52', '#E8720C', '#6C5CE7', '#00A8B5', '#B5406A'];
 const GOLDEN_ANGLE = 137.508 * (Math.PI / 180);
 
-// -----------------------------------------------------------------
-// Normalisasi data dari backend (.NET) ke shape yang dipakai UI.
-// Field asli di backend: namaAplikasi, category, status, pemilik.nama,
-// lastUpdated (opsional, fallback ke createdAt kalau belum pernah diupdate).
-// -----------------------------------------------------------------
-function formatTanggal(dateStr) {
-    if (!dateStr) return '-';
-    return new Date(dateStr).toLocaleDateString('id-ID', {
-        day: '2-digit',
-        month: 'short',
-        year: 'numeric',
-    });
-}
-
-function normalizeApp(app) {
-    return {
-        id: app.id,
-        name: app.namaAplikasi ?? 'Tanpa nama',
-        category: app.category ?? 'Uncategorized',
-        owner: app.pemilik?.nama ?? app.pemilik?.username ?? '-',
-        status: app.status ?? 'Active',
-        updated: formatTanggal(app.lastUpdated ?? app.createdAt),
-        // simpan raw object kalau butuh detail lain (server, pembuat, dst)
-        _raw: app,
-    };
-}
 
 /**
  * GalaxyView
@@ -239,14 +213,13 @@ function AppPortofolioMain() {
     useEffect(() => {
         let isCancelled = false;
 
-        async function fetchApplications() {
+        async function loadData() {
             setIsLoading(true);
             setLoadError(null);
             try {
-                const data = await authFetch('/api/Applications');
+                const data = await fetchApplications();
                 if (!isCancelled) {
-                    const normalized = Array.isArray(data) ? data.map(normalizeApp) : [];
-                    setApplications(normalized);
+                    setApplications(data);
                 }
             } catch (err) {
                 if (!isCancelled) {
@@ -259,7 +232,7 @@ function AppPortofolioMain() {
             }
         }
 
-        fetchApplications();
+        loadData();
 
         return () => {
             isCancelled = true;

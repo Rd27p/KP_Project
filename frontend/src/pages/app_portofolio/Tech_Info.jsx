@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { useParams, useNavigate, useLocation, Link } from 'react-router-dom';
 import {
     ArrowLeft,
@@ -12,13 +13,15 @@ import {
     Layers3,
 } from 'lucide-react';
 import Layout from '../../components/Layout';
-import { applications } from './Application_Data';
+import DetailStateWrapper from './DetailStateWrapper';
+import { fetchApplicationById } from '../../services/applications';
 import '../../style/app_portofolio_style/App_Profile_Style.css';
 
 const statusColor = {
     Active: 'badge-active',
     Maintenance: 'badge-maintenance',
     Inactive: 'badge-inactive',
+    Pending: 'badge-maintenance',
 };
 
 function AppDetailTabs({ id }) {
@@ -48,105 +51,123 @@ function AppDetailTabs({ id }) {
 function TechInfo() {
     const { id } = useParams();
     const navigate = useNavigate();
-    const app = applications.find((item) => item.id === id);
 
-    if (!app) {
-        return (
-            <Layout>
-                <div className="profile-notfound">
-                    <p>Aplikasi tidak ditemukan.</p>
-                    <button className="profile-back-btn" onClick={() => navigate('/applications')}>
-                        <ArrowLeft size={16} strokeWidth={2} />
-                        Kembali ke App Portofolio
-                    </button>
-                </div>
-            </Layout>
-        );
-    }
+    const [app, setApp] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState(null);
 
-    const techItems = [
-        { label: 'Framework', value: app.framework, icon: Code2 },
-        { label: 'Bahasa Pemrograman', value: app.language, icon: Terminal },
-        { label: 'Server', value: app.server, icon: Server },
-        { label: 'Database', value: app.database, icon: Database },
-        { label: 'Repository', value: app.repository, icon: GitBranch },
-        { label: 'CI/CD Pipeline', value: app.cicdPipeline, icon: Workflow },
-        { label: 'Dokumentasi API', value: app.apiDocumentation, icon: FileText },
-    ].filter((item) => item.value);
-
-    const techStack = app.techStack || [];
-    const hasAnyContent = techItems.length > 0 || techStack.length > 0;
+    useEffect(() => {
+        let cancelled = false;
+        async function load() {
+            setIsLoading(true);
+            setError(null);
+            try {
+                const result = await fetchApplicationById(id);
+                if (!cancelled) setApp(result);
+            } catch (err) {
+                if (!cancelled) setError(err.message || 'Gagal memuat data aplikasi.');
+            } finally {
+                if (!cancelled) setIsLoading(false);
+            }
+        }
+        load();
+        return () => { cancelled = true; };
+    }, [id]);
 
     return (
-        <Layout>
-            <div className="app-profile-content">
-                <button className="profile-back-btn" onClick={() => navigate('/applications')}>
-                    <ArrowLeft size={16} strokeWidth={2} />
-                    Kembali ke App Portofolio
-                </button>
+        <DetailStateWrapper
+            isLoading={isLoading}
+            error={error}
+            notFound={!isLoading && !error && !app}
+            onBack={() => navigate('/applications')}
+        >
+            {app && (() => {
+                const techItems = [
+                    { label: 'Framework', value: app.framework, icon: Code2 },
+                    { label: 'Bahasa Pemrograman', value: app.language, icon: Terminal },
+                    { label: 'Server', value: app.server, icon: Server },
+                    { label: 'Database', value: app.database, icon: Database },
+                    { label: 'Repository', value: app.repository, icon: GitBranch },
+                    { label: 'CI/CD Pipeline', value: app.cicdPipeline, icon: Workflow },
+                    { label: 'Dokumentasi API', value: app.apiDocumentation, icon: FileText },
+                ].filter((item) => item.value && item.value !== '-');
 
-                <div className="profile-header-card">
-                    <div className="profile-header-top">
-                        <div className="profile-header-icon">
-                            <Boxes size={28} strokeWidth={2} color="#FFFFFF" />
-                        </div>
-                        <span className={`status-badge ${statusColor[app.status]}`}>
-                            {app.status}
-                        </span>
-                    </div>
-                    <h1 className="profile-app-name">{app.name}</h1>
-                    <p className="profile-app-description">{app.description}</p>
-                </div>
+                const techStack = app.techStack || [];
+                const hasAnyContent = techItems.length > 0 || techStack.length > 0;
 
-                <AppDetailTabs id={id} />
+                return (
+                    <Layout>
+                        <div className="app-profile-content">
+                            <button className="profile-back-btn" onClick={() => navigate('/applications')}>
+                                <ArrowLeft size={16} strokeWidth={2} />
+                                Kembali ke App Portofolio
+                            </button>
 
-                {!hasAnyContent ? (
-                    <div className="section-card">
-                        <div className="section-empty">
-                            <Layers3 size={22} strokeWidth={1.6} />
-                            <p>Informasi teknis belum dilengkapi untuk aplikasi ini.</p>
-                        </div>
-                    </div>
-                ) : (
-                    <>
-                        {techStack.length > 0 && (
-                            <div className="section-card">
-                                <div className="section-card-title">
-                                    <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                                        <Layers3 size={16} strokeWidth={2} />
-                                        Tech Stack
+                            <div className="profile-header-card">
+                                <div className="profile-header-top">
+                                    <div className="profile-header-icon">
+                                        <Boxes size={28} strokeWidth={2} color="#FFFFFF" />
+                                    </div>
+                                    <span className={`status-badge ${statusColor[app.status]}`}>
+                                        {app.status}
                                     </span>
                                 </div>
-                                <div className="chip-row">
-                                    {techStack.map((item) => (
-                                        <span className="chip" key={item}>{item}</span>
-                                    ))}
-                                </div>
+                                <h1 className="profile-app-name">{app.name}</h1>
+                                <p className="profile-app-description">{app.description || 'Tidak ada deskripsi.'}</p>
                             </div>
-                        )}
 
-                        {techItems.length > 0 && (
-                            <div className="profile-info-grid">
-                                {techItems.map((item) => {
-                                    const Icon = item.icon;
-                                    return (
-                                        <div className="profile-info-card" key={item.label}>
-                                            <div className="profile-info-icon">
-                                                <Icon size={18} strokeWidth={2} />
+                            <AppDetailTabs id={id} />
+
+                            {!hasAnyContent ? (
+                                <div className="section-card">
+                                    <div className="section-empty">
+                                        <Layers3 size={22} strokeWidth={1.6} />
+                                        <p>Informasi teknis belum dilengkapi untuk aplikasi ini.</p>
+                                    </div>
+                                </div>
+                            ) : (
+                                <>
+                                    {techStack.length > 0 && (
+                                        <div className="section-card">
+                                            <div className="section-card-title">
+                                                <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                                                    <Layers3 size={16} strokeWidth={2} />
+                                                    Tech Stack
+                                                </span>
                                             </div>
-                                            <div className="profile-info-body">
-                                                <span className="profile-info-label">{item.label}</span>
-                                                <span className="profile-info-value">{item.value}</span>
+                                            <div className="chip-row">
+                                                {techStack.map((item) => (
+                                                    <span className="chip" key={item}>{item}</span>
+                                                ))}
                                             </div>
                                         </div>
-                                    );
-                                })}
-                            </div>
-                        )}
-                    </>
-                )}
-            </div>
-        </Layout>
+                                    )}
+
+                                    {techItems.length > 0 && (
+                                        <div className="profile-info-grid">
+                                            {techItems.map((item) => {
+                                                const Icon = item.icon;
+                                                return (
+                                                    <div className="profile-info-card" key={item.label}>
+                                                        <div className="profile-info-icon">
+                                                            <Icon size={18} strokeWidth={2} />
+                                                        </div>
+                                                        <div className="profile-info-body">
+                                                            <span className="profile-info-label">{item.label}</span>
+                                                            <span className="profile-info-value">{item.value}</span>
+                                                        </div>
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
+                                    )}
+                                </>
+                            )}
+                        </div>
+                    </Layout>
+                );
+            })()}
+        </DetailStateWrapper>
     );
 }
 

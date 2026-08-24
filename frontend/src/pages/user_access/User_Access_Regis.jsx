@@ -1,14 +1,15 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, UserPlus } from 'lucide-react';
 import Layout from '../../components/Layout';
-import { applications } from '../app_portofolio/Application_Data';
+import { fetchApplications } from '../../services/applications';
 import '../../style/user_access_style/Main_Style.css';
 
 const accessLevels = ['Read Only', 'Read & Write', 'Admin'];
 
 function UserAccessRegis() {
     const navigate = useNavigate();
+    const [applications, setApplications] = useState([]);
     const [formData, setFormData] = useState({
         ldapUsername: '',
         nik: '',
@@ -22,6 +23,14 @@ function UserAccessRegis() {
     });
     const [error, setError] = useState('');
     const [success, setSuccess] = useState(false);
+
+    useEffect(() => {
+        let cancelled = false;
+        fetchApplications()
+            .then((data) => { if (!cancelled) setApplications(data); })
+            .catch(() => {});
+        return () => { cancelled = true; };
+    }, []);
 
     const handleChange = (e) => {
         const { name, value } = e.target;

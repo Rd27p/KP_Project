@@ -9,13 +9,15 @@ import {
     ImageOff,
 } from 'lucide-react';
 import Layout from '../../components/Layout';
-import { applications } from './Application_Data';
+import DetailStateWrapper from './DetailStateWrapper';
+import { fetchApplicationById } from '../../services/applications';
 import '../../style/app_portofolio_style/App_Profile_Style.css';
 
 const statusColor = {
     Active: 'badge-active',
     Maintenance: 'badge-maintenance',
     Inactive: 'badge-inactive',
+    Pending: 'badge-maintenance',
 };
 
 function AppDetailTabs({ id }) {
@@ -168,57 +170,73 @@ function AutoScreenshot({ url, appName }) {
 function AppView() {
     const { id } = useParams();
     const navigate = useNavigate();
-    const app = applications.find((item) => item.id === id);
 
-    if (!app) {
-        return (
-            <Layout>
-                <div className="profile-notfound">
-                    <p>Aplikasi tidak ditemukan.</p>
-                    <button className="profile-back-btn" onClick={() => navigate('/applications')}>
-                        <ArrowLeft size={16} strokeWidth={2} />
-                        Kembali ke App Portofolio
-                    </button>
-                </div>
-            </Layout>
-        );
-    }
+    const [app, setApp] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        let cancelled = false;
+        async function load() {
+            setIsLoading(true);
+            setError(null);
+            try {
+                const result = await fetchApplicationById(id);
+                if (!cancelled) setApp(result);
+            } catch (err) {
+                if (!cancelled) setError(err.message || 'Gagal memuat data aplikasi.');
+            } finally {
+                if (!cancelled) setIsLoading(false);
+            }
+        }
+        load();
+        return () => { cancelled = true; };
+    }, [id]);
 
     return (
-        <Layout>
-            <div className="app-profile-content">
-                <button className="profile-back-btn" onClick={() => navigate('/applications')}>
-                    <ArrowLeft size={16} strokeWidth={2} />
-                    Kembali ke App Portofolio
-                </button>
+        <DetailStateWrapper
+            isLoading={isLoading}
+            error={error}
+            notFound={!isLoading && !error && !app}
+            onBack={() => navigate('/applications')}
+        >
+            {app && (
+                <Layout>
+                    <div className="app-profile-content">
+                        <button className="profile-back-btn" onClick={() => navigate('/applications')}>
+                            <ArrowLeft size={16} strokeWidth={2} />
+                            Kembali ke App Portofolio
+                        </button>
 
-                <div className="profile-header-card">
-                    <div className="profile-header-top">
-                        <div className="profile-header-icon">
-                            <Boxes size={28} strokeWidth={2} color="#FFFFFF" />
+                        <div className="profile-header-card">
+                            <div className="profile-header-top">
+                                <div className="profile-header-icon">
+                                    <Boxes size={28} strokeWidth={2} color="#FFFFFF" />
+                                </div>
+                                <span className={`status-badge ${statusColor[app.status]}`}>
+                                    {app.status}
+                                </span>
+                            </div>
+                            <h1 className="profile-app-name">{app.name}</h1>
+                            <p className="profile-app-description">{app.description || 'Tidak ada deskripsi.'}</p>
                         </div>
-                        <span className={`status-badge ${statusColor[app.status]}`}>
-                            {app.status}
-                        </span>
-                    </div>
-                    <h1 className="profile-app-name">{app.name}</h1>
-                    <p className="profile-app-description">{app.description}</p>
-                </div>
 
-                <AppDetailTabs id={id} />
+                        <AppDetailTabs id={id} />
 
-                {!app.url ? (
-                    <div className="section-card">
-                        <div className="section-empty">
-                            <Globe size={22} strokeWidth={1.6} />
-                            <p>URL aplikasi belum terdaftar, jadi screenshot otomatis belum bisa diambil.</p>
-                        </div>
+                        {!app.url ? (
+                            <div className="section-card">
+                                <div className="section-empty">
+                                    <Globe size={22} strokeWidth={1.6} />
+                                    <p>URL aplikasi belum terdaftar, jadi screenshot otomatis belum bisa diambil.</p>
+                                </div>
+                            </div>
+                        ) : (
+                            <AutoScreenshot key={app.id} url={app.url} appName={app.name} />
+                        )}
                     </div>
-                ) : (
-                    <AutoScreenshot key={app.id} url={app.url} appName={app.name} />
-                )}
-            </div>
-        </Layout>
+                </Layout>
+            )}
+        </DetailStateWrapper>
     );
 }
 

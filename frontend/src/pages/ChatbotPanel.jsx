@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { X, Send } from "lucide-react";
-import { applications } from "./app_portofolio/Application_Data";
+import { fetchApplications } from "../services/applications";
 import "../style/ChatbotPanel_Style.css";
 
 function serializeApp(app) {
@@ -21,24 +21,24 @@ function serializeApp(app) {
   return `- ${parts.join(" | ")}`;
 }
 
-function getRelevantApps(query) {
+function getRelevantApps(query, apps) {
   const words = query
     .toLowerCase()
     .split(/\s+/)
     .filter((w) => w.length > 2);
 
-  if (words.length === 0) return applications;
+  if (words.length === 0) return apps;
 
-  const matched = applications.filter((app) => {
+  const matched = apps.filter((app) => {
     const haystack = `${app.name} ${app.category} ${app.owner} ${app.status} ${app.description || ""}`.toLowerCase();
     return words.some((w) => haystack.includes(w));
   });
 
-  return matched.length > 0 ? matched : applications;
+  return matched.length > 0 ? matched : apps;
 }
 
-function buildSystemPrompt(query) {
-  const relevantApps = getRelevantApps(query);
+function buildSystemPrompt(query, apps) {
+  const relevantApps = getRelevantApps(query, apps);
   const knowledgeBase = relevantApps.map(serializeApp).join("\n");
 
   return `Kamu adalah asisten internal untuk katalog aplikasi perusahaan (Application Catalog).
@@ -46,12 +46,13 @@ Kamu HANYA boleh menjawab berdasarkan data aplikasi di bawah ini — jangan guna
 atau mengarang informasi yang tidak ada di data ini. Kalau pertanyaan tidak bisa dijawab dari data
 ini, katakan dengan jujur bahwa informasinya tidak tersedia di katalog.
 
-Total aplikasi terdaftar: ${applications.length}
+Total aplikasi terdaftar: ${apps.length}
 Data aplikasi yang relevan dengan pertanyaan (${relevantApps.length} aplikasi):
 ${knowledgeBase}`;
 }
 
 export default function ChatbotPanel({ isOpen, onClose }) {
+  const [applications, setApplications] = useState([]);
   const [messages, setMessages] = useState([
     {
       id: 1,
@@ -61,6 +62,16 @@ export default function ChatbotPanel({ isOpen, onClose }) {
   ]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
+  // Fetch daftar aplikasi sekali saat panel pertama kali dibuka
+  const fetchedRef = useRef(false);
+  useEffect(() => {
+    if (!isOpen || fetchedRef.current) return;
+    fetchedRef.current = true;
+    fetchApplications()
+      .then((data) => setApplications(data))
+      .catch(() => {});
+  }, [isOpen]);
 
   const handleSend = async () => {
     if (!input.trim() || isLoading) return;
@@ -78,7 +89,7 @@ export default function ChatbotPanel({ isOpen, onClose }) {
       // tetap ingat konteks obrolan sebelumnya, dengan system prompt berisi data
       // katalog aplikasi yang relevan di paling depan.
       const conversationPayload = [
-        { role: "system", content: buildSystemPrompt(userMessage) },
+        { role: "system", content: buildSystemPrompt(userMessage, applications) },
         ...updatedMessages.map((m) => ({
           role: m.sender === "user" ? "user" : "assistant",
           content: m.text,
