@@ -32,12 +32,12 @@ public class AuthController : ControllerBase
             new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
             new Claim(ClaimTypes.Name, user.Username),
             new Claim(ClaimTypes.Email, user.Email),
+            new Claim(ClaimTypes.Role, user.LevelAccess),
             new Claim("Nama", user.Nama),
             new Claim("NIK", user.NIK),
             new Claim("Telp", user.Telp),
             new Claim("LevelAccess", user.LevelAccess),
             new Claim("Department", user.Department),
-            
         };
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("AppHub_JWT_Secret_Key_2026_Minimum_32_Characters")); // ganti dengan key di appsettings

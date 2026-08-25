@@ -3,13 +3,15 @@ import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, UserPlus } from 'lucide-react';
 import Layout from '../../components/Layout';
 import { fetchApplications } from '../../services/applications';
+import { grantUserAccess } from '../../services/userAccess';
 import '../../style/user_access_style/Main_Style.css';
 
-const accessLevels = ['Read Only', 'Read & Write', 'Admin'];
+const accessLevels = ['Read Only', 'Read & Write'];
 
 function UserAccessRegis() {
     const navigate = useNavigate();
     const [applications, setApplications] = useState([]);
+    const [currentUser, setCurrentUser] = useState(null);
     const [formData, setFormData] = useState({
         ldapUsername: '',
         nik: '',
@@ -17,27 +19,65 @@ function UserAccessRegis() {
         email: '',
         phone: '',
         department: '',
-        applicationRequested: '',
+        applicationRequested: '', // nama aplikasi
+        applicationId: '',        // ID GUID aplikasi
         accessLevel: '',
         reason: '',
     });
     const [error, setError] = useState('');
     const [success, setSuccess] = useState(false);
 
+    // Load user aktif dari localStorage dan isi form secara default
+    useEffect(() => {
+        const storedUser = localStorage.getItem('user');
+        if (storedUser) {
+            try {
+                const user = JSON.parse(storedUser);
+                setCurrentUser(user);
+                setFormData((prev) => ({
+                    ...prev,
+                    ldapUsername: user.username || '',
+                    nik: user.nik || '',
+                    fullName: user.nama || '',
+                    email: user.email || '',
+                    phone: user.telp || '',
+                    department: user.department || '',
+                }));
+            } catch (e) {
+                console.error('Gagal parse user dari localStorage:', e);
+            }
+        }
+    }, []);
+
+    // Load daftar aplikasi dari database backend
     useEffect(() => {
         let cancelled = false;
         fetchApplications()
-            .then((data) => { if (!cancelled) setApplications(data); })
-            .catch(() => {});
+            .then((data) => { 
+                if (!cancelled) setApplications(data); 
+            })
+            .catch((err) => {
+                console.error('Gagal memuat daftar aplikasi:', err);
+            });
         return () => { cancelled = true; };
     }, []);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData((prev) => ({ ...prev, [name]: value }));
+        if (name === 'applicationRequested') {
+            // Temukan id aplikasi berdasarkan nama
+            const selectedApp = applications.find(app => app.name === value);
+            setFormData((prev) => ({ 
+                ...prev, 
+                applicationRequested: value,
+                applicationId: selectedApp ? selectedApp.id : ''
+            }));
+        } else {
+            setFormData((prev) => ({ ...prev, [name]: value }));
+        }
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
 
@@ -47,7 +87,7 @@ function UserAccessRegis() {
             'fullName',
             'email',
             'department',
-            'applicationRequested',
+            'applicationId',
             'accessLevel',
         ];
         const isIncomplete = requiredFields.some((field) => !formData[field]);
@@ -57,9 +97,18 @@ function UserAccessRegis() {
             return;
         }
 
-        // TODO: Kirim data ke API backend untuk diproses tim approval.
-        console.log('Access request submitted:', formData);
-        setSuccess(true);
+        if (!currentUser || !currentUser.id) {
+            setError('User tidak terdeteksi. Silakan login kembali.');
+            return;
+        }
+
+        try {
+            await grantUserAccess(currentUser.id, formData.applicationId, formData.accessLevel);
+            setSuccess(true);
+        } catch (err) {
+            console.error('Error submitting access request:', err);
+            setError(err.message || 'Gagal mengirimkan pengajuan akses aplikasi.');
+        }
     };
 
     if (success) {
@@ -74,7 +123,7 @@ function UserAccessRegis() {
                         <p>
                             Permintaan akses kamu untuk aplikasi{' '}
                             <strong>{formData.applicationRequested}</strong> sudah dikirim dan
-                            menunggu persetujuan tim terkait.
+                            berhasil di-whitelist secara langsung oleh sistem.
                         </p>
                         <button
                             className="user-access-add-btn"
@@ -102,11 +151,11 @@ function UserAccessRegis() {
                         Lengkapi data berikut untuk mengajukan whitelisting akses ke aplikasi tertentu.
                     </p>
 
-                    {error && <div className="user-access-error">{error}</div>}
+                    {error && <div className="user-access-error" style={{ padding: '12px', background: '#fee2e2', color: '#991b1b', borderRadius: '6px', marginBottom: '16px' }}>{error}</div>}
 
                     <form onSubmit={handleSubmit} className="user-access-form">
                         <div className="user-access-form-section">
-                            <h3 className="user-access-section-title">Data Pribadi</h3>
+                            <h3 className="user-access-section-title">Data Pribadi (Otomatis terisi dari Akun Anda)</h3>
 
                             <div className="user-access-form-grid">
                                 <div className="form-group">
@@ -117,7 +166,8 @@ function UserAccessRegis() {
                                         type="text"
                                         placeholder="contoh: raka.adi"
                                         value={formData.ldapUsername}
-                                        onChange={handleChange}
+                                        disabled
+                                        style={{ backgroundColor: '#f3f4f6', cursor: 'not-allowed' }}
                                     />
                                 </div>
 
@@ -129,7 +179,8 @@ function UserAccessRegis() {
                                         type="text"
                                         placeholder="Nomor Induk Karyawan"
                                         value={formData.nik}
-                                        onChange={handleChange}
+                                        disabled
+                                        style={{ backgroundColor: '#f3f4f6', cursor: 'not-allowed' }}
                                     />
                                 </div>
 
@@ -141,7 +192,8 @@ function UserAccessRegis() {
                                         type="text"
                                         placeholder="Nama sesuai identitas"
                                         value={formData.fullName}
-                                        onChange={handleChange}
+                                        disabled
+                                        style={{ backgroundColor: '#f3f4f6', cursor: 'not-allowed' }}
                                     />
                                 </div>
 
@@ -153,7 +205,8 @@ function UserAccessRegis() {
                                         type="email"
                                         placeholder="nama@telkomsel.internal"
                                         value={formData.email}
-                                        onChange={handleChange}
+                                        disabled
+                                        style={{ backgroundColor: '#f3f4f6', cursor: 'not-allowed' }}
                                     />
                                 </div>
 
@@ -165,7 +218,8 @@ function UserAccessRegis() {
                                         type="tel"
                                         placeholder="08xxxxxxxxxx"
                                         value={formData.phone}
-                                        onChange={handleChange}
+                                        disabled
+                                        style={{ backgroundColor: '#f3f4f6', cursor: 'not-allowed' }}
                                     />
                                 </div>
 
@@ -177,7 +231,8 @@ function UserAccessRegis() {
                                         type="text"
                                         placeholder="contoh: IT Infrastructure"
                                         value={formData.department}
-                                        onChange={handleChange}
+                                        disabled
+                                        style={{ backgroundColor: '#f3f4f6', cursor: 'not-allowed' }}
                                     />
                                 </div>
                             </div>
@@ -231,6 +286,7 @@ function UserAccessRegis() {
                                     placeholder="Jelaskan alasan kamu membutuhkan akses ini..."
                                     value={formData.reason}
                                     onChange={handleChange}
+                                    required
                                 />
                             </div>
                         </div>

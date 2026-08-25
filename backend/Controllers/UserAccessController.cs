@@ -9,7 +9,7 @@ namespace backend.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize(Roles = "Admin")]
+    [Authorize]
     public class UserAccessController : ControllerBase
     {
         private readonly AppDbContext _context;
@@ -24,6 +24,15 @@ namespace backend.Controllers
         [HttpGet("{userId:guid}")]
         public async Task<IActionResult> GetUserAccess(Guid userId)
         {
+            var loggedInUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var loggedInUserRole = User.FindFirst(ClaimTypes.Role)?.Value ?? User.FindFirst("LevelAccess")?.Value;
+
+            // Validasi: hanya Admin atau pemilik user itu sendiri yang bisa melihat data whitelist ini
+            if (loggedInUserId != userId.ToString() && 
+                !string.Equals(loggedInUserRole, "Admin", StringComparison.OrdinalIgnoreCase))
+            {
+                return Forbid();
+            }
             var user = await _context.Users
                 .AsNoTracking()
                 .FirstOrDefaultAsync(user => user.Id == userId);
@@ -80,6 +89,7 @@ namespace backend.Controllers
         // POST: api/UserAccess
         // Memberikan whitelist aplikasi kepada user
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GrantAccess(
             [FromBody] GrantUserAccessRequest request)
         {
@@ -234,6 +244,7 @@ namespace backend.Controllers
         // DELETE: api/UserAccess/{userId}/{applicationId}
         // Mencabut whitelist aplikasi
         [HttpDelete("{userId:guid}/{applicationId:guid}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> RevokeAccess(
             Guid userId,
             Guid applicationId)
