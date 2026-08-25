@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
     ArrowLeft,
     Check,
@@ -15,6 +15,8 @@ import Layout from '../../components/Layout';
 import ProgressBar from '../../components/ProgressBar';
 import Table from '../../components/Table';
 import CheckTicket from './CheckTicket';
+import { fetchApplications } from '../../services/applications';
+import { createComplaint } from '../../services/complaints';
 import '../../style/feedback_style/Main_Style.css';
 import '../../style/Dashboard_Style.css';
 
@@ -192,6 +194,7 @@ const initialComplainData = {
     regional: '',
     issueType: '',
     application: '',
+    applicationId: '', // Menyimpan GUID ID aplikasi riil
     category: '',
     ldapUsername: '',
     role: '',
@@ -311,53 +314,180 @@ function Result() {
     const [submitted, setSubmitted] = useState(false);
     const [generatedTicketId, setGeneratedTicketId] = useState('');
     const [tickets, setTickets] = useState(initialTickets);
+    const [applications, setApplications] = useState([]);
+    const [error, setError] = useState('');
+
+    // Load daftar aplikasi dan isi otomatis user dari localStorage
+    useEffect(() => {
+        // Load data user
+        const storedUser = localStorage.getItem('user');
+        if (storedUser) {
+            try {
+                const user = JSON.parse(storedUser);
+                setFormData((prev) => ({
+                    ...prev,
+                    fullName: user.nama || user.username || '',
+                    email: user.email || '',
+                    phone: user.telp || '',
+                    ldapUsername: user.username || '',
+                    role: user.levelAccess || '',
+                }));
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
+        // Load aplikasi
+        fetchApplications()
+            .then((data) => setApplications(data))
+            .catch((err) => console.error('Gagal mengambil aplikasi:', err));
+    }, []);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData((prev) => ({ ...prev, [name]: value }));
+        if (name === 'application') {
+            const selectedApp = applications.find((app) => app.name === value);
+            setFormData((prev) => ({
+                ...prev,
+                application: value,
+                applicationId: selectedApp ? selectedApp.id : '',
+            }));
+        } else {
+            setFormData((prev) => ({ ...prev, [name]: value }));
+        }
     };
 
     const handleNext = () => {
+        setError('');
+        
+        if (currentStep === 1) {
+            if (!formData.fullName.trim() || !formData.email.trim() || !formData.phone.trim() || !formData.regional.trim() || !formData.issueType.trim()) {
+                setError('Mohon lengkapi seluruh field wajib di Step 1 (Full Name, Email, No Handphone, Regional, Issue Type).');
+                return;
+            }
+        }
+        
+        if (currentStep === 2) {
+            if (!formData.application.trim() || !formData.category.trim()) {
+                setError('Mohon lengkapi seluruh field wajib di Step 2 (Application, Category).');
+                return;
+            }
+        }
+
+        if (currentStep === 3) {
+            if (!formData.ldapUsername.trim() || !formData.role.trim()) {
+                setError('Mohon lengkapi seluruh field wajib di Step 3 (Username LDAP, Role/Jabatan).');
+                return;
+            }
+        }
+
         if (currentStep < complainSteps.length) setCurrentStep((prev) => prev + 1);
     };
 
     const handleBack = () => {
+        setError('');
         if (currentStep > 1) setCurrentStep((prev) => prev - 1);
     };
 
-    const handleSubmit = () => {
-        const newTicketId = generateTicketId();
-        const today = formatDisplayDate(new Date());
+    const handleSubmit = async () => {
+        setError('');
+        
+        // Validasi Step 4
+        if (!formData.description.trim()) {
+            setError('Mohon isi deskripsi keluhan Anda di Step 4.');
+            return;
+        }
 
-        const newTicket = {
-            id: newTicketId,
-            fullName: formData.fullName || 'Pengguna',
-            application: formData.application || formData.issueType || '-',
-            category: formData.category || formData.issueType || '-',
-            regional: formData.regional || '-',
-            status: 'open',
-            submittedDate: today,
-            updatedDate: today,
-            description: formData.description || 'Tidak ada deskripsi tambahan.',
-            timeline: [
-                { label: 'Tiket Diterima', date: today, done: true },
-                { label: 'Sedang Ditinjau', date: '-', done: false },
-                { label: 'Dalam Proses Perbaikan', date: '-', done: false },
-                { label: 'Selesai', date: '-', done: false },
-            ],
-        };
+        // Validasi kumulatif secara menyeluruh sebelum submit
+        if (!formData.fullName.trim() || !formData.email.trim() || !formData.phone.trim() || !formData.regional.trim() || !formData.issueType.trim()) {
+            setError('Data pada Step 1 belum lengkap.');
+            setCurrentStep(1);
+            return;
+        }
 
-        setTickets((prev) => [...prev, newTicket]);
-        setGeneratedTicketId(newTicketId);
-        setSubmitted(true);
+        if (!formData.application.trim() || !formData.category.trim()) {
+            setError('Data pada Step 2 belum lengkap.');
+            setCurrentStep(2);
+            return;
+        }
+
+        if (!formData.ldapUsername.trim() || !formData.role.trim()) {
+            setError('Data pada Step 3 belum lengkap.');
+            setCurrentStep(3);
+            return;
+        }
+
+        if (!formData.applicationId) {
+            setError('Aplikasi yang Anda pilih tidak valid atau tidak terdaftar di sistem. Mohon pilih dari dropdown di Step 2.');
+            setCurrentStep(2);
+            return;
+        }
+
+        try {
+            const payload = {
+                regional: formData.regional,
+                issueType: formData.issueType,
+                applicationId: formData.applicationId,
+                categoryMasalah: formData.category,
+                usernameLDAP: formData.ldapUsername,
+                role: formData.role,
+                description: formData.description,
+            };
+
+            const response = await createComplaint(payload);
+
+            const newTicketId = generateTicketId();
+            const today = formatDisplayDate(new Date());
+
+            const newTicket = {
+                id: newTicketId,
+                fullName: formData.fullName,
+                application: formData.application,
+                category: formData.category,
+                regional: formData.regional,
+                status: 'open',
+                submittedDate: today,
+                updatedDate: today,
+                description: formData.description,
+                timeline: [
+                    { label: 'Tiket Diterima', date: today, done: true },
+                    { label: 'Sedang Ditinjau', date: '-', done: false },
+                    { label: 'Dalam Proses Perbaikan', date: '-', done: false },
+                    { label: 'Selesai', date: '-', done: false },
+                ],
+            };
+
+            setTickets((prev) => [...prev, newTicket]);
+            setGeneratedTicketId(newTicketId);
+            setSubmitted(true);
+        } catch (err) {
+            console.error('Error saat membuat komplain:', err);
+            setError(err.message || 'Gagal mengirimkan keluhan ke database.');
+        }
     };
 
     const backToDashboard = () => {
         setView('dashboard');
         setCurrentStep(1);
-        setFormData(initialComplainData);
+        
+        // Reset form tetapi pertahankan identitas user yang login
+        const storedUser = localStorage.getItem('user');
+        let parsedUser = {};
+        if (storedUser) {
+            try { parsedUser = JSON.parse(storedUser); } catch(e) {}
+        }
+        setFormData({
+            ...initialComplainData,
+            fullName: parsedUser.nama || parsedUser.username || '',
+            email: parsedUser.email || '',
+            phone: parsedUser.telp || '',
+            ldapUsername: parsedUser.username || '',
+            role: parsedUser.levelAccess || '',
+        });
+
         setSubmitted(false);
         setGeneratedTicketId('');
+        setError('');
     };
 
     if (view === 'checkTicket') {
@@ -430,6 +560,19 @@ function Result() {
                     </div>
 
                     <div className="feedback-form-card">
+                        {error && (
+                            <div className="feedback-error-banner" style={{
+                                padding: '12px',
+                                background: '#fee2e2',
+                                color: '#991b1b',
+                                borderRadius: '6px',
+                                marginBottom: '16px',
+                                fontSize: '14px',
+                                fontWeight: '500'
+                            }}>
+                                {error}
+                            </div>
+                        )}
                         {currentStep === 1 && (
                             <>
                                 <span className="feedback-form-badge">Please Inform Who You Are</span>
@@ -506,15 +649,20 @@ function Result() {
                                 <span className="feedback-form-badge">Issue Detail</span>
                                 <div className="feedback-form-grid">
                                     <div className="form-group">
-                                        <label htmlFor="application">Application</label>
-                                        <input
+                                        <label htmlFor="application">Application *</label>
+                                        <select
                                             id="application"
                                             name="application"
-                                            type="text"
-                                            placeholder="Nama aplikasi terkait"
                                             value={formData.application}
                                             onChange={handleChange}
-                                        />
+                                        >
+                                            <option value="">Pilih aplikasi...</option>
+                                            {applications.map((app) => (
+                                                <option key={app.id} value={app.name}>
+                                                    {app.name}
+                                                </option>
+                                            ))}
+                                        </select>
                                     </div>
                                     <div className="form-group">
                                         <label htmlFor="category">Category</label>
