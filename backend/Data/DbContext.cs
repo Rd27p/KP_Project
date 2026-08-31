@@ -401,7 +401,7 @@ protected override void OnModelCreating(ModelBuilder modelBuilder)
 
             Category = "Operations",
             Status = "Active",
-
+            Uptime = 99.95m,
             DataClassification = "Internal",
             DataSource = "Internal Application Database",
             DataRetentionPolicy = "5 Years",
@@ -459,7 +459,7 @@ protected override void OnModelCreating(ModelBuilder modelBuilder)
 
             Category = "Budgeting & Finance",
             Status = "Active",
-
+            Uptime = 95.95m,
             DataClassification = "Confidential",
             DataSource = "Finance Database",
             DataRetentionPolicy = "7 Years",
@@ -517,7 +517,7 @@ protected override void OnModelCreating(ModelBuilder modelBuilder)
 
             Category = "Operations",
             Status = "Active",
-
+            Uptime = 97.95m,
             DataClassification = "Internal",
             DataSource = "Network Monitoring API",
             DataRetentionPolicy = "1 Year",
@@ -575,7 +575,7 @@ protected override void OnModelCreating(ModelBuilder modelBuilder)
 
             Category = "Security",
             Status = "Active",
-
+            Uptime = 92.95m,
             DataClassification = "Restricted",
             DataSource = "Security Event Logs",
             DataRetentionPolicy = "3 Years",
@@ -633,7 +633,7 @@ protected override void OnModelCreating(ModelBuilder modelBuilder)
 
             Category = "Engineering & Deployment",
             Status = "Active",
-
+            Uptime = 96.95m,
             DataClassification = "Internal",
             DataSource = "CI/CD Platform",
             DataRetentionPolicy = "1 Year",
@@ -691,6 +691,7 @@ protected override void OnModelCreating(ModelBuilder modelBuilder)
 
             Category = "Operations",
             Status = "Inactive",
+            Uptime = 94.95m,
 
             DataClassification = "Internal",
             DataSource = "Inventory Database",
@@ -749,6 +750,7 @@ protected override void OnModelCreating(ModelBuilder modelBuilder)
 
             Category = "Budgeting & Finance",
             Status = "Pending",
+            Uptime = 93.95m,
 
             DataClassification = "Confidential",
             DataSource = "Finance Database",
@@ -799,6 +801,7 @@ protected override void OnModelCreating(ModelBuilder modelBuilder)
 
             Category = "Others",
             Status = "Active",
+            Uptime = 94.95m,
 
             DataClassification = "Internal",
             DataSource = "Employee Database",
@@ -857,7 +860,7 @@ protected override void OnModelCreating(ModelBuilder modelBuilder)
 
             Category = "Engineering & Deployment",
             Status = "Active",
-
+            Uptime = 90.95m,
             DataClassification = "Internal",
             DataSource = "Internal APIs",
             DataRetentionPolicy = "1 Year",
@@ -915,7 +918,7 @@ protected override void OnModelCreating(ModelBuilder modelBuilder)
 
             Category = "Security",
             Status = "Pending",
-
+            Uptime = 99.95m,
             DataClassification = "Restricted",
             DataSource = "Application Logs",
             DataRetentionPolicy = "2 Years",

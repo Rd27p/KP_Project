@@ -33,6 +33,10 @@ namespace backend.Models
         )]
         public string Status { get; set; } = string.Empty;
 
+        [Range(typeof(decimal), "0", "100",
+            ErrorMessage = "Uptime harus berada antara 0 sampai 100")]
+        public decimal? Uptime { get; set; }
+        
         [Required]
         public string DataClassification { get; set; } = string.Empty;
 

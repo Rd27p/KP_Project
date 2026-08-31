@@ -84,6 +84,9 @@ namespace AppHub2.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<decimal?>("Uptime")
+                        .HasColumnType("numeric");
+
                     b.Property<string>("Version")
                         .IsRequired()
                         .HasColumnType("text");
@@ -120,6 +123,7 @@ namespace AppHub2.Migrations
                             ServerId = new Guid("30000000-0000-0000-0000-000000000001"),
                             Status = "Active",
                             TechnologyStack = ".NET, React, PostgreSQL",
+                            Uptime = 99.95m,
                             Version = "2.5.0"
                         },
                         new
@@ -141,6 +145,7 @@ namespace AppHub2.Migrations
                             ServerId = new Guid("30000000-0000-0000-0000-000000000002"),
                             Status = "Active",
                             TechnologyStack = ".NET, Angular, PostgreSQL",
+                            Uptime = 95.95m,
                             Version = "3.2.1"
                         },
                         new
@@ -162,6 +167,7 @@ namespace AppHub2.Migrations
                             ServerId = new Guid("30000000-0000-0000-0000-000000000003"),
                             Status = "Active",
                             TechnologyStack = ".NET, React, Prometheus",
+                            Uptime = 97.95m,
                             Version = "4.1.0"
                         },
                         new
@@ -183,6 +189,7 @@ namespace AppHub2.Migrations
                             ServerId = new Guid("30000000-0000-0000-0000-000000000003"),
                             Status = "Active",
                             TechnologyStack = ".NET, React, Elasticsearch",
+                            Uptime = 92.95m,
                             Version = "2.8.0"
                         },
                         new
@@ -204,6 +211,7 @@ namespace AppHub2.Migrations
                             ServerId = new Guid("30000000-0000-0000-0000-000000000001"),
                             Status = "Active",
                             TechnologyStack = ".NET, Vue, PostgreSQL",
+                            Uptime = 96.95m,
                             Version = "1.9.4"
                         },
                         new
@@ -225,6 +233,7 @@ namespace AppHub2.Migrations
                             ServerId = new Guid("30000000-0000-0000-0000-000000000002"),
                             Status = "Inactive",
                             TechnologyStack = "Laravel, MySQL, Bootstrap",
+                            Uptime = 94.95m,
                             Version = "1.4.2"
                         },
                         new
@@ -245,6 +254,7 @@ namespace AppHub2.Migrations
                             ServerId = new Guid("30000000-0000-0000-0000-000000000002"),
                             Status = "Pending",
                             TechnologyStack = ".NET, React, PostgreSQL",
+                            Uptime = 93.95m,
                             Version = "1.0.0"
                         },
                         new
@@ -266,6 +276,7 @@ namespace AppHub2.Migrations
                             ServerId = new Guid("30000000-0000-0000-0000-000000000001"),
                             Status = "Active",
                             TechnologyStack = ".NET, React, PostgreSQL",
+                            Uptime = 94.95m,
                             Version = "3.0.5"
                         },
                         new
@@ -287,6 +298,7 @@ namespace AppHub2.Migrations
                             ServerId = new Guid("30000000-0000-0000-0000-000000000001"),
                             Status = "Active",
                             TechnologyStack = ".NET, Redis, PostgreSQL",
+                            Uptime = 90.95m,
                             Version = "5.3.0"
                         },
                         new
@@ -307,6 +319,7 @@ namespace AppHub2.Migrations
                             ServerId = new Guid("30000000-0000-0000-0000-000000000003"),
                             Status = "Pending",
                             TechnologyStack = ".NET, Elasticsearch, Kibana",
+                            Uptime = 99.95m,
                             Version = "1.1.0"
                         });
                 });

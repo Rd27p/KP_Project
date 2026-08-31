@@ -22,37 +22,22 @@ namespace backend.Controllers
         [HttpGet]
         public async Task<IActionResult> GetExecutiveSummary()
         {
-            // 1. Total aplikasi yang terdaftar
-            var totalApplications =
-                await _context.Applications.CountAsync();
+            var totalApplications = await _context.Applications.CountAsync();
 
-            // 2. Total alarm kritis yang aktif
-            var activeCriticalAlarms =
-                await _context.Complaints.CountAsync(complaint =>(
-                        complaint.IssueType == "Application Error" ||
-                        complaint.IssueType == "Application Error"
-                    )
-                    && complaint.Status != ComplaintStatuses.Resolved
-                    && complaint.Status != ComplaintStatuses.Closed
-                );
-
-            // 3. Rata-rata kesehatan berdasarkan availability
-            var averageHealthValue =
-                await _context.Servers
-                    .Select(server =>
-                        (double?)server.Availability
-                    )
-                    .AverageAsync();
-
-            var averageHealth = Math.Round(
-                averageHealthValue ?? 0,
-                1
+            var criticalAlerts = await _context.Complaints.CountAsync(
+                complaint => complaint.IssueType == "Aplication Error"
             );
+
+            var averageHealth = await _context.Applications
+                .Where(application => application.Uptime.HasValue)
+                .AverageAsync(application => application.Uptime) ?? 0m;
+
+            averageHealth = Math.Round(averageHealth, 1);
 
             return Ok(new
             {
                 totalApplications,
-                activeCriticalAlarms,
+                criticalAlerts,
                 averageHealth
             });
         }
