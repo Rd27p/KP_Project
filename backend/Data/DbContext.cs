@@ -17,6 +17,23 @@ protected override void OnModelCreating(ModelBuilder modelBuilder)
 {
         base.OnModelCreating(modelBuilder);
 
+        modelBuilder.Entity<Complaint>(entity =>
+        {
+            entity.HasOne(complaint => complaint.Application)
+                .WithMany(application => application.Complaints)
+                .HasForeignKey(complaint => complaint.ApplicationId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.Property(complaint => complaint.Status)
+                .IsRequired()
+                .HasMaxLength(30)
+                .HasDefaultValue(ComplaintStatuses.Submitted);
+
+            entity.HasIndex(complaint => complaint.Status);
+
+            entity.HasIndex(complaint => complaint.CreatedAt);
+        });
+
         modelBuilder.Entity<UserApplicationAccess>(entity =>
         {
             // Satu user tidak boleh mendapat akses ke aplikasi yang sama dua kali
@@ -1045,6 +1062,414 @@ protected override void OnModelCreating(ModelBuilder modelBuilder)
 
             AlasanPengajuan =
                 "Akses monitoring Security Dashboard"
+        }
+
+
+        // ======================================================
+        // COMPLAINT SEED DATA
+        // ======================================================
+
+
+    );
+
+    modelBuilder.Entity<Complaint>().HasData(
+     // 1. Complaint App Catalog - Resolved
+        new Complaint
+        {
+            Id = Guid.Parse(
+                "40000000-0000-0000-0000-000000000001"
+            ),
+
+            FullName = "Budi Santoso",
+            Email = "budi@example.com",
+            Phone = "081234567891",
+            Regional = "HQ",
+
+            IssueType = "User Management",
+            ApplicationId = appCatalogId,
+            Category = "Reviewer User",
+
+            LdapUsername = "budi",
+            Role = "Read Only",
+
+            Description =
+                "User tidak dapat membuka menu reviewer pada aplikasi.",
+
+            Status = ComplaintStatuses.Resolved,
+
+            ResolutionNote =
+                "Akses reviewer telah ditambahkan oleh administrator.",
+
+            CreatedAt = new DateTime(
+                2026, 8, 21, 2, 0, 0,
+                DateTimeKind.Utc
+            ),
+
+            UpdatedAt = new DateTime(
+                2026, 8, 21, 5, 30, 0,
+                DateTimeKind.Utc
+            ),
+
+            ResolvedAt = new DateTime(
+                2026, 8, 21, 5, 30, 0,
+                DateTimeKind.Utc
+            )
+        },
+
+        // 2. Complaint App Catalog - Checking
+        new Complaint
+        {
+            Id = Guid.Parse(
+                "40000000-0000-0000-0000-000000000002"
+            ),
+
+            FullName = "Siti Rahma",
+            Email = "siti@example.com",
+            Phone = "081234567892",
+            Regional = "RI SUMBAGUT",
+
+            IssueType = "User Management",
+            ApplicationId = appCatalogId,
+            Category = "Reviewer User",
+
+            LdapUsername = "siti",
+            Role = "Read And Write",
+
+            Description =
+                "Role pengguna tidak sesuai dengan jabatan yang dimiliki.",
+
+            Status = ComplaintStatuses.Checking,
+
+            ResolutionNote =
+                "Sedang dilakukan pengecekan role dan department pengguna.",
+
+            CreatedAt = new DateTime(
+                2026, 8, 22, 3, 15, 0,
+                DateTimeKind.Utc
+            ),
+
+            UpdatedAt = new DateTime(
+                2026, 8, 22, 6, 0, 0,
+                DateTimeKind.Utc
+            ),
+
+            ResolvedAt = null
+        },
+
+        // 3. Complaint Finance - Checking
+        new Complaint
+        {
+            Id = Guid.Parse(
+                "40000000-0000-0000-0000-000000000003"
+            ),
+
+            FullName = "Rina Wijaya",
+            Email = "rina@example.com",
+            Phone = "081234567894",
+            Regional = "HQ",
+
+            IssueType = "Data Not Synchronize",
+            ApplicationId = financeId,
+            Category = "Data Not Synchronize",
+
+            LdapUsername = null,
+            Role = null,
+
+            Description =
+                "Data transaksi terbaru belum muncul pada dashboard finance.",
+
+            Status = ComplaintStatuses.Checking,
+
+            ResolutionNote =
+                "Tim sedang memeriksa proses sinkronisasi database.",
+
+            CreatedAt = new DateTime(
+                2026, 8, 23, 1, 45, 0,
+                DateTimeKind.Utc
+            ),
+
+            UpdatedAt = new DateTime(
+                2026, 8, 23, 4, 0, 0,
+                DateTimeKind.Utc
+            ),
+
+            ResolvedAt = null
+        },
+
+        // 4. Complaint Finance - Submitted
+        new Complaint
+        {
+            Id = Guid.Parse(
+                "40000000-0000-0000-0000-000000000004"
+            ),
+
+            FullName = "Administrator",
+            Email = "admin@example.com",
+            Phone = "081234567890",
+            Regional = "HQ",
+
+            IssueType = "Performance",
+            ApplicationId = financeId,
+            Category = "KPI",
+
+            LdapUsername = null,
+            Role = null,
+
+            Description =
+                "Halaman KPI membutuhkan waktu cukup lama untuk ditampilkan.",
+
+            Status = ComplaintStatuses.Submitted,
+
+            ResolutionNote = null,
+
+            CreatedAt = new DateTime(
+                2026, 8, 24, 2, 30, 0,
+                DateTimeKind.Utc
+            ),
+
+            UpdatedAt = null,
+            ResolvedAt = null
+        },
+
+        // 5. Complaint Network Monitoring - Submitted
+        new Complaint
+        {
+            Id = Guid.Parse(
+                "40000000-0000-0000-0000-000000000005"
+            ),
+
+            FullName = "Andika Putra",
+            Email = "andika@example.com",
+            Phone = "081234567893",
+            Regional = "R4 WEST JAVA",
+
+            IssueType = "Performance",
+            ApplicationId = networkId,
+            Category = "RH Visit",
+
+            LdapUsername = null,
+            Role = null,
+
+            Description =
+                "Dashboard network monitoring sering mengalami loading lama.",
+
+            Status = ComplaintStatuses.Submitted,
+
+            ResolutionNote = null,
+
+            CreatedAt = new DateTime(
+                2026, 8, 25, 1, 0, 0,
+                DateTimeKind.Utc
+            ),
+
+            UpdatedAt = null,
+            ResolvedAt = null
+        },
+
+        // 6. Complaint Network Monitoring - Resolved
+        new Complaint
+        {
+            Id = Guid.Parse(
+                "40000000-0000-0000-0000-000000000006"
+            ),
+
+            FullName = "Andika Putra",
+            Email = "andika@example.com",
+            Phone = "081234567893",
+            Regional = "R6 EAST JAVA",
+
+            // Mengikuti value pada dropdown frontend
+            IssueType = "Aplication Error",
+
+            ApplicationId = networkId,
+            Category = "Ticketing Handling",
+
+            LdapUsername = null,
+            Role = null,
+
+            Description =
+                "Tombol pembuatan ticket tidak merespons ketika diklik.",
+
+            Status = ComplaintStatuses.Resolved,
+
+            ResolutionNote =
+                "Masalah pada endpoint ticketing telah diperbaiki.",
+
+            CreatedAt = new DateTime(
+                2026, 8, 25, 4, 0, 0,
+                DateTimeKind.Utc
+            ),
+
+            UpdatedAt = new DateTime(
+                2026, 8, 26, 2, 0, 0,
+                DateTimeKind.Utc
+            ),
+
+            ResolvedAt = new DateTime(
+                2026, 8, 26, 2, 0, 0,
+                DateTimeKind.Utc
+            )
+        },
+
+        // 7. Complaint Security Dashboard - Closed
+        new Complaint
+        {
+            Id = Guid.Parse(
+                "40000000-0000-0000-0000-000000000007"
+            ),
+
+            FullName = "Rina Wijaya",
+            Email = "rina@example.com",
+            Phone = "081234567894",
+            Regional = "HQ",
+
+            IssueType = "Aplication Error",
+            ApplicationId = securityId,
+            Category = "Ticketing Handling",
+
+            LdapUsername = null,
+            Role = null,
+
+            Description =
+                "Notifikasi security alert tidak dapat dibuka.",
+
+            Status = ComplaintStatuses.Closed,
+
+            ResolutionNote =
+                "Complaint ditutup setelah perbaikan dan konfirmasi pengguna.",
+
+            CreatedAt = new DateTime(
+                2026, 8, 26, 3, 0, 0,
+                DateTimeKind.Utc
+            ),
+
+            UpdatedAt = new DateTime(
+                2026, 8, 27, 2, 0, 0,
+                DateTimeKind.Utc
+            ),
+
+            ResolvedAt = new DateTime(
+                2026, 8, 27, 2, 0, 0,
+                DateTimeKind.Utc
+            )
+        },
+
+        // 8. Complaint Deployment Manager - Checking
+        new Complaint
+        {
+            Id = Guid.Parse(
+                "40000000-0000-0000-0000-000000000008"
+            ),
+
+            FullName = "Budi Santoso",
+            Email = "budi@example.com",
+            Phone = "081234567891",
+            Regional = "R4 WEST JAVA",
+
+            IssueType = "Data Not Synchronize",
+            ApplicationId = deploymentId,
+            Category = "Data Not Synchronize",
+
+            LdapUsername = null,
+            Role = null,
+
+            Description =
+                "Riwayat deployment terbaru belum tampil pada dashboard.",
+
+            Status = ComplaintStatuses.Checking,
+
+            ResolutionNote =
+                "Sedang dilakukan pengecekan deployment service.",
+
+            CreatedAt = new DateTime(
+                2026, 8, 27, 5, 0, 0,
+                DateTimeKind.Utc
+            ),
+
+            UpdatedAt = new DateTime(
+                2026, 8, 28, 1, 0, 0,
+                DateTimeKind.Utc
+            ),
+
+            ResolvedAt = null
+        },
+
+        // 9. Complaint Inventory - Resolved
+        new Complaint
+        {
+            Id = Guid.Parse(
+                "40000000-0000-0000-0000-000000000009"
+            ),
+
+            FullName = "Siti Rahma",
+            Email = "siti@example.com",
+            Phone = "081234567892",
+            Regional = "R6 EAST JAVA",
+
+            IssueType = "Data Not Synchronize",
+            ApplicationId = inventoryId,
+            Category = "Data Not Synchronize",
+
+            LdapUsername = null,
+            Role = null,
+
+            Description =
+                "Jumlah stok pada dashboard berbeda dengan database.",
+
+            Status = ComplaintStatuses.Resolved,
+
+            ResolutionNote =
+                "Proses sinkronisasi stok telah dijalankan ulang.",
+
+            CreatedAt = new DateTime(
+                2026, 8, 28, 3, 0, 0,
+                DateTimeKind.Utc
+            ),
+
+            UpdatedAt = new DateTime(
+                2026, 8, 29, 2, 0, 0,
+                DateTimeKind.Utc
+            ),
+
+            ResolvedAt = new DateTime(
+                2026, 8, 29, 2, 0, 0,
+                DateTimeKind.Utc
+            )
+        },
+
+        // 10. Complaint Budget Planning - Submitted
+        new Complaint
+        {
+            Id = Guid.Parse(
+                "40000000-0000-0000-0000-000000000010"
+            ),
+
+            FullName = "Administrator",
+            Email = "admin@example.com",
+            Phone = "081234567890",
+            Regional = "HQ",
+
+            IssueType = "Performance",
+            ApplicationId = budgetId,
+            Category = "KPI",
+
+            LdapUsername = null,
+            Role = null,
+
+            Description =
+                "Proses menampilkan laporan anggaran berjalan lambat.",
+
+            Status = ComplaintStatuses.Submitted,
+
+            ResolutionNote = null,
+
+            CreatedAt = new DateTime(
+                2026, 8, 29, 4, 30, 0,
+                DateTimeKind.Utc
+            ),
+
+            UpdatedAt = null,
+            ResolvedAt = null
         }
     );
 }

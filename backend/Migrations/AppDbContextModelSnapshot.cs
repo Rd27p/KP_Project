@@ -320,42 +320,243 @@ namespace AppHub2.Migrations
                     b.Property<Guid>("ApplicationId")
                         .HasColumnType("uuid");
 
-                    b.Property<string>("CategoryMasalah")
-                        .IsRequired()
+                    b.Property<string>("Category")
                         .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("CategoryMasalah");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(1000)
-                        .HasColumnType("character varying(1000)");
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)");
+
+                    b.Property<string>("FullName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<string>("IssueType")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
+                    b.Property<string>("LdapUsername")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("UsernameLDAP");
+
+                    b.Property<string>("Phone")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
                     b.Property<string>("Regional")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
-                    b.Property<string>("Role")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<string>("ResolutionNote")
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
 
-                    b.Property<string>("UsernameLDAP")
+                    b.Property<DateTime?>("ResolvedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Role")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("Status")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(30)
+                        .HasColumnType("character varying(30)")
+                        .HasDefaultValue("Submitted");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ApplicationId");
 
+                    b.HasIndex("CreatedAt");
+
+                    b.HasIndex("Status");
+
                     b.ToTable("Complaints");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("40000000-0000-0000-0000-000000000001"),
+                            ApplicationId = new Guid("20000000-0000-0000-0000-000000000001"),
+                            Category = "Reviewer User",
+                            CreatedAt = new DateTime(2026, 8, 21, 2, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "User tidak dapat membuka menu reviewer pada aplikasi.",
+                            Email = "budi@example.com",
+                            FullName = "Budi Santoso",
+                            IssueType = "User Management",
+                            LdapUsername = "budi",
+                            Phone = "081234567891",
+                            Regional = "HQ",
+                            ResolutionNote = "Akses reviewer telah ditambahkan oleh administrator.",
+                            ResolvedAt = new DateTime(2026, 8, 21, 5, 30, 0, 0, DateTimeKind.Utc),
+                            Role = "Read Only",
+                            Status = "Resolved",
+                            UpdatedAt = new DateTime(2026, 8, 21, 5, 30, 0, 0, DateTimeKind.Utc)
+                        },
+                        new
+                        {
+                            Id = new Guid("40000000-0000-0000-0000-000000000002"),
+                            ApplicationId = new Guid("20000000-0000-0000-0000-000000000001"),
+                            Category = "Reviewer User",
+                            CreatedAt = new DateTime(2026, 8, 22, 3, 15, 0, 0, DateTimeKind.Utc),
+                            Description = "Role pengguna tidak sesuai dengan jabatan yang dimiliki.",
+                            Email = "siti@example.com",
+                            FullName = "Siti Rahma",
+                            IssueType = "User Management",
+                            LdapUsername = "siti",
+                            Phone = "081234567892",
+                            Regional = "RI SUMBAGUT",
+                            ResolutionNote = "Sedang dilakukan pengecekan role dan department pengguna.",
+                            Role = "Read And Write",
+                            Status = "Checking",
+                            UpdatedAt = new DateTime(2026, 8, 22, 6, 0, 0, 0, DateTimeKind.Utc)
+                        },
+                        new
+                        {
+                            Id = new Guid("40000000-0000-0000-0000-000000000003"),
+                            ApplicationId = new Guid("20000000-0000-0000-0000-000000000002"),
+                            Category = "Data Not Synchronize",
+                            CreatedAt = new DateTime(2026, 8, 23, 1, 45, 0, 0, DateTimeKind.Utc),
+                            Description = "Data transaksi terbaru belum muncul pada dashboard finance.",
+                            Email = "rina@example.com",
+                            FullName = "Rina Wijaya",
+                            IssueType = "Data Not Synchronize",
+                            Phone = "081234567894",
+                            Regional = "HQ",
+                            ResolutionNote = "Tim sedang memeriksa proses sinkronisasi database.",
+                            Status = "Checking",
+                            UpdatedAt = new DateTime(2026, 8, 23, 4, 0, 0, 0, DateTimeKind.Utc)
+                        },
+                        new
+                        {
+                            Id = new Guid("40000000-0000-0000-0000-000000000004"),
+                            ApplicationId = new Guid("20000000-0000-0000-0000-000000000002"),
+                            Category = "KPI",
+                            CreatedAt = new DateTime(2026, 8, 24, 2, 30, 0, 0, DateTimeKind.Utc),
+                            Description = "Halaman KPI membutuhkan waktu cukup lama untuk ditampilkan.",
+                            Email = "admin@example.com",
+                            FullName = "Administrator",
+                            IssueType = "Performance",
+                            Phone = "081234567890",
+                            Regional = "HQ",
+                            Status = "Submitted"
+                        },
+                        new
+                        {
+                            Id = new Guid("40000000-0000-0000-0000-000000000005"),
+                            ApplicationId = new Guid("20000000-0000-0000-0000-000000000003"),
+                            Category = "RH Visit",
+                            CreatedAt = new DateTime(2026, 8, 25, 1, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "Dashboard network monitoring sering mengalami loading lama.",
+                            Email = "andika@example.com",
+                            FullName = "Andika Putra",
+                            IssueType = "Performance",
+                            Phone = "081234567893",
+                            Regional = "R4 WEST JAVA",
+                            Status = "Submitted"
+                        },
+                        new
+                        {
+                            Id = new Guid("40000000-0000-0000-0000-000000000006"),
+                            ApplicationId = new Guid("20000000-0000-0000-0000-000000000003"),
+                            Category = "Ticketing Handling",
+                            CreatedAt = new DateTime(2026, 8, 25, 4, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "Tombol pembuatan ticket tidak merespons ketika diklik.",
+                            Email = "andika@example.com",
+                            FullName = "Andika Putra",
+                            IssueType = "Aplication Error",
+                            Phone = "081234567893",
+                            Regional = "R6 EAST JAVA",
+                            ResolutionNote = "Masalah pada endpoint ticketing telah diperbaiki.",
+                            ResolvedAt = new DateTime(2026, 8, 26, 2, 0, 0, 0, DateTimeKind.Utc),
+                            Status = "Resolved",
+                            UpdatedAt = new DateTime(2026, 8, 26, 2, 0, 0, 0, DateTimeKind.Utc)
+                        },
+                        new
+                        {
+                            Id = new Guid("40000000-0000-0000-0000-000000000007"),
+                            ApplicationId = new Guid("20000000-0000-0000-0000-000000000004"),
+                            Category = "Ticketing Handling",
+                            CreatedAt = new DateTime(2026, 8, 26, 3, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "Notifikasi security alert tidak dapat dibuka.",
+                            Email = "rina@example.com",
+                            FullName = "Rina Wijaya",
+                            IssueType = "Aplication Error",
+                            Phone = "081234567894",
+                            Regional = "HQ",
+                            ResolutionNote = "Complaint ditutup setelah perbaikan dan konfirmasi pengguna.",
+                            ResolvedAt = new DateTime(2026, 8, 27, 2, 0, 0, 0, DateTimeKind.Utc),
+                            Status = "Closed",
+                            UpdatedAt = new DateTime(2026, 8, 27, 2, 0, 0, 0, DateTimeKind.Utc)
+                        },
+                        new
+                        {
+                            Id = new Guid("40000000-0000-0000-0000-000000000008"),
+                            ApplicationId = new Guid("20000000-0000-0000-0000-000000000005"),
+                            Category = "Data Not Synchronize",
+                            CreatedAt = new DateTime(2026, 8, 27, 5, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "Riwayat deployment terbaru belum tampil pada dashboard.",
+                            Email = "budi@example.com",
+                            FullName = "Budi Santoso",
+                            IssueType = "Data Not Synchronize",
+                            Phone = "081234567891",
+                            Regional = "R4 WEST JAVA",
+                            ResolutionNote = "Sedang dilakukan pengecekan deployment service.",
+                            Status = "Checking",
+                            UpdatedAt = new DateTime(2026, 8, 28, 1, 0, 0, 0, DateTimeKind.Utc)
+                        },
+                        new
+                        {
+                            Id = new Guid("40000000-0000-0000-0000-000000000009"),
+                            ApplicationId = new Guid("20000000-0000-0000-0000-000000000006"),
+                            Category = "Data Not Synchronize",
+                            CreatedAt = new DateTime(2026, 8, 28, 3, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "Jumlah stok pada dashboard berbeda dengan database.",
+                            Email = "siti@example.com",
+                            FullName = "Siti Rahma",
+                            IssueType = "Data Not Synchronize",
+                            Phone = "081234567892",
+                            Regional = "R6 EAST JAVA",
+                            ResolutionNote = "Proses sinkronisasi stok telah dijalankan ulang.",
+                            ResolvedAt = new DateTime(2026, 8, 29, 2, 0, 0, 0, DateTimeKind.Utc),
+                            Status = "Resolved",
+                            UpdatedAt = new DateTime(2026, 8, 29, 2, 0, 0, 0, DateTimeKind.Utc)
+                        },
+                        new
+                        {
+                            Id = new Guid("40000000-0000-0000-0000-000000000010"),
+                            ApplicationId = new Guid("20000000-0000-0000-0000-000000000007"),
+                            Category = "KPI",
+                            CreatedAt = new DateTime(2026, 8, 29, 4, 30, 0, 0, DateTimeKind.Utc),
+                            Description = "Proses menampilkan laporan anggaran berjalan lambat.",
+                            Email = "admin@example.com",
+                            FullName = "Administrator",
+                            IssueType = "Performance",
+                            Phone = "081234567890",
+                            Regional = "HQ",
+                            Status = "Submitted"
+                        });
                 });
 
             modelBuilder.Entity("backend.Models.Server", b =>
@@ -659,9 +860,9 @@ namespace AppHub2.Migrations
             modelBuilder.Entity("backend.Models.Complaint", b =>
                 {
                     b.HasOne("backend.Models.Application", "Application")
-                        .WithMany()
+                        .WithMany("Complaints")
                         .HasForeignKey("ApplicationId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Application");
@@ -698,6 +899,8 @@ namespace AppHub2.Migrations
 
             modelBuilder.Entity("backend.Models.Application", b =>
                 {
+                    b.Navigation("Complaints");
+
                     b.Navigation("UserAccesses");
 
                     b.Navigation("Users");
