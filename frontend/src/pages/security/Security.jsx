@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
     Search,
@@ -10,6 +10,7 @@ import {
     FileText,
 } from 'lucide-react';
 import Layout from '../../components/Layout';
+import { fetchApplications } from '../../services/applications';
 import '../../style/security_style/Main_Style.css';
 
 // ─── Sample Data ────────────────────────────────────────────────────────────
@@ -18,28 +19,50 @@ const PHASES = [
     { label: 'Red Teaming Phase IX Term 2 - 2024', source: '(Source_data_application)' },
 ];
 
-function makeRows(names) {
-    return names.map((name) => ({
-        name,
+// TODO: Skor severity (critical/high/medium/low, open/close) masih placeholder
+// karena backend belum punya endpoint/model "Security Assessment". Begitu ada
+// (mis. GET /api/SecurityAssessments), ganti fungsi ini jadi ambil dari API,
+// idealnya per-application (join by app.id) bukan angka sama rata seperti sekarang.
+function attachPlaceholderSeverity(apps) {
+    return apps.map((app) => ({
+        id: app.id,
+        name: app.name,
         open: { critical: 0, high: 1, medium: 2, low: 2, total: 5 },
         close: { critical: 0, high: 1, medium: 2, low: 2, total: 4 },
     }));
 }
-
-const ALL_APPS = makeRows([
-    'Covmo', 'NAVA', 'Cyclops', 'Digipos', 'Order Management',
-    'MyTelkomsel', 'Orbit', 'Enterprise Portal', 'Digiflazz', 'SocketIO',
-    'Billing System', 'CRM Core', 'API Gateway', 'Auth Service', 'DataVault',
-    'TelcoBI', 'NetworkOps', 'CloudManager', 'Incident Hub', 'LogStream',
-    'PatchBot', 'AppShield', 'ZeroTrust', 'SecureDNS', 'VaultKey',
-    'PolicyEngine', 'RiskRadar', 'ThreatMap', 'AuditLog', 'ComplianceX',
-]);
 
 const PAGE_SIZES = [5, 10, 20, 50];
 
 // ─── Component ───────────────────────────────────────────────────────────────
 function Security() {
     const navigate = useNavigate();
+
+    // ---------- Load aplikasi asli dari API (bukan lagi hardcoded) ----------
+    const [rows, setRows] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [loadError, setLoadError] = useState(null);
+
+    useEffect(() => {
+        let cancelled = false;
+        async function load() {
+            setIsLoading(true);
+            setLoadError(null);
+            try {
+                const apps = await fetchApplications();
+                if (!cancelled) setRows(attachPlaceholderSeverity(apps));
+            } catch (err) {
+                if (!cancelled) setLoadError(err.message || 'Gagal memuat daftar aplikasi.');
+            } finally {
+                if (!cancelled) setIsLoading(false);
+            }
+        }
+        load();
+        return () => {
+            cancelled = true;
+        };
+    }, []);
+
     const [search, setSearch] = useState('');
     const [phaseOpen, setPhaseOpen] = useState(false);
     const [selectedPhase, setSelectedPhase] = useState(0);
@@ -49,8 +72,8 @@ function Security() {
 
     const filtered = useMemo(() => {
         const q = search.toLowerCase();
-        return ALL_APPS.filter((a) => a.name.toLowerCase().includes(q));
-    }, [search]);
+        return rows.filter((a) => a.name.toLowerCase().includes(q));
+    }, [rows, search]);
 
     const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
     const currentPage = Math.min(page, totalPages);
@@ -93,8 +116,28 @@ function Security() {
     }
 
     const phase = PHASES[selectedPhase];
-    const startItem = (currentPage - 1) * pageSize + 1;
+    const startItem = filtered.length === 0 ? 0 : (currentPage - 1) * pageSize + 1;
     const endItem = Math.min(currentPage * pageSize, filtered.length);
+
+    if (isLoading) {
+        return (
+            <Layout>
+                <div className="sa-page">
+                    <div className="sa-empty">Memuat daftar aplikasi...</div>
+                </div>
+            </Layout>
+        );
+    }
+
+    if (loadError) {
+        return (
+            <Layout>
+                <div className="sa-page">
+                    <div className="sa-empty">{loadError}</div>
+                </div>
+            </Layout>
+        );
+    }
 
     return (
         <Layout>
@@ -231,7 +274,7 @@ function Security() {
                                 </tr>
                             ) : (
                                 paged.map((app) => (
-                                    <React.Fragment key={app.name}>
+                                    <React.Fragment key={app.id}>
                                         {/* Open row */}
                                         <tr className="sa-tr">
                                             <td className="sa-td-name" rowSpan={2}>

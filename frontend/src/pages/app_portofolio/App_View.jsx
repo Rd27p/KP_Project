@@ -48,29 +48,14 @@ function AppDetailTabs({ id }) {
  * AutoScreenshot
  * ----------------
  * Mengambil screenshot otomatis dari URL aplikasi yang sudah terdaftar, tanpa perlu
- * upload gambar manual. Contoh: jika URL aplikasi adalah https://youtube.com,
- * komponen ini otomatis menampilkan pratinjau halaman YouTube tersebut.
- *
- * Sumber gambar:
- * 1. WordPress mShots (gratis, tanpa API key) — permintaan pertama kadang masih
- *    menampilkan placeholder abu-abu selagi screenshot di-generate di background,
- *    makanya ada auto-refresh sekali setelah beberapa detik.
- * 2. Jika mShots gagal (error jaringan/URL tidak valid), otomatis fallback ke
- *    Microlink sebagai layanan thumbnail cadangan.
- * 3. Jika keduanya gagal, tampilkan state kosong dengan opsi buka situs manual.
- *
- * Diberi `key={app.id}` oleh parent supaya state screenshot selalu fresh
- * setiap kali pindah ke aplikasi lain (bukan lewat effect yang reset state
- * berdasarkan perubahan prop, yang bisa memicu cascading render).
+ * upload gambar manual. Tidak berubah dari versi sebelumnya -- cuma sekarang
+ * `url`/`appName` datang dari data hasil fetch API, bukan data statis.
  */
 function AutoScreenshot({ url, appName }) {
     const [stage, setStage] = useState('primary'); // 'primary' | 'fallback' | 'failed'
     const [loaded, setLoaded] = useState(false);
     const [cacheBust, setCacheBust] = useState(0);
 
-    // Auto-refresh sekali: mShots sering butuh beberapa detik untuk generate
-    // screenshot pertama kali. Ini timer sekali jalan per mount (per aplikasi),
-    // bukan reaksi terhadap perubahan state lain—jadi aman dari cascading render.
     useEffect(() => {
         const timer = setTimeout(() => {
             setCacheBust(Date.now());
@@ -190,7 +175,9 @@ function AppView() {
             }
         }
         load();
-        return () => { cancelled = true; };
+        return () => {
+            cancelled = true;
+        };
     }, [id]);
 
     return (
@@ -218,7 +205,7 @@ function AppView() {
                                 </span>
                             </div>
                             <h1 className="profile-app-name">{app.name}</h1>
-                            <p className="profile-app-description">{app.description || 'Tidak ada deskripsi.'}</p>
+                            <p className="profile-app-description">{app.description}</p>
                         </div>
 
                         <AppDetailTabs id={id} />

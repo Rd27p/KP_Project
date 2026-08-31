@@ -71,7 +71,9 @@ function TechInfo() {
             }
         }
         load();
-        return () => { cancelled = true; };
+        return () => {
+            cancelled = true;
+        };
     }, [id]);
 
     return (
@@ -90,7 +92,7 @@ function TechInfo() {
                     { label: 'Repository', value: app.repository, icon: GitBranch },
                     { label: 'CI/CD Pipeline', value: app.cicdPipeline, icon: Workflow },
                     { label: 'Dokumentasi API', value: app.apiDocumentation, icon: FileText },
-                ].filter((item) => item.value && item.value !== '-');
+                ].filter((item) => item.value);
 
                 const techStack = app.techStack || [];
                 const hasAnyContent = techItems.length > 0 || techStack.length > 0;
@@ -113,7 +115,7 @@ function TechInfo() {
                                     </span>
                                 </div>
                                 <h1 className="profile-app-name">{app.name}</h1>
-                                <p className="profile-app-description">{app.description || 'Tidak ada deskripsi.'}</p>
+                                <p className="profile-app-description">{app.description}</p>
                             </div>
 
                             <AppDetailTabs id={id} />

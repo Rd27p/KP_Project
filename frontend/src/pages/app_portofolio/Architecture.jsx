@@ -10,6 +10,7 @@ import {
     Share2,
     Link2,
     FileText,
+    PenLine,
 } from 'lucide-react';
 import Layout from '../../components/Layout';
 import DetailStateWrapper from './DetailStateWrapper';
@@ -121,8 +122,23 @@ function Architecture() {
                             {!hasAnyContent ? (
                                 <div className="section-card">
                                     <div className="section-empty">
-                                        <Layers size={22} strokeWidth={1.6} />
-                                        <p>Informasi arsitektur belum dilengkapi untuk aplikasi ini.</p>
+                                        <Layers size={28} strokeWidth={1.6} />
+                                        <p className="section-empty-title">
+                                            Informasi arsitektur belum dilengkapi untuk aplikasi ini
+                                        </p>
+                                        <p className="section-empty-hint">
+                                            Data yang biasanya diisi di sini: tipe arsitektur (monolith/microservices),
+                                            hosting provider, region deployment, model deployment, integrasi sistem
+                                            terkait, dan dependencies teknis.
+                                        </p>
+                                        <button
+                                            type="button"
+                                            className="section-empty-cta"
+                                            onClick={() => navigate('/request/app-registration')}
+                                        >
+                                            <PenLine size={14} strokeWidth={2} />
+                                            Ajukan Update Data Arsitektur
+                                        </button>
                                     </div>
                                 </div>
                             ) : (
