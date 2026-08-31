@@ -3,7 +3,6 @@ import {
   LayoutGrid,
   AlertTriangle,
   HeartPulse,
-  FileCheck2,
   Inbox,
   ClipboardList,
   ShieldCheck,
@@ -13,7 +12,7 @@ import {
   Lock,
   CheckCircle2,
   ArrowUpDown,
-  Clock,
+  Download,
 } from 'lucide-react';
 import { Link, useSearchParams } from 'react-router-dom';
 import Layout from '../components/Layout';
@@ -51,14 +50,6 @@ const kpis = [
     value: '92.6%',
     label: 'Kesehatan Rata-rata',
     sub: '15 dari 128 butuh perhatian',
-  },
-  {
-    key: 'completeness',
-    icon: FileCheck2,
-    tone: 'amber',
-    value: '86%',
-    label: 'Kelengkapan Data',
-    sub: '18 aplikasi belum lengkap',
   },
 ];
 
@@ -103,13 +94,6 @@ const tickets = [
   { label: 'Complaint', value: 7, icon: MessageSquareWarning, trend: '+3', trendType: 'up', link: '/feedback/result' },
 ];
 
-const healthPulseLegend = [
-  { label: 'Security 100%', tone: 'green' },
-  { label: 'Compliance 96%', tone: 'green' },
-  { label: 'Performance 78%', tone: 'amber' },
-  { label: 'Operation 7%', tone: 'red' },
-];
-
 const servers = [
   { app: 'Payment Gateway API', category: 'Finance', total: 14, util: 91, status: 'Live', tone: 'red' },
   { app: 'CRM Suite', category: 'Sales', total: 8, util: 54, status: 'Live', tone: 'green' },
@@ -125,8 +109,6 @@ const toneVar = {
   green: 'var(--green)',
   neutral: '#C7CCDA',
 };
-
-const lastUpdated = '03 Agu 2026, 15:38 WIB';
 
 function HealthPulseRing({ percent = 0, label = 'Sehat' }) {
   const radius = 70;
@@ -200,6 +182,10 @@ export default function Dashboard() {
     }));
   }
 
+  function handleDownloadPdf() {
+    window.print();
+  }
+
   const sortableColumns = [
     { key: 'app', label: 'Aplikasi' },
     { key: 'category', label: 'Kategori' },
@@ -213,28 +199,37 @@ export default function Dashboard() {
       <div className="dashboard">
 
         {/* ---------- VIEW TABS ---------- */}
-        <div className="view-tabs" role="tablist" aria-label="Mode tampilan dashboard">
-          <button
-            type="button"
-            role="tab"
-            aria-selected={view === VIEWS.EXECUTIVE}
-            className={`view-tab ${view === VIEWS.EXECUTIVE ? 'active' : ''}`}
-            onClick={() => switchView(VIEWS.EXECUTIVE)}
-          >
-            Executive Summary
-          </button>
-          <button
-            type="button"
-            role="tab"
-            aria-selected={view === VIEWS.OPERATIONAL}
-            className={`view-tab ${view === VIEWS.OPERATIONAL ? 'active' : ''}`}
-            onClick={() => switchView(VIEWS.OPERATIONAL)}
-          >
-            Operational Detail
-          </button>
+        <div className="dashboard-toolbar">
+          <div className="view-tabs" role="tablist" aria-label="Mode tampilan dashboard">
+            <button
+              type="button"
+              role="tab"
+              aria-selected={view === VIEWS.EXECUTIVE}
+              className={`view-tab ${view === VIEWS.EXECUTIVE ? 'active' : ''}`}
+              onClick={() => switchView(VIEWS.EXECUTIVE)}
+            >
+              Executive Summary
+            </button>
+            <button
+              type="button"
+              role="tab"
+              aria-selected={view === VIEWS.OPERATIONAL}
+              className={`view-tab ${view === VIEWS.OPERATIONAL ? 'active' : ''}`}
+              onClick={() => switchView(VIEWS.OPERATIONAL)}
+            >
+              Operational Detail
+            </button>
+          </div>
+
+          {view === VIEWS.EXECUTIVE && (
+            <button type="button" className="pdf-download-btn" onClick={handleDownloadPdf}>
+              <Download size={16} />
+              Download PDF
+            </button>
+          )}
         </div>
 
-        {/* ---------- KPI (1 kartu navy, 4 segmen internal — selalu tampil di kedua view) ---------- */}
+        {/* ---------- KPI (1 kartu navy, 3 segmen internal — selalu tampil di kedua view) ---------- */}
         <div className="kpi-unified">
           {kpis.map((kpi) => {
             const Icon = kpi.icon;

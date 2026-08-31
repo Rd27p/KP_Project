@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import { Search, X, Bell, Bot, ChevronRight } from 'lucide-react';
-import Profile from '../pages/Profile';
-import { applications } from '../pages/app_portofolio/Application_Data';
+import { fetchApplicationById } from '../services/applications';
+import Profile from '../pages/profile/Profile';
 import '../style/Header_Style.css';
 
 // [GAR] Routing label digunakan pada header untuk navigasi ke halaman tertentu
@@ -34,16 +34,41 @@ function formatFallbackLabel(segment) {
   return segment.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
 }
 
+// [GAR] Hook untuk fetch nama aplikasi dari API berdasarkan ID di URL
+function useAppNameForBreadcrumb(appId) {
+  const [appName, setAppName] = useState(null);
+
+  useEffect(() => {
+    if (!appId) {
+      setAppName(null);
+      return;
+    }
+    let cancelled = false;
+    fetchApplicationById(appId)
+      .then((app) => { if (!cancelled && app) setAppName(app.name); })
+      .catch(() => { /* biarkan fallback ke ID jika error */ });
+    return () => { cancelled = true; };
+  }, [appId]);
+
+  return appName;
+}
+
 // [GAR] Digunakan saat routing dipanggil akan masuk ke breadcrumb dan membuat fungsi seperti navigasi
 function useBreadcrumb() {
   const { pathname } = useLocation();
   const segments = pathname.split('/').filter(Boolean);
 
+  // Deteksi apakah ada app ID di URL (path: /applications/:id/...)
+  const appIdIndex = segments.findIndex((seg, i) => segments[i - 1] === 'applications' && seg !== 'compare');
+  const appId = appIdIndex !== -1 ? segments[appIdIndex] : null;
+  const fetchedAppName = useAppNameForBreadcrumb(appId);
+
   return segments.map((segment, index) => {
     const path = `/${segments.slice(0, index + 1).join('/')}`;
     const isAppId = segments[index - 1] === 'applications' && segment !== 'compare';
-    const matchedApp = isAppId ? applications?.find((a) => String(a.id) === segment) : null;
-    const label = matchedApp?.name || ROUTE_LABELS[segment] || formatFallbackLabel(segment);
+    const label = isAppId
+      ? (fetchedAppName || formatFallbackLabel(segment))
+      : (ROUTE_LABELS[segment] || formatFallbackLabel(segment));
 
     return { label, path, isLast: index === segments.length - 1 };
   });

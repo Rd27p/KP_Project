@@ -15,13 +15,14 @@ import AppRegis from './pages/request/App_Regis';
 import UseCaseRegis from './pages/request/Use_Case_Regis';
 import BotRegis from './pages/feedback/Bot_Regis';
 import Result from './pages/feedback/Result';
-import Profile from './pages/Profile';
-import Settings from './pages/Settings';
+import ProfilePage from './pages/profile/ProfilePage';
+import Settings from './pages/profile/Settings';
 import Security from './pages/security/Security';
+import Add_Security from './pages/security/Add_Security';
 import TSAInformation from './pages/tsa/TSA_Information';
 import OSSData from './pages/oss/OSS_Data';
 import Add_OSS from './pages/oss/Add_OSS';
-import Layout from './components/Layout';
+import LogUser from './pages/log_user/Log_User_Main';
 import './App.css';
 
 function App() {
@@ -52,11 +53,13 @@ function App() {
         <Route path="/feedback/result" element={<Result />} />
         <Route path="/feedback/bot-registration" element={<BotRegis />} />
         <Route path="/security-assessment" element={<Security />} />
+        <Route path="/security-assessment/add" element={<Add_Security />} />
         <Route path="/tsa-information" element={<TSAInformation />} />
         <Route path="/oss-data" element={<OSSData />} />
         <Route path="/oss-data/add" element={<Add_OSS />} />
 
-        <Route path="/profile" element={<Layout><Profile /></Layout>} />
+        <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/log-user" element={<LogUser />} />
       </Routes>
     </BrowserRouter>
   );

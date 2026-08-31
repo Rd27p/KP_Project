@@ -4,6 +4,40 @@
   gap: 18px;
 }
 
+.dashboard-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.pdf-download-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1px solid rgba(90, 104, 141, 0.18);
+  background: #fff;
+  color: var(--navy);
+  border-radius: 999px;
+  padding: 10px 16px;
+  font-size: 12.5px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: var(--shadow-1);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.pdf-download-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-2);
+}
+
+.pdf-download-btn:focus-visible {
+  outline: 2px solid var(--navy);
+  outline-offset: 2px;
+}
+
 .dashboard-hero {
   display: flex;
   align-items: center;
@@ -163,6 +197,15 @@
 }
 
 @media (max-width: 900px) {
+  .dashboard-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .pdf-download-btn {
+    width: 100%;
+  }
+
   .kpi-unified {
     flex-direction: column;
   }
@@ -174,6 +217,63 @@
 
   .kpi-segment:last-child {
     border-bottom: none;
+  }
+}
+
+@media print {
+  @page {
+    size: A4 landscape;
+    margin: 12mm;
+  }
+
+  body {
+    background: #fff;
+  }
+
+  .app-shell {
+    display: block !important;
+    grid-template-columns: none !important;
+    min-height: auto !important;
+  }
+
+  .sidebar,
+  .topbar,
+  .chatbot-panel,
+  .page-intro,
+  .dashboard-toolbar,
+  .view-tabs,
+  .link-btn,
+  .exec-action-card,
+  .alarm-action,
+  .pdf-download-btn {
+    display: none !important;
+  }
+
+  .main {
+    display: block !important;
+    width: 100% !important;
+    max-width: none !important;
+    padding: 0 !important;
+  }
+
+  .dashboard {
+    display: block !important;
+    gap: 12px !important;
+    padding: 0 !important;
+    background: #fff !important;
+    box-shadow: none !important;
+  }
+
+  .panel,
+  .kpi-unified {
+    break-inside: avoid;
+    box-shadow: none !important;
+    background: #fff !important;
+    border: 1px solid rgba(31, 42, 68, 0.12) !important;
+  }
+
+  .exec-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 

@@ -9,13 +9,15 @@ import {
     ImageOff,
 } from 'lucide-react';
 import Layout from '../../components/Layout';
-import { applications } from './Application_Data';
+import DetailStateWrapper from './DetailStateWrapper';
+import { fetchApplicationById } from '../../services/applications';
 import '../../style/app_portofolio_style/App_Profile_Style.css';
 
 const statusColor = {
     Active: 'badge-active',
     Maintenance: 'badge-maintenance',
     Inactive: 'badge-inactive',
+    Pending: 'badge-maintenance',
 };
 
 function AppDetailTabs({ id }) {
@@ -46,29 +48,14 @@ function AppDetailTabs({ id }) {
  * AutoScreenshot
  * ----------------
  * Mengambil screenshot otomatis dari URL aplikasi yang sudah terdaftar, tanpa perlu
- * upload gambar manual. Contoh: jika URL aplikasi adalah https://youtube.com,
- * komponen ini otomatis menampilkan pratinjau halaman YouTube tersebut.
- *
- * Sumber gambar:
- * 1. WordPress mShots (gratis, tanpa API key) — permintaan pertama kadang masih
- *    menampilkan placeholder abu-abu selagi screenshot di-generate di background,
- *    makanya ada auto-refresh sekali setelah beberapa detik.
- * 2. Jika mShots gagal (error jaringan/URL tidak valid), otomatis fallback ke
- *    Microlink sebagai layanan thumbnail cadangan.
- * 3. Jika keduanya gagal, tampilkan state kosong dengan opsi buka situs manual.
- *
- * Diberi `key={app.id}` oleh parent supaya state screenshot selalu fresh
- * setiap kali pindah ke aplikasi lain (bukan lewat effect yang reset state
- * berdasarkan perubahan prop, yang bisa memicu cascading render).
+ * upload gambar manual. Tidak berubah dari versi sebelumnya -- cuma sekarang
+ * `url`/`appName` datang dari data hasil fetch API, bukan data statis.
  */
 function AutoScreenshot({ url, appName }) {
     const [stage, setStage] = useState('primary'); // 'primary' | 'fallback' | 'failed'
     const [loaded, setLoaded] = useState(false);
     const [cacheBust, setCacheBust] = useState(0);
 
-    // Auto-refresh sekali: mShots sering butuh beberapa detik untuk generate
-    // screenshot pertama kali. Ini timer sekali jalan per mount (per aplikasi),
-    // bukan reaksi terhadap perubahan state lain—jadi aman dari cascading render.
     useEffect(() => {
         const timer = setTimeout(() => {
             setCacheBust(Date.now());
@@ -168,57 +155,75 @@ function AutoScreenshot({ url, appName }) {
 function AppView() {
     const { id } = useParams();
     const navigate = useNavigate();
-    const app = applications.find((item) => item.id === id);
 
-    if (!app) {
-        return (
-            <Layout>
-                <div className="profile-notfound">
-                    <p>Aplikasi tidak ditemukan.</p>
-                    <button className="profile-back-btn" onClick={() => navigate('/applications')}>
-                        <ArrowLeft size={16} strokeWidth={2} />
-                        Kembali ke App Portofolio
-                    </button>
-                </div>
-            </Layout>
-        );
-    }
+    const [app, setApp] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        let cancelled = false;
+        async function load() {
+            setIsLoading(true);
+            setError(null);
+            try {
+                const result = await fetchApplicationById(id);
+                if (!cancelled) setApp(result);
+            } catch (err) {
+                if (!cancelled) setError(err.message || 'Gagal memuat data aplikasi.');
+            } finally {
+                if (!cancelled) setIsLoading(false);
+            }
+        }
+        load();
+        return () => {
+            cancelled = true;
+        };
+    }, [id]);
 
     return (
-        <Layout>
-            <div className="app-profile-content">
-                <button className="profile-back-btn" onClick={() => navigate('/applications')}>
-                    <ArrowLeft size={16} strokeWidth={2} />
-                    Kembali ke App Portofolio
-                </button>
+        <DetailStateWrapper
+            isLoading={isLoading}
+            error={error}
+            notFound={!isLoading && !error && !app}
+            onBack={() => navigate('/applications')}
+        >
+            {app && (
+                <Layout>
+                    <div className="app-profile-content">
+                        <button className="profile-back-btn" onClick={() => navigate('/applications')}>
+                            <ArrowLeft size={16} strokeWidth={2} />
+                            Kembali ke App Portofolio
+                        </button>
 
-                <div className="profile-header-card">
-                    <div className="profile-header-top">
-                        <div className="profile-header-icon">
-                            <Boxes size={28} strokeWidth={2} color="#FFFFFF" />
+                        <div className="profile-header-card">
+                            <div className="profile-header-top">
+                                <div className="profile-header-icon">
+                                    <Boxes size={28} strokeWidth={2} color="#FFFFFF" />
+                                </div>
+                                <span className={`status-badge ${statusColor[app.status]}`}>
+                                    {app.status}
+                                </span>
+                            </div>
+                            <h1 className="profile-app-name">{app.name}</h1>
+                            <p className="profile-app-description">{app.description}</p>
                         </div>
-                        <span className={`status-badge ${statusColor[app.status]}`}>
-                            {app.status}
-                        </span>
-                    </div>
-                    <h1 className="profile-app-name">{app.name}</h1>
-                    <p className="profile-app-description">{app.description}</p>
-                </div>
 
-                <AppDetailTabs id={id} />
+                        <AppDetailTabs id={id} />
 
-                {!app.url ? (
-                    <div className="section-card">
-                        <div className="section-empty">
-                            <Globe size={22} strokeWidth={1.6} />
-                            <p>URL aplikasi belum terdaftar, jadi screenshot otomatis belum bisa diambil.</p>
-                        </div>
+                        {!app.url ? (
+                            <div className="section-card">
+                                <div className="section-empty">
+                                    <Globe size={22} strokeWidth={1.6} />
+                                    <p>URL aplikasi belum terdaftar, jadi screenshot otomatis belum bisa diambil.</p>
+                                </div>
+                            </div>
+                        ) : (
+                            <AutoScreenshot key={app.id} url={app.url} appName={app.name} />
+                        )}
                     </div>
-                ) : (
-                    <AutoScreenshot key={app.id} url={app.url} appName={app.name} />
-                )}
-            </div>
-        </Layout>
+                </Layout>
+            )}
+        </DetailStateWrapper>
     );
 }
 

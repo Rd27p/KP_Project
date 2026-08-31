@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Check, Bot, ArrowLeft } from 'lucide-react';
 import Layout from '../../components/Layout';
-import { applications } from '../app_portofolio/Application_Data';
+import { fetchApplications } from '../../services/applications';
 import '../../style/feedback_style/Main_Style.css';
 
 const steps = [
@@ -33,9 +33,18 @@ const initialFormData = {
 
 function BotRegis() {
     const navigate = useNavigate();
+    const [applications, setApplications] = useState([]);
     const [currentStep, setCurrentStep] = useState(1);
     const [formData, setFormData] = useState(initialFormData);
     const [submitted, setSubmitted] = useState(false);
+
+    useEffect(() => {
+        let cancelled = false;
+        fetchApplications()
+            .then((data) => { if (!cancelled) setApplications(data); })
+            .catch(() => {});
+        return () => { cancelled = true; };
+    }, []);
 
     const handleChange = (e) => {
         const { name, value } = e.target;

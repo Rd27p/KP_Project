@@ -12,26 +12,31 @@ import {
     ChevronRight,
     Command,
     Sparkles,
+    Loader2,
+    AlertTriangle,
 } from 'lucide-react';
 import Layout from '../../components/Layout';
 import Table from '../../components/table';
-import { applications } from './Application_Data';
+import { fetchApplications } from '../../services/applications';
 import '../../style/app_portofolio_style/Main_Style.css';
 
 const statusColor = {
     Active: 'badge-active',
     Maintenance: 'badge-maintenance',
     Inactive: 'badge-inactive',
+    Pending: 'badge-maintenance',
 };
 
 const statusDotColor = {
     Active: '#1E8E52',
     Maintenance: '#E8720C',
     Inactive: '#9AA1B4',
+    Pending: '#E8720C',
 };
 
 const GALAXY_PALETTE = ['#D3324A', '#1F2A44', '#1E8E52', '#E8720C', '#6C5CE7', '#00A8B5', '#B5406A'];
 const GOLDEN_ANGLE = 137.508 * (Math.PI / 180);
+
 
 /**
  * GalaxyView
@@ -185,6 +190,11 @@ function GalaxyView({ allApps, categories, isMatch, navigate }) {
 const PAGE_SIZE = 24;
 
 function AppPortofolioMain() {
+    // ---------- Data dari backend ----------
+    const [applications, setApplications] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [loadError, setLoadError] = useState(null);
+
     const [searchTerm, setSearchTerm] = useState('');
     const [activeCategory, setActiveCategory] = useState('All');
     const [viewMode, setViewMode] = useState('list'); // 'list' (default, efektif untuk banyak data) | 'grid'
@@ -199,9 +209,39 @@ function AppPortofolioMain() {
 
     const navigate = useNavigate();
 
+    // ---------- Ambil data aplikasi dari GET /api/Applications ----------
+    useEffect(() => {
+        let isCancelled = false;
+
+        async function loadData() {
+            setIsLoading(true);
+            setLoadError(null);
+            try {
+                const data = await fetchApplications();
+                if (!isCancelled) {
+                    setApplications(data);
+                }
+            } catch (err) {
+                if (!isCancelled) {
+                    setLoadError(err.message || 'Gagal memuat data aplikasi.');
+                }
+            } finally {
+                if (!isCancelled) {
+                    setIsLoading(false);
+                }
+            }
+        }
+
+        loadData();
+
+        return () => {
+            isCancelled = true;
+        };
+    }, []);
+
     const categories = useMemo(
         () => ['All', ...new Set(applications.map((app) => app.category))],
-        []
+        [applications]
     );
 
     const filteredApps = useMemo(() => {
@@ -212,7 +252,7 @@ function AppPortofolioMain() {
             const matchesCategory = activeCategory === 'All' || app.category === activeCategory;
             return matchesSearch && matchesCategory;
         });
-    }, [searchTerm, activeCategory]);
+    }, [applications, searchTerm, activeCategory]);
 
     // Dipakai khusus oleh Galaxy view: predikat yang sama dengan filteredApps,
     // tapi tidak menghapus item dari render—cuma menentukan mana yang "menyala".
@@ -238,8 +278,6 @@ function AppPortofolioMain() {
     const pagedApps = sortedApps.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
 
     // ---------- Handler perubahan pencarian/filter/sort/view ----------
-    // Reset halaman ke 1 dilakukan langsung di handler yang mengubah kondisi filter,
-    // bukan lewat useEffect terpisah yang memantau state lain (menghindari cascading render).
     function handleSearchChange(value) {
         setSearchTerm(value);
         setPage(1);
@@ -283,7 +321,7 @@ function AppPortofolioMain() {
                     app.owner.toLowerCase().includes(q)
             )
             .slice(0, 8);
-    }, [paletteQuery]);
+    }, [paletteQuery, applications]);
 
     function handlePaletteQueryChange(value) {
         setPaletteQuery(value);
@@ -307,9 +345,6 @@ function AppPortofolioMain() {
         navigate(`/applications/${app.id}`);
     }
 
-    // Subscribe ke keyboard global: buka dengan ⌘K/Ctrl+K, tutup dengan Escape.
-    // Ini pola effect yang tepat—berlangganan ke sistem eksternal (window),
-    // setState hanya dipanggil di dalam callback event, bukan langsung di body effect.
     useEffect(() => {
         function handleGlobalKeyDown(e) {
             if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
@@ -324,8 +359,6 @@ function AppPortofolioMain() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    // Fokus input saat palette terbuka. Ini murni sinkronisasi ke DOM (external system),
-    // tidak memanggil setState, jadi tidak memicu cascading render.
     useEffect(() => {
         if (paletteOpen) {
             const raf = requestAnimationFrame(() => paletteInputRef.current?.focus());
@@ -384,7 +417,9 @@ function AppPortofolioMain() {
 
                 <div className="portofolio-view-row">
                     <p className="portofolio-count">
-                        {viewMode === 'galaxy'
+                        {isLoading
+                            ? 'Memuat data...'
+                            : viewMode === 'galaxy'
                             ? `Menyorot ${filteredApps.length} dari ${applications.length} aplikasi`
                             : `${filteredApps.length} aplikasi ditemukan`}
                     </p>
@@ -416,7 +451,17 @@ function AppPortofolioMain() {
                     </div>
                 </div>
 
-                {viewMode === 'galaxy' ? (
+                {isLoading ? (
+                    <div className="portofolio-empty">
+                        <Loader2 size={20} className="spin" strokeWidth={2} />
+                        <span style={{ marginLeft: 8 }}>Memuat data aplikasi...</span>
+                    </div>
+                ) : loadError ? (
+                    <div className="portofolio-empty">
+                        <AlertTriangle size={20} strokeWidth={2} />
+                        <span style={{ marginLeft: 8 }}>{loadError}</span>
+                    </div>
+                ) : viewMode === 'galaxy' ? (
                     <GalaxyView
                         allApps={applications}
                         categories={categories.filter((c) => c !== 'All')}
